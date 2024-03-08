@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { MainNavigationComponent } from './main-navigation/main-navigation.component';
+
+import { ProfilesListComponent } from './profiles-list/profiles-list.component';
 
 export const routes: Routes = [
-    { path: '/', component: MainNavigationComponent },
+    { path: 'profiles', component: ProfilesListComponent },
 
 ];
