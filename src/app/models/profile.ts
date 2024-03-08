@@ -1,6 +1,6 @@
 import { NonNullableFormBuilder } from "@angular/forms"
 import { Transform, Type } from "class-transformer"
-import { IsEnum } from "class-validator/types/decorator/decorators"
+
 
 export enum ProfileType {
     flow = "flow",
