@@ -34,4 +34,12 @@ export class MainNavigationComponent {
       map(result => result.matches),
       shareReplay()
     );
+
+  /**
+   *
+   */
+  constructor() {
+    console.log("Loading Navigation");
+
+  }
 }
