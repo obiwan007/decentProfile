@@ -1,5 +1,26 @@
 import { NonNullableFormBuilder } from "@angular/forms"
-import { Type } from "class-transformer"
+import { Transform, Type } from "class-transformer"
+import { IsEnum } from "class-validator/types/decorator/decorators"
+
+export enum ProfileType {
+    flow = "flow",
+    pressure = "pressure",
+    advanced = "advanced",
+}
+
+export enum PumpMode {
+    flow = "flow",
+    pressure = "pressure",
+}
+export enum TransitionMode {
+    fast = "fast",
+    smooth = "smooth",
+}
+
+export enum SensorType {
+    coffee = "coffee",
+    smooth = "water",
+}
 
 export class Profile {
     title!: string
@@ -17,7 +38,7 @@ export class Profile {
     @Type(() => Number)
     target_volume_count_start!: string
     legacy_profile_type!: string
-    type!: string
+    type!: ProfileType
     lang!: string
     hidden!: string
     reference_file!: string
@@ -30,8 +51,8 @@ export class Step {
     @Type(() => Number)
     temperature!: number;
     sensor!: string;
-    pump!: string;
-    transition!: string;
+    pump!: PumpMode;
+    transition!: TransitionMode;
     @Type(() => Number)
     pressure!: number;
     @Type(() => Number)

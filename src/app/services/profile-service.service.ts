@@ -16,7 +16,7 @@ export class ProfileServiceService {
     console.log("Loading Profile");
 
     const p = new Profile();
-    this._http.get('assets/profiles/Default.json', { responseType: 'text' })
+    this._http.get('assets/profiles/Blooming espresso.json', { responseType: 'text' })
       .subscribe(data => {
         const raw = JSON.parse(data);
         console.log("Raw:", raw);
