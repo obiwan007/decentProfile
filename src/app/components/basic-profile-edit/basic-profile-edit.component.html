@@ -70,5 +70,8 @@
                 </div>
             </mat-card-content>
         </mat-card>
+        <mat-card *ngIf="profile">
+            <app-profile-chart [profile]="profile"></app-profile-chart>
+        </mat-card>
     </div>
 </div>

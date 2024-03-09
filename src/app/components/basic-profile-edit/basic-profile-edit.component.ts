@@ -10,10 +10,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { ProfileChartComponent } from '../profile-chart/profile-chart.component';
 @Component({
   selector: 'app-basic-profile-edit',
   standalone: true,
-  imports: [MatCardModule, RenderStepComponent, FlexLayoutModule, ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
+  imports: [ProfileChartComponent, MatCardModule, RenderStepComponent, FlexLayoutModule, ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
     AdvancedProfileEditComponent, BasicProfileEditComponent, MatSliderModule, CommonModule, FormsModule, ReactiveFormsModule, MatInputModule],
   templateUrl: './basic-profile-edit.component.html',
   styleUrl: './basic-profile-edit.component.scss'
