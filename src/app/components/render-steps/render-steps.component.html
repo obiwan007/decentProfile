@@ -1,28 +1,30 @@
 @if(profile){
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>
-            Steps
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        @if(!selectable){
-        <ul>
-            @for(step of profile.steps; track profile.id){
-            <li>
-                <app-render-step [step]="step"></app-render-step>
-            </li>
+<div class="w-full">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                Steps
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            @if(!selectable){
+            <ul>
+                @for(step of profile.steps; track profile.id){
+                <li>
+                    <app-render-step [step]="step"></app-render-step>
+                </li>
+                }
+            </ul>
             }
-        </ul>
-        }
-        @if(selectable){
-        <mat-selection-list [multiple]="false">
-            @for(step of profile.steps; track profile.id){
-            <mat-list-option [selected]="step===currentStep" (click)="onSelected(step)" [value]="step">
-                {{step.name}}</mat-list-option>
+            @if(selectable){
+            <mat-selection-list [multiple]="false">
+                @for(step of profile.steps; track profile.id){
+                <mat-list-option [selected]="step===currentStep" (click)="onSelected(step)" [value]="step">
+                    {{step.name}}</mat-list-option>
+                }
+            </mat-selection-list>
             }
-        </mat-selection-list>
-        }
-    </mat-card-content>
-</mat-card>
+        </mat-card-content>
+    </mat-card>
+</div>
 }

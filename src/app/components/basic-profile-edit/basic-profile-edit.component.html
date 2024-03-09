@@ -1,77 +1,85 @@
 <div class="flex flex-row" style="padding:15px">
-    <div class="flex flex-col">
+    <div class="flex flex-col w-2/6">
 
-        <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
+        <div class="flex m-2">
+            <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
+        </div>
+        <div class="flex m-2">
+            <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"
+                              [profile]="profile"></app-render-steps>
+        </div>
+        <div class="m-2">
+            <mat-card *ngIf="profile">
+                <mat-card-header>
+                    <mat-card-title>
+                        Stop
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="slider">
+                        <div class="label">Stop at Weight ({{profile.target_weight}} g)</div>
+                        <mat-slider ngDefaultControl min="20" max="600" step="1"
+                                    discrete>
+                            <input matSliderThumb [(ngModel)]="profile.target_weight">
+                        </mat-slider>
+                    </div>
 
-        <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"
-                          [profile]="profile"></app-render-steps>
-
-        <mat-card *ngIf="profile">
-            <mat-card-header>
-                <mat-card-title>
-                    Stop
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="slider">
-                    <div class="label">Stop at Weight ({{profile.target_weight}} g)</div>
-                    <mat-slider ngDefaultControl min="20" max="600" step="1"
-                                discrete>
-                        <input matSliderThumb [(ngModel)]="profile.target_weight">
-                    </mat-slider>
-                </div>
-
-                <div class="slider">
-                    <div class="label">Stop at Volume ({{profile.target_volume}} ml)</div>
-                    <mat-slider ngDefaultControl min="20" max="600" step="1"
-                                discrete>
-                        <input matSliderThumb [(ngModel)]="profile.target_volume">
-                    </mat-slider>
-                </div>
-            </mat-card-content>
-        </mat-card>
+                    <div class="slider">
+                        <div class="label">Stop at Volume ({{profile.target_volume}} ml)</div>
+                        <mat-slider ngDefaultControl min="20" max="600" step="1"
+                                    discrete>
+                            <input matSliderThumb [(ngModel)]="profile.target_volume">
+                        </mat-slider>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </div>
-    <div class="flex" *ngIf="step">
-        <mat-card *ngIf="profile">
-            <mat-card-header>
-                <mat-card-title>
-                    {{step.name}}
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div style="height:100px">
-                    <app-render-step [step]="step"></app-render-step>
-                </div>
-                <br>
-                <div class="slider">
-                    <div class="label">Time ({{step.seconds}} s)</div>
-                    <mat-slider ngDefaultControl min="1" max="1000" step="1" discrete>
-                        <input matSliderThumb [(ngModel)]="step.seconds">
-                    </mat-slider>
-                </div>
-                <div class="slider">
-                    <div class="label">Pressure ({{step.pressure}} bar)</div>
-                    <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
-                        <input matSliderThumb [(ngModel)]="step.pressure">
-                    </mat-slider>
-                </div>
-                <div class="slider">
-                    <div class="label">Flow ({{step.flow}} ml/s)</div>
-                    <mat-slider ngDefaultControl min="0" max="20" step="0.5" discrete>
-                        <input matSliderThumb [(ngModel)]="step.flow">
-                    </mat-slider>
-                </div>
-                <div class="slider">
-                    <div class="label">Temperature ({{step.temperature}} °C)</div>
-                    <mat-slider ngDefaultControl min="50" max="100" step="1"
-                                discrete>
-                        <input matSliderThumb [(ngModel)]="step.temperature">
-                    </mat-slider>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <mat-card *ngIf="profile">
-            <app-profile-chart [profile]="profile"></app-profile-chart>
-        </mat-card>
+    <div class="flex flex-col w-4/6" *ngIf="step">
+        <div class="m-2">
+            <mat-card *ngIf="profile">
+                <mat-card-header>
+                    <mat-card-title>
+                        {{step.name}}
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div style="height:100px">
+                        <app-render-step [step]="step"></app-render-step>
+                    </div>
+                    <br>
+                    <div class="slider">
+                        <div class="label">Time ({{step.seconds}} s)</div>
+                        <mat-slider ngDefaultControl min="1" max="1000" step="1" discrete>
+                            <input matSliderThumb [(ngModel)]="step.seconds">
+                        </mat-slider>
+                    </div>
+                    <div class="slider">
+                        <div class="label">Pressure ({{step.pressure}} bar)</div>
+                        <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
+                            <input matSliderThumb [(ngModel)]="step.pressure">
+                        </mat-slider>
+                    </div>
+                    <div class="slider">
+                        <div class="label">Flow ({{step.flow}} ml/s)</div>
+                        <mat-slider ngDefaultControl min="0" max="20" step="0.5" discrete>
+                            <input matSliderThumb [(ngModel)]="step.flow">
+                        </mat-slider>
+                    </div>
+                    <div class="slider">
+                        <div class="label">Temperature ({{step.temperature}} °C)</div>
+                        <mat-slider ngDefaultControl min="50" max="100" step="1"
+                                    discrete>
+                            <input matSliderThumb [(ngModel)]="step.temperature">
+                        </mat-slider>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="m-2">
+            <mat-card *ngIf="profile">
+                <app-profile-chart [profile]="profile"></app-profile-chart>
+            </mat-card>
+        </div>
     </div>
 </div>
