@@ -8,11 +8,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ProfileServiceService } from '../../services/profile-service.service';
+import { RenderStepsComponent } from '../../components/render-steps/render-steps.component';
 
 @Component({
   selector: 'app-profile-list-page',
   standalone: true,
-  imports: [ProfilesListComponent, ProfileDetailsComponent, FlexLayoutModule, JsonPipe, MatButtonModule, MatCardModule],
+  imports: [ProfilesListComponent, ProfileDetailsComponent,
+    RenderStepsComponent,
+    FlexLayoutModule, JsonPipe, MatButtonModule, MatCardModule],
   templateUrl: './profile-list-page.component.html',
   styleUrl: './profile-list-page.component.scss'
 })

@@ -74,7 +74,7 @@ export class Exit {
     type!: string
     condition!: string
     @Type(() => Number)
-    value!: string
+    value!: number
 }
 
 export class Limiter {
