@@ -14,8 +14,14 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class ProfileChartComponent {
   @Input()
-  profile: Profile | undefined;
-
+  public get profile(): Profile | undefined {
+    return this._profile;
+  }
+  public set profile(value: Profile | undefined) {
+    this._profile = value;
+    this.updateChart();
+  }
+  private _profile: Profile | undefined;
   @Input()
   step: Step | undefined;
 
@@ -68,7 +74,16 @@ export class ProfileChartComponent {
     },
   }
   ngOnInit() {
+
+    this.updateChart();
+
+
+  }
+
+  private updateChart() {
+    this.chartOptions = { ...this.chartOptions! }!;
     if (this.chartOptions.series && this.profile) {
+
       this.chartOptions.title!.text = this.profile.title;
       const series = this.chartOptions.series[0] as Highcharts.SeriesLineOptions;
       series.data = [];
@@ -100,7 +115,5 @@ export class ProfileChartComponent {
 
       console.log("Series:", this.profile, series.data);
     }
-
-
   }
 }

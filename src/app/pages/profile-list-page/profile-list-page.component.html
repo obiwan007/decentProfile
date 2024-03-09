@@ -5,17 +5,15 @@
     @if(selectedProfile){
     <div fxFlex>
         <div fxLayout="column" fxLayoutGap="15px">
-
+            <div style="height:350px">
+                <app-profile-chart [profile]="selectedProfile"></app-profile-chart>
+            </div>
             <app-profile-details [showButtons]="true" [profile]="selectedProfile"></app-profile-details>
             <app-render-steps [profile]="selectedProfile"></app-render-steps>
-            <div>
-                {{selectedProfile|json}}
-            </div>
+
         </div>
     </div>
+
     }
 
-    <!-- <div flex>
-        <app-profiles-list (onClick)="onClick($event)"></app-profiles-list>
-    </div> -->
 </div>
