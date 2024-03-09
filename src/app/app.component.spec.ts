@@ -1,10 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { MainNavigationComponent } from './components/main-navigation/main-navigation.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterOutlet } from '@angular/router';
+import { AdvancedProfileEditComponent } from './components/advanced-profile-edit/advanced-profile-edit.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [NoopAnimationsModule, AdvancedProfileEditComponent, AppComponent, RouterOutlet, MatSlideToggleModule, MainNavigationComponent],
     }).compileComponents();
   });
 
