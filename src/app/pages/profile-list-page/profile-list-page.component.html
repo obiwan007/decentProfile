@@ -6,7 +6,7 @@
     <div fxFlex>
         <div fxLayout="column" fxLayoutGap="15px">
 
-            <app-profile-details [profile]="selectedProfile"></app-profile-details>
+            <app-profile-details [showButtons]="true" [profile]="selectedProfile"></app-profile-details>
             <app-render-steps [profile]="selectedProfile"></app-render-steps>
             <div>
                 {{selectedProfile|json}}

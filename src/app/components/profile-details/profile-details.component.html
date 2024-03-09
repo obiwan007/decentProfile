@@ -2,7 +2,7 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>
-            {{profile?.title}}
+            {{profile.title}}
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -15,8 +15,8 @@
         <div class="title">Notes</div>
         <div>{{profile.notes}}</div>
     </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button>Edit</button>
+    <mat-card-actions *ngIf="showButtons">
+        <button (click)="onEdit()" mat-raised-button>Edit</button>
         <button mat-raised-button>Copy</button>
         <button mat-raised-button>Delete</button>
     </mat-card-actions>
