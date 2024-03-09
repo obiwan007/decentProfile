@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProfileServiceService } from '../../services/profile-service.service';
-import { Profile, ProfileType } from '../../models/profile';
+import { Profile, ProfileType, Step } from '../../models/profile';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProfileDetailsComponent } from '../../components/profile-details/profile-details.component';
 import { RenderStepsComponent } from '../../components/render-steps/render-steps.component';
@@ -22,6 +22,7 @@ export class ProfileEditPageComponent {
   flow = ProfileType.flow;
   advanced = ProfileType.advanced;
   pressure = ProfileType.pressure;
+  currentStep: Step | undefined;
   /**
    *
    */
@@ -35,5 +36,9 @@ export class ProfileEditPageComponent {
         this.profile = p;
       });
     }
+  }
+
+  onSelectedStep(step: Step) {
+    this.currentStep = step;
   }
 }

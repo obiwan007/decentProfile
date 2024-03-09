@@ -1,1 +1,12 @@
-<p>basic-profile-edit works!</p>
+<div fxFlex style="padding:15px" fxLayoutGap="15px">
+    <div fxFlex="30" fxLayout="column" fxLayoutGap="15px">
+
+        <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
+
+        <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"
+                          [profile]="profile"></app-render-steps>
+    </div>
+    <div>
+        <app-render-step [step]="step"></app-render-step>
+    </div>
+</div>

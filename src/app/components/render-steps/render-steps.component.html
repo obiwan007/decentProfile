@@ -6,6 +6,7 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
+        @if(!selectable){
         <ul>
             @for(step of profile.steps; track profile.id){
             <li>
@@ -13,6 +14,15 @@
             </li>
             }
         </ul>
+        }
+        @if(selectable){
+        <mat-selection-list [multiple]="false">
+            @for(step of profile.steps; track profile.id){
+            <mat-list-option [selected]="step===currentStep" (click)="onSelected(step)" [value]="step">
+                {{step.name}}</mat-list-option>
+            }
+        </mat-selection-list>
+        }
     </mat-card-content>
 </mat-card>
 }

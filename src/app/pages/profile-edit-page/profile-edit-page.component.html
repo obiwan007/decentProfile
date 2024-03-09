@@ -1,24 +1,18 @@
 @if(profile){
-<div fxFlex style="padding:15px">
-    <div fxFlex="30" fxLayout="column" fxLayoutGap="15px">
-
-        <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
-        <app-render-steps [profile]="profile"></app-render-steps>
-
-    </div>
-    <div fxFlex fxLayout="column" fxLayoutGap="15px">
-        {{profile.type}}
-        @if(profile.type===flow){
-        <app-basic-profile-edit></app-basic-profile-edit>
-        }
-        @if(profile.type===pressure){
-        <app-basic-profile-edit></app-basic-profile-edit>
-        }
-        @if(profile.type===advanced){
-        <app-advanced-profile-edit></app-advanced-profile-edit>
-        }
 
 
-    </div>
-</div>
+
+@if(profile.type===flow){
+<app-basic-profile-edit [profile]="profile"  [step]="currentStep"></app-basic-profile-edit>
+}
+@if(profile.type===pressure){
+<app-basic-profile-edit [profile]="profile" [step]="currentStep"></app-basic-profile-edit>
+}
+@if(profile.type===advanced){
+<app-advanced-profile-edit [profile]="profile" [step]="currentStep"></app-advanced-profile-edit>
+}
+
+
+
+
 }
