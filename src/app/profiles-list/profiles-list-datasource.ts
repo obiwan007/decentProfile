@@ -1,51 +1,32 @@
-import { DataSource } from '@angular/cdk/collections';
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { map } from 'rxjs/operators';
-import { Observable, of as observableOf, merge } from 'rxjs';
+import { catchError, finalize, map } from 'rxjs/operators';
+import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
+import { Profile } from '../models/profile';
+import { ProfileServiceService } from '../services/profile-service.service';
 
-// TODO: Replace this with your own data model type
-export interface ProfilesListItem {
-  name: string;
-  id: number;
-}
 
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: ProfilesListItem[] = [
-  {id: 1, name: 'Hydrogen'},
-  {id: 2, name: 'Helium'},
-  {id: 3, name: 'Lithium'},
-  {id: 4, name: 'Beryllium'},
-  {id: 5, name: 'Boron'},
-  {id: 6, name: 'Carbon'},
-  {id: 7, name: 'Nitrogen'},
-  {id: 8, name: 'Oxygen'},
-  {id: 9, name: 'Fluorine'},
-  {id: 10, name: 'Neon'},
-  {id: 11, name: 'Sodium'},
-  {id: 12, name: 'Magnesium'},
-  {id: 13, name: 'Aluminum'},
-  {id: 14, name: 'Silicon'},
-  {id: 15, name: 'Phosphorus'},
-  {id: 16, name: 'Sulfur'},
-  {id: 17, name: 'Chlorine'},
-  {id: 18, name: 'Argon'},
-  {id: 19, name: 'Potassium'},
-  {id: 20, name: 'Calcium'},
-];
 
 /**
  * Data source for the ProfilesList view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class ProfilesListDataSource extends DataSource<ProfilesListItem> {
-  data: ProfilesListItem[] = EXAMPLE_DATA;
+export class ProfilesListDataSource extends DataSource<Profile> {
+  data: Profile[] = [];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
-  constructor() {
+  private lessonsSubject = new BehaviorSubject<Profile[]>([]);
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loadingSubject.asObservable();
+  maxlength: number = 0;
+
+  constructor(private _profileSrv: ProfileServiceService) {
     super();
+
+    this.maxlength = _profileSrv.getProfilesCount();
   }
 
   /**
@@ -53,43 +34,65 @@ export class ProfilesListDataSource extends DataSource<ProfilesListItem> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<ProfilesListItem[]> {
-    if (this.paginator && this.sort) {
-      // Combine everything that affects the rendered data into one update
-      // stream for the data-table to consume.
-      return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
-        .pipe(map(() => {
-          return this.getPagedData(this.getSortedData([...this.data ]));
-        }));
-    } else {
-      throw Error('Please set the paginator and sort on the data source before connecting.');
-    }
+  connect(): Observable<Profile[]> {
+    return this.lessonsSubject.asObservable();
+    // if (this.paginator && this.sort) {
+    //   // Combine everything that affects the rendered data into one update
+    //   // stream for the data-table to consume.
+    //   // const data = await this.getPagedData(this.getSortedData([...this.data]))
+    //   return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
+    //     .pipe(map(() => {
+    //       return this.data;
+    //     }));
+    // } else {
+    //   throw Error('Please set the paginator and sort on the data source before connecting.');
+    // }
   }
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up
    * any open connections or free any held resources that were set up during connect.
    */
-  disconnect(): void {}
+  disconnect(collectionViewer: CollectionViewer): void {
+    this.lessonsSubject.complete();
+    this.loadingSubject.complete();
+  }
+
+
 
   /**
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getPagedData(data: ProfilesListItem[]): ProfilesListItem[] {
-    if (this.paginator) {
-      const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-      return data.splice(startIndex, this.paginator.pageSize);
-    } else {
-      return data;
-    }
+  // private async getPagedData(data: Profile[]): Promise<Profile[]> {
+  //   if (this.paginator) {
+  //     const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+  //     const profiles = await this._profileSrv.getProfilesFromIndex(startIndex, startIndex + this.paginator.pageSize)
+  //     return profiles;
+  //   } else {
+  //     return data;
+  //   }
+  // }
+
+  loadLessons(filter = '',
+    sortDirection = 'asc', pageIndex = 0, pageSize = 3) {
+
+    this.loadingSubject.next(true);
+
+
+    this._profileSrv.getProfilesFromIndex(filter, sortDirection,
+      pageIndex, pageSize).pipe(
+        catchError(() => of([])),
+        finalize(() => this.loadingSubject.next(false))
+      )
+      .subscribe(lessons => this.lessonsSubject.next(lessons));
   }
 
   /**
    * Sort the data (client-side). If you're using server-side sorting,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getSortedData(data: ProfilesListItem[]): ProfilesListItem[] {
+  private getSortedData(data: Profile[]): Profile[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
     }
@@ -97,8 +100,8 @@ export class ProfilesListDataSource extends DataSource<ProfilesListItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort?.direction === 'asc';
       switch (this.sort?.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
+        case 'title': return compare(a.title, b.title, isAsc);
+        case 'author': return compare(+a.author, +b.author, isAsc);
         default: return 0;
       }
     });

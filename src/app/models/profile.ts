@@ -23,6 +23,7 @@ export enum SensorType {
 }
 
 export class Profile {
+    id!: string
     title!: string
     author!: string
     notes!: string
