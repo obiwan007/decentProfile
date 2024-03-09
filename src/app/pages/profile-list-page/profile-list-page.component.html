@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutGap="15px" style="padding:15px">
+    <div fxFlex>
+        <app-profiles-list (onClick)="onClick($event)"></app-profiles-list>
+    </div>
+    @if(selectedProfile){
+    <div fxFlex>
+        <div fxLayout="column">
+
+            <app-profile-details [profile]="selectedProfile"></app-profile-details>
+        </div>
+    </div>
+    }
+
+    <!-- <div flex>
+        <app-profiles-list (onClick)="onClick($event)"></app-profiles-list>
+    </div> -->
+</div>

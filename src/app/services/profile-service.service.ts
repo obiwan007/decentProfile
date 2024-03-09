@@ -94,9 +94,10 @@ export class ProfileServiceService {
       this._http.get(`assets/profiles/${id}`, { responseType: 'text' })
         .subscribe(data => {
           const raw = JSON.parse(data);
-          console.log("Raw:", raw);
+
           plainToClassFromExist(p, raw);
-          console.log("Loaded", p.title);
+          p.id = id;
+
           ret(p);
         });
     });

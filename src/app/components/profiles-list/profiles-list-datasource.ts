@@ -3,8 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
-import { Profile } from '../models/profile';
-import { ProfileServiceService } from '../services/profile-service.service';
+import { Profile } from '../../models/profile';
+import { ProfileServiceService } from '../../services/profile-service.service';
 
 
 
@@ -18,7 +18,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
-  private lessonsSubject = new BehaviorSubject<Profile[]>([]);
+  private profilesSubject = new BehaviorSubject<Profile[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
   maxlength: number = 0;
@@ -35,7 +35,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<Profile[]> {
-    return this.lessonsSubject.asObservable();
+    return this.profilesSubject.asObservable();
     // if (this.paginator && this.sort) {
     //   // Combine everything that affects the rendered data into one update
     //   // stream for the data-table to consume.
@@ -54,7 +54,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    * any open connections or free any held resources that were set up during connect.
    */
   disconnect(collectionViewer: CollectionViewer): void {
-    this.lessonsSubject.complete();
+    this.profilesSubject.complete();
     this.loadingSubject.complete();
   }
 
@@ -74,7 +74,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   //   }
   // }
 
-  loadLessons(filter = '',
+  loadProfiles(filter = '',
     sortDirection = 'asc', pageIndex = 0, pageSize = 3) {
 
     this.loadingSubject.next(true);
@@ -85,7 +85,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
         catchError(() => of([])),
         finalize(() => this.loadingSubject.next(false))
       )
-      .subscribe(lessons => this.lessonsSubject.next(lessons));
+      .subscribe(lessons => this.profilesSubject.next(lessons));
   }
 
   /**

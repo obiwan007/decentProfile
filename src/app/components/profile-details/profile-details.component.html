@@ -1,0 +1,25 @@
+@if(profile){
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            {{profile?.title}}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="title">Type</div>
+        <div>{{profile.type}}</div>
+        <div class="title">Author</div>
+        <div>{{profile.author}}</div>
+        <div class="title">Beverage</div>
+        <div>{{profile.beverage_type}}</div>
+        <div class="title">Notes</div>
+        <div>{{profile.notes}}</div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button>Edit</button>
+        <button mat-raised-button>Copy</button>
+        <button mat-raised-button>Delete</button>
+    </mat-card-actions>
+</mat-card>
+
+}
