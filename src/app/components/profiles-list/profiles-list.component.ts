@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-profiles-list',
   templateUrl: './profiles-list.component.html',
-  styleUrl: './profiles-list.component.scss',
+  styleUrl: './profiles-list.component.css',
   standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule,]
 })

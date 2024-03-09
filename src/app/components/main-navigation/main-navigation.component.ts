@@ -13,7 +13,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-main-navigation',
   templateUrl: './main-navigation.component.html',
-  styleUrl: './main-navigation.component.scss',
+  styleUrl: './main-navigation.component.css',
   standalone: true,
   imports: [
     MatToolbarModule,

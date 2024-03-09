@@ -11,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
   standalone: true,
   imports: [MatCardModule, MatButtonModule, RenderStepComponent, MatListModule],
   templateUrl: './render-steps.component.html',
-  styleUrl: './render-steps.component.scss'
+  styleUrl: './render-steps.component.css'
 })
 export class RenderStepsComponent {
   @Input()

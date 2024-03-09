@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [HighchartsChartModule, MatCardModule],
   templateUrl: './profile-chart.component.html',
-  styleUrl: './profile-chart.component.scss'
+  styleUrl: './profile-chart.component.css'
 })
 export class ProfileChartComponent {
   @Input()

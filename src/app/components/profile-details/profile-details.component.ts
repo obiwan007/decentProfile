@@ -10,7 +10,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   standalone: true,
   imports: [JsonPipe, MatCardModule, MatButtonModule, CommonModule],
   templateUrl: './profile-details.component.html',
-  styleUrl: './profile-details.component.scss'
+  styleUrl: './profile-details.component.css'
 })
 export class ProfileDetailsComponent {
 

@@ -6,7 +6,7 @@ import { BasicProfileEditComponent } from '../basic-profile-edit/basic-profile-e
   standalone: true,
   imports: [],
   templateUrl: './advanced-profile-edit.component.html',
-  styleUrl: './advanced-profile-edit.component.scss'
+  styleUrl: './advanced-profile-edit.component.css'
 })
 export class AdvancedProfileEditComponent extends BasicProfileEditComponent {
 

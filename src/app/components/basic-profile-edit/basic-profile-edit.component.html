@@ -1,5 +1,5 @@
-<div fxLayout="row" style="padding:15px" fxLayoutGap="15px">
-    <div fxFlex="30" fxLayout="column" fxLayoutGap="15px">
+<div class="flex flex-row" style="padding:15px">
+    <div class="flex flex-col">
 
         <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
 
@@ -31,7 +31,7 @@
             </mat-card-content>
         </mat-card>
     </div>
-    <div fxFlex *ngIf="step">
+    <div class="flex" *ngIf="step">
         <mat-card *ngIf="profile">
             <mat-card-header>
                 <mat-card-title>

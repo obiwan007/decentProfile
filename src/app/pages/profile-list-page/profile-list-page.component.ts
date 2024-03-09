@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ProfilesListComponent } from '../../components/profiles-list/profiles-list.component';
 import { Profile } from '../../models/profile';
 import { ProfileDetailsComponent } from '../../components/profile-details/profile-details.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { JsonPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -16,9 +16,9 @@ import { ProfileChartComponent } from '../../components/profile-chart/profile-ch
   standalone: true,
   imports: [ProfilesListComponent, ProfileDetailsComponent,
     RenderStepsComponent,
-    FlexLayoutModule, JsonPipe, MatButtonModule, MatCardModule, ProfileChartComponent],
+    JsonPipe, MatButtonModule, MatCardModule, ProfileChartComponent],
   templateUrl: './profile-list-page.component.html',
-  styleUrl: './profile-list-page.component.scss'
+  styleUrl: './profile-list-page.component.css'
 })
 export class ProfileListPageComponent {
   selectedProfile: Profile | undefined;

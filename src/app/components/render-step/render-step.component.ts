@@ -6,7 +6,7 @@ import { PumpMode, Step } from '../../models/profile';
   standalone: true,
   imports: [],
   templateUrl: './render-step.component.html',
-  styleUrl: './render-step.component.scss'
+  styleUrl: './render-step.component.css'
 })
 export class RenderStepComponent {
   @Input()

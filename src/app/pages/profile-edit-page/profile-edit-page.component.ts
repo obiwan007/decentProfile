@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { Profile, ProfileType, Step } from '../../models/profile';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProfileDetailsComponent } from '../../components/profile-details/profile-details.component';
 import { RenderStepsComponent } from '../../components/render-steps/render-steps.component';
 import { AdvancedProfileEditComponent } from '../../components/advanced-profile-edit/advanced-profile-edit.component';
@@ -11,10 +10,10 @@ import { BasicProfileEditComponent } from '../../components/basic-profile-edit/b
 @Component({
   selector: 'app-profile-edit-page',
   standalone: true,
-  imports: [FlexLayoutModule, ProfileDetailsComponent, RenderStepsComponent,
+  imports: [ProfileDetailsComponent, RenderStepsComponent,
     AdvancedProfileEditComponent, BasicProfileEditComponent],
   templateUrl: './profile-edit-page.component.html',
-  styleUrl: './profile-edit-page.component.scss'
+  styleUrl: './profile-edit-page.component.css'
 })
 export class ProfileEditPageComponent {
   profile: Profile | undefined;
