@@ -33,9 +33,9 @@ export class Profile {
     @Type(() => Number)
     tank_temperature!: string
     @Type(() => Number)
-    target_weight!: string
+    target_weight: number = 0;
     @Type(() => Number)
-    target_volume!: string
+    target_volume: number = 0;
     @Type(() => Number)
     target_volume_count_start!: string
     legacy_profile_type!: string
@@ -59,7 +59,7 @@ export class Step {
     @Type(() => Number)
     flow!: number
     @Type(() => Number)
-    seconds!: number
+    seconds: number = 0
     @Type(() => Number)
     volume!: number
     @Type(() => Number)
