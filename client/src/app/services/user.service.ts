@@ -16,15 +16,17 @@ export class UserService {
   userdata$: Observable<User | null>;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient, private auth: Auth,
   ) {
     this.userdata$ = user(this.afAuth);
   }
 
-  user$(id: string): Observable<User | null> {
+  user$(): Observable<User | null> {
     return this.userdata$;
   }
-
+  logout() {
+    this.auth.signOut();
+  }
 
 
 }

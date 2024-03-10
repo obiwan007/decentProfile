@@ -15,25 +15,19 @@
 
 
 
-    <form class="flex flex-col p-2">
+    <form class="flex flex-col p-2" [formGroup]="form" (ngSubmit)="onSubmit()">
         <mat-form-field class="flex">
             <mat-label>Email</mat-label>
-            <input matInput type="email" placeholder="Your email" value="Sushi">
+            <input matInput type="email" placeholder="Your email" value="" formControlName="email">
         </mat-form-field>
 
         <mat-form-field class="flex">
             <mat-label>Password</mat-label>
-            <input matInput type="password" placeholder="Your secret password">
+            <input matInput type="password" placeholder="Your secret password" formControlName="password">
         </mat-form-field>
     </form>
 
     <form class="form-group" [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div>
-            <input mat-raised-button matInput type="text" placeholder="Email" formControlName="email" />
-        </div>
-        <div>
-            <input mat-raised-button type="password" placeholder="Password" formControlName="password" />
-        </div>
         <div>
             <button mat-raised-button type="submit">Sign In via Email</button>
             &nbsp;

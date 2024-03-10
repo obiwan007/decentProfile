@@ -8,8 +8,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { RouterOutlet } from '@angular/router';
-
+import { Router, RouterOutlet } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import { UserService } from '../../services/user.service';
+import { Auth } from '@angular/fire/auth';
 @Component({
   selector: 'app-main-navigation',
   templateUrl: './main-navigation.component.html',
@@ -23,7 +25,7 @@ import { RouterOutlet } from '@angular/router';
     MatIconModule,
     AsyncPipe,
     RouterOutlet,
-
+    MatMenuModule,
   ]
 })
 export class MainNavigationComponent {
@@ -34,12 +36,20 @@ export class MainNavigationComponent {
       map(result => result.matches),
       shareReplay()
     );
+  user$ = inject(UserService).user$();
 
+  userSrv = inject(UserService);
+  router = inject(Router);
   /**
    *
    */
   constructor() {
     console.log("Loading Navigation");
-
+  }
+  login() {
+    this.router.navigateByUrl('/login');
+  }
+  logout() {
+    this.userSrv.logout();
   }
 }
