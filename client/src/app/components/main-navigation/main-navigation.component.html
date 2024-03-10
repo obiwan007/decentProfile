@@ -6,22 +6,41 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item href="profiles">My Profiles</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
+      <a mat-list-item href="#">Settings</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      @if (isHandset$ | async) {
-      <button
-              type="button"
-              aria-label="Toggle sidenav"
-              mat-icon-button
-              (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      }
-      <span>decentProfiler</span>
+      <div style="width: 100%" class="flex flex-row">
+        <div class="grow">
+          @if (isHandset$ | async) {
+          <button
+                  type="button"
+                  aria-label="Toggle sidenav"
+                  mat-icon-button
+                  (click)="drawer.toggle()">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+          }
+          <span>decentProfiler</span>
+        </div>
+
+        <div>
+          <button mat-mini-fab [matMenuTriggerFor]="menu">
+            <mat-icon aria-label="Side nav toggle icon">person</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            @if(user$|async){
+            <button mat-menu-item>Profile</button>
+            <button (click)="logout()" mat-menu-item>Logout</button>
+            }@else{
+            <button (click)="login()" mat-menu-item>Login</button>
+            }
+
+          </mat-menu>
+        </div>
+      </div>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
