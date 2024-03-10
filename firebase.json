@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/decent-profiler/browser",
+    "public": "client/dist/decent-profiler/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
