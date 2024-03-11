@@ -99,3 +99,20 @@ const server = new ApolloServer({ typeDefs, resolvers });
 exports.graphql = functions
     .region("europe-west3")
     .https.onRequest(server.createHandler())
+
+
+exports.newUserToFirestore = functions.auth.user().onCreate((user) => {
+    var current = new Date().toString();
+    var email = user.email!;
+    var nameIndex = email.indexOf('@');
+    var nameUser = email.substring(0, nameIndex);
+    console.log(user.uid + ',' + nameIndex + ',' + nameUser)
+
+    return admin.firestore().collection('users').doc()  // <= See that we use admin here
+        .set({
+            userId: user.uid,
+            email: user.email,
+            name: nameUser,
+            creationDate: current
+        })
+})

@@ -1,11 +1,11 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
-/dist
+/client/dist
 /tmp
 /out-tsc
 /bazel-out
-
+*/dist/*
 # Node
 /client/node_modules
 npm-debug.log
