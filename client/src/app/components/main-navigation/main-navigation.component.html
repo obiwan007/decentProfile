@@ -32,10 +32,12 @@
 
           <mat-menu #menu="matMenu">
             @if(user$|async){
-            <button mat-menu-item>Profile</button>
+
+            <button (click)="account()" mat-menu-item>Account</button>
             <button (click)="logout()" mat-menu-item>Logout</button>
             }@else{
             <button (click)="login()" mat-menu-item>Login</button>
+
             }
 
           </mat-menu>

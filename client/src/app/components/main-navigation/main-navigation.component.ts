@@ -12,6 +12,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from '../../services/user.service';
 import { Auth } from '@angular/fire/auth';
+import { SupabaseService } from '../../services/supabase.service';
 @Component({
   selector: 'app-main-navigation',
   templateUrl: './main-navigation.component.html',
@@ -39,6 +40,7 @@ export class MainNavigationComponent {
   user$ = inject(UserService).user$();
 
   userSrv = inject(UserService);
+  supabaseSrv = inject(SupabaseService);
   router = inject(Router);
   /**
    *
@@ -49,7 +51,11 @@ export class MainNavigationComponent {
   login() {
     this.router.navigateByUrl('/login');
   }
+  account() {
+    this.router.navigateByUrl('/account');
+  }
+
   logout() {
-    this.userSrv.logout();
+    this.supabaseSrv.signOut();
   }
 }
