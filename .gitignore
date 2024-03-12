@@ -8,6 +8,8 @@
 */dist/*
 # Node
 /client/node_modules
+/server/node_modules
+/server/dist
 npm-debug.log
 yarn-error.log
 
