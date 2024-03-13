@@ -6,7 +6,9 @@
     "start": "ng serve --host=0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "prettier": "prettier"
   },
   "private": true,
   "dependencies": {
@@ -21,9 +23,11 @@
     "@angular/platform-browser": "^17.2.0",
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "@apollo/client": "^3.9.7",
     "@supabase/supabase-js": "^2.39.8",
     "class-transformer": "^0.5.1",
     "firebase": "^10.8.1",
+    "graphql": "^16.8.1",
     "highcharts-angular": "^4.0.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "~7.8.0",
@@ -34,6 +38,8 @@
     "@angular-devkit/build-angular": "^17.2.3",
     "@angular/cli": "^17.2.3",
     "@angular/compiler-cli": "^17.2.0",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/typescript-apollo-angular": "4.0.0",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.18",
     "jasmine-core": "~5.1.0",
@@ -43,6 +49,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.4.35",
+    "prettier": "3.2.5",
     "tailwindcss": "^3.4.1",
     "typescript": "~5.3.2"
   },
