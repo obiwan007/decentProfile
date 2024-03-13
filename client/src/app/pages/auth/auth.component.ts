@@ -45,25 +45,8 @@ export class AuthComponent {
   async signInOAuth(provider: string): Promise<void> {
     try {
       this.loading = true
-
-      const { error } = await this.supabase.signInOAuth("github")
-      if (error) throw error
-      alert('Check your email for the login link!')
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message)
-      }
-    } finally {
-      this.signInForm.reset()
-      this.loading = false
-    }
-  }
-
-  async onGithub(): Promise<void> {
-    try {
-      this.loading = true
       const email = this.signInForm.value.email as string
-      const { error } = await this.supabase.signInForm(email)
+      const { error } = await this.supabase.signInOAuth("github")
       if (error) throw error
       alert('Check your email for the login link!')
     } catch (error) {
