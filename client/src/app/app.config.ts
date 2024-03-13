@@ -24,9 +24,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimationsAsync(),
     importProvidersFrom([
-      provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-      provideAuth(() => getAuth()),
-      provideFirestore(() => getFirestore()),
-      provideStorage(() => getStorage())
+      // provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+      // provideAuth(() => getAuth()),
+      // provideFirestore(() => getFirestore()),
+      // provideStorage(() => getStorage())
     ])]
 };

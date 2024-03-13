@@ -1,0 +1,44 @@
+<p>auth works!</p>
+<div class="flex-center flex-col">
+    <div class="form-widget w-full" aria-live="polite">
+        <h1 class="header">Supabase + Angular</h1>
+        <p class="description">Sign in via magic link with your email below</p>
+        <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="form-widget">
+            <div>
+                <mat-form-field class="flex w-full">
+                    <mat-label>Email</mat-label>
+                    <input
+                           matInput
+                           id="email"
+                           formControlName="email"
+                           class="inputField"
+                           type="email"
+                           placeholder="Your email" />
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="flex w-full">
+                    <mat-label>Password</mat-label>
+                    <input
+                           matInput
+                           id="password"
+                           formControlName="password"
+                           class="inputField"
+                           type="password"
+                           placeholder="Your password if not using OTP" />
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row">
+                <button mat-raised-button type="submit" class="button block" [disabled]="loading">
+                    {{ loading ? 'Loading' : 'Send magic link' }}
+                </button>
+                <button mat-raised-button (click)="signInPassword(false)" class="button block" [disabled]="loading">
+                    {{ loading ? 'Loading' : 'Login with Password' }}
+                </button>
+                <button mat-raised-button (click)="signInPassword(true)" class="button block" [disabled]="loading">
+                    {{ loading ? 'Loading' : 'Registering as new User' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
