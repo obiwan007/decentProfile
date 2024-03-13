@@ -3,6 +3,7 @@ import {
   AuthChangeEvent,
   AuthSession,
   createClient,
+  Provider,
   Session,
   SupabaseClient,
   User,
@@ -48,6 +49,10 @@ export class SupabaseService {
 
   signInOtp(email: string) {
     return this.supabase.auth.signInWithOtp({ email })
+  }
+
+  signInOAuth(provider: Provider) {
+    return this.supabase.auth.signInWithOAuth({ provider: provider })
   }
 
   signInPwd(email: string, password: string) {

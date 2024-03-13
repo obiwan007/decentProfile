@@ -38,6 +38,9 @@
                 <button mat-raised-button (click)="signInPassword(true)" class="button block" [disabled]="loading">
                     {{ loading ? 'Loading' : 'Registering as new User' }}
                 </button>
+                <button mat-raised-button (click)="signInOAuth('github')" class="button block" [disabled]="loading">
+                    {{ loading ? 'Loading' : 'Sign in with Github' }}
+                </button>
             </div>
         </form>
     </div>
