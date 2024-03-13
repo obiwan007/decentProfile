@@ -15,6 +15,7 @@ import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { getPerformance, providePerformance } from '@angular/fire/performance';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { AuthTokenHttpInterceptorProvider } from './interceptors/auth-token-interceptor';
+import { graphqlProvider } from './graphql.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,5 +29,5 @@ export const appConfig: ApplicationConfig = {
       // provideAuth(() => getAuth()),
       // provideFirestore(() => getFirestore()),
       // provideStorage(() => getStorage())
-    ])]
+    ]), provideHttpClient(), graphqlProvider]
 };

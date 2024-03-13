@@ -6,7 +6,7 @@ import {
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { relayStylePagination } from '@apollo/client/utilities'
-import from './services/supabase.service'
+//import from './services/supabase.service'
 
 import { environment } from '../environments/environment'
 
@@ -42,16 +42,16 @@ const httpLink = createHttpLink({
     uri: `${environment.supabaseUrl}/graphql/v1`,
 })
 
-const authLink = setContext(async (_, { headers }) => {
-    const token = (await supabase.auth.getSession()).data.session?.access_token
+// const authLink = setContext(async (_, { headers }) => {
+//     const token = (await supabase.auth.getSession()).data.session?.access_token
 
-    return {
-        headers: {
-            ...headers,
-            Authorization: token ? `Bearer ${token}` : '',
-        },
-    }
-})
+//     return {
+//         headers: {
+//             ...headers,
+//             Authorization: token ? `Bearer ${token}` : '',
+//         },
+//     }
+// })
 
 const apolloClient = new ApolloClient({
     link: authLink.concat(httpLink),
