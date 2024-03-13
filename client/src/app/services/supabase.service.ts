@@ -9,8 +9,9 @@ import {
   User,
 } from '@supabase/supabase-js'
 import { environment } from '../../environments/environment'
+import { BehaviorSubject } from 'rxjs'
 
-export interface Profile {
+export interface UserProfile {
   id?: string
   username: string
   website: string
@@ -24,8 +25,22 @@ export class SupabaseService {
   private supabase: SupabaseClient
   _session: AuthSession | null = null
 
+  _session$: BehaviorSubject<AuthSession | null>;
+
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+    this._session$ = new BehaviorSubject<AuthSession | null>(null);
+
+    this.authChanges((_, s) => {
+
+      this._session$.next(s);
+      this._session = s;
+      console.log("SESSION:", this._session);
+    })
+  }
+
+  get session$() {
+    return this._session$.asObservable();
   }
 
   get session() {
@@ -35,9 +50,9 @@ export class SupabaseService {
     return this._session
   }
 
-  profile(user: User) {
+  userprofile(user: User) {
     return this.supabase
-      .from('profiles')
+      .from('userprofiles')
       .select(`username, website, avatar_url`)
       .eq('id', user.id)
       .single()
@@ -67,13 +82,13 @@ export class SupabaseService {
     return this.supabase.auth.signOut()
   }
 
-  updateProfile(profile: Profile) {
+  updateUserProfile(profile: UserProfile) {
     const update = {
       ...profile,
       updated_at: new Date(),
     }
 
-    return this.supabase.from('profiles').upsert(update)
+    return this.supabase.from('userprofiles').upsert(update)
   }
 
   downLoadImage(path: string) {
@@ -83,4 +98,6 @@ export class SupabaseService {
   uploadAvatar(filePath: string, file: File) {
     return this.supabase.storage.from('avatars').upload(filePath, file)
   }
+
+
 }

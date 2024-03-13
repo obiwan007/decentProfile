@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { AuthSession } from '@supabase/supabase-js'
-import { Profile, SupabaseService } from '../../services/supabase.service'
+import { UserProfile, SupabaseService } from '../../services/supabase.service'
 import { CommonModule } from '@angular/common'
-import { Observable } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
@@ -15,18 +15,22 @@ import { MatInputModule } from '@angular/material/input'
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss'
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
   loading = false
-  profile!: Profile
+  profile!: UserProfile
 
 
   session: AuthSession;
+
+  session$: Observable<AuthSession | null>;
 
   updateProfileForm = this.formBuilder.group({
     username: '',
     website: '',
     avatar_url: '',
   })
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private readonly supabase: SupabaseService,
@@ -35,25 +39,37 @@ export class AccountComponent implements OnInit {
   ) {
 
     this.session = this.supabase.session!;
+    this.session$ = this.supabase.session$;
 
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getProfile()
+    this.subscriptions.push(this.session$.subscribe(async s => {
+      if (s) {
+        this.session = s;
+        await this.getProfile()
 
-    const { username, website, avatar_url } = this.profile
-    this.updateProfileForm.patchValue({
-      username,
-      website,
-      avatar_url,
-    })
+        const { username, website, avatar_url } = this.profile
+        this.updateProfileForm.patchValue({
+          username,
+          website,
+          avatar_url,
+        })
+      }
+    }));
+
+  }
+
+  ngOnDestroy() {
+    console.log("Destroy called");
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   async getProfile() {
     try {
       this.loading = true
       const { user } = this.session
-      const { data: profile, error, status } = await this.supabase.profile(user)
+      const { data: profile, error, status } = await this.supabase.userprofile(user)
 
       if (error && status !== 406) {
         throw error
@@ -80,7 +96,7 @@ export class AccountComponent implements OnInit {
       const website = this.updateProfileForm.value.website as string
       const avatar_url = this.updateProfileForm.value.avatar_url as string
 
-      const { error } = await this.supabase.updateProfile({
+      const { error } = await this.supabase.updateUserProfile({
         id: user.id,
         username,
         website,

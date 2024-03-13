@@ -37,15 +37,16 @@ export class MainNavigationComponent {
       map(result => result.matches),
       shareReplay()
     );
-  user$ = inject(UserService).user$();
 
-  userSrv = inject(UserService);
   supabaseSrv = inject(SupabaseService);
   router = inject(Router);
+  user$: Observable<any>;
   /**
    *
    */
   constructor() {
+    this.user$ = this.supabaseSrv.session$;
+
     console.log("Loading Navigation");
   }
   login() {
