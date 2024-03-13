@@ -1,4 +1,4 @@
-<form [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()" class="form-widget">
+<form *ngIf="session" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()" class="form-widget">
     <div>
         <mat-form-field class="flex">
             <mat-label>Email</mat-label>

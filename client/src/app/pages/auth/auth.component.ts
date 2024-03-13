@@ -42,13 +42,19 @@ export class AuthComponent {
     }
   }
 
-  async signInPassword(): Promise<void> {
+  async signInPassword(doSignUp: boolean): Promise<void> {
     try {
       this.loading = true
       const email = this.signInForm.value.email as string
       const password = this.signInForm.value.password as string
-      const { error } = await this.supabase.signInPwd(email, password)
-      if (error) throw error
+      if (doSignUp) {
+        const { error } = await this.supabase.signUp(email, password)
+        if (error) throw error
+
+      } else {
+        const { error } = await this.supabase.signInPwd(email, password)
+        if (error) throw error
+      }
 
     } catch (error) {
       if (error instanceof Error) {
