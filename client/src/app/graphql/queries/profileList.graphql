@@ -11,6 +11,7 @@ query ProfilesList {
         beverage_type
         target_volume
         target_weight
+        isPublic
         stepsCollection {
           edges {
             node {
@@ -31,6 +32,7 @@ query ProfilesList {
               profile_id
               name
               index
+              isPublic
             }
           }
         }

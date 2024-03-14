@@ -139,11 +139,12 @@ export class ProfileServiceService {
   }
 
   insertProfile(p: Profile): Promise<boolean> {
+    p.isPublic = true;
     return new Promise<boolean>(resolver => {
       const v: profilesInsertInput = {
         author: p.author,
         beverage_type: p.beverage_type,
-        isPublic: true,
+        isPublic: p.isPublic,
         notes: p.notes,
         target_volume: p.target_volume,
         target_weight: p.target_weight,
@@ -179,6 +180,7 @@ export class ProfileServiceService {
         transition: s.transition,
         volume: s.volume,
         weight: s.weight,
+        isPublic: p.isPublic,
       }));
 
       this._insertSteps.mutate({ ep: v }).subscribe(res => {

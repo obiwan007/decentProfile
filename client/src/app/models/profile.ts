@@ -45,6 +45,7 @@ export class Profile {
     reference_file!: string
     changes_since_last_espresso!: string
     version!: string
+    isPublic: boolean = false
 }
 
 export class Step {
@@ -68,6 +69,7 @@ export class Step {
     exit?: Exit
     @Type(() => Limiter)
     limiter?: Limiter
+    isPublic: boolean = false
 }
 
 export class Exit {
