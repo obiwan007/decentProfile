@@ -1,0 +1,8 @@
+mutation InsertSteps($ep: [stepsInsertInput!]!) {
+  insertIntostepsCollection(objects: $ep) {
+    affectedCount
+    records {
+      id     
+    }
+  }
+}

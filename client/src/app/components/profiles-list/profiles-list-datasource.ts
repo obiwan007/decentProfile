@@ -39,17 +39,26 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<Profile[]> {
+    // return this.profilesSubject.asObservable();
 
     const s = this._profilesGQL.watch().valueChanges
-      .pipe(map(result => result.data && result.data.profilesCollection?.edges))
-      .pipe(map(data => data!.map(d => d.node)));
+      .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data)));
+
     return s as Observable<any[]>;
+
+    // const s = this._profilesGQL.watch().valueChanges
+    //   .pipe(map(result => result.data && result.data.profilesCollection?.edges))
+    //   .pipe(map(data => data!.map(d => d.node)));
+    // return s as Observable<any[]>;
+
+
     // if (this.paginator && this.sort) {
     //   // Combine everything that affects the rendered data into one update
     //   // stream for the data-table to consume.
     //   // const data = await this.getPagedData(this.getSortedData([...this.data]))
     //   return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
     //     .pipe(map(() => {
+    //       console.log("Data:", this.data);
     //       return this.data;
     //     }));
     // } else {
@@ -88,7 +97,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   // }
 
   loadProfiles(filter = '',
-    sortDirection = 'asc', pageIndex = 0, pageSize = 3) {
+    sortDirection = 'asc', pageIndex = 0, pageSize = this._profileSrv.allProfiles.length) {
 
     this.loadingSubject.next(true);
 
@@ -98,7 +107,11 @@ export class ProfilesListDataSource extends DataSource<Profile> {
         catchError(() => of([])),
         finalize(() => this.loadingSubject.next(false))
       )
-      .subscribe(lessons => this.profilesSubject.next(lessons));
+      .subscribe(profiles => {
+        this.profilesSubject.next(profiles);
+        // profiles.forEach(p => this._profileSrv.insertProfile(p));
+
+      });
   }
 
   /**

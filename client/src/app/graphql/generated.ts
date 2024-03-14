@@ -463,13 +463,14 @@ export type profilesUpdateResponse = {
 
 export type steps = Node & {
   __typename?: 'steps';
-  exitCondition?: Maybe<Scalars['String']['output']>;
-  exitType?: Maybe<Scalars['String']['output']>;
+  exit_condition?: Maybe<Scalars['String']['output']>;
+  exit_type?: Maybe<Scalars['String']['output']>;
+  exit_value?: Maybe<Scalars['Float']['output']>;
   flow?: Maybe<Scalars['Float']['output']>;
   id: Scalars['BigInt']['output'];
   index?: Maybe<Scalars['Int']['output']>;
-  limiterRange?: Maybe<Scalars['String']['output']>;
-  limiterValue?: Maybe<Scalars['Float']['output']>;
+  limiter_range?: Maybe<Scalars['String']['output']>;
+  limiter_value?: Maybe<Scalars['Float']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
@@ -508,13 +509,14 @@ export type stepsEdge = {
 export type stepsFilter = {
   /** Returns true only if all its inner filters are true, otherwise returns false */
   and?: InputMaybe<Array<stepsFilter>>;
-  exitCondition?: InputMaybe<StringFilter>;
-  exitType?: InputMaybe<StringFilter>;
+  exit_condition?: InputMaybe<StringFilter>;
+  exit_type?: InputMaybe<StringFilter>;
+  exit_value?: InputMaybe<FloatFilter>;
   flow?: InputMaybe<FloatFilter>;
   id?: InputMaybe<BigIntFilter>;
   index?: InputMaybe<IntFilter>;
-  limiterRange?: InputMaybe<StringFilter>;
-  limiterValue?: InputMaybe<FloatFilter>;
+  limiter_range?: InputMaybe<StringFilter>;
+  limiter_value?: InputMaybe<FloatFilter>;
   name?: InputMaybe<StringFilter>;
   nodeId?: InputMaybe<IDFilter>;
   /** Negates a filter */
@@ -533,12 +535,13 @@ export type stepsFilter = {
 };
 
 export type stepsInsertInput = {
-  exitCondition?: InputMaybe<Scalars['String']['input']>;
-  exitType?: InputMaybe<Scalars['String']['input']>;
+  exit_condition?: InputMaybe<Scalars['String']['input']>;
+  exit_type?: InputMaybe<Scalars['String']['input']>;
+  exit_value?: InputMaybe<Scalars['Float']['input']>;
   flow?: InputMaybe<Scalars['Float']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  limiterRange?: InputMaybe<Scalars['String']['input']>;
-  limiterValue?: InputMaybe<Scalars['Float']['input']>;
+  limiter_range?: InputMaybe<Scalars['String']['input']>;
+  limiter_value?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   profile_id?: InputMaybe<Scalars['BigInt']['input']>;
   pump?: InputMaybe<Scalars['String']['input']>;
@@ -560,13 +563,14 @@ export type stepsInsertResponse = {
 };
 
 export type stepsOrderBy = {
-  exitCondition?: InputMaybe<OrderByDirection>;
-  exitType?: InputMaybe<OrderByDirection>;
+  exit_condition?: InputMaybe<OrderByDirection>;
+  exit_type?: InputMaybe<OrderByDirection>;
+  exit_value?: InputMaybe<OrderByDirection>;
   flow?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
   index?: InputMaybe<OrderByDirection>;
-  limiterRange?: InputMaybe<OrderByDirection>;
-  limiterValue?: InputMaybe<OrderByDirection>;
+  limiter_range?: InputMaybe<OrderByDirection>;
+  limiter_value?: InputMaybe<OrderByDirection>;
   name?: InputMaybe<OrderByDirection>;
   profile_id?: InputMaybe<OrderByDirection>;
   pump?: InputMaybe<OrderByDirection>;
@@ -580,12 +584,13 @@ export type stepsOrderBy = {
 };
 
 export type stepsUpdateInput = {
-  exitCondition?: InputMaybe<Scalars['String']['input']>;
-  exitType?: InputMaybe<Scalars['String']['input']>;
+  exit_condition?: InputMaybe<Scalars['String']['input']>;
+  exit_type?: InputMaybe<Scalars['String']['input']>;
+  exit_value?: InputMaybe<Scalars['Float']['input']>;
   flow?: InputMaybe<Scalars['Float']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  limiterRange?: InputMaybe<Scalars['String']['input']>;
-  limiterValue?: InputMaybe<Scalars['Float']['input']>;
+  limiter_range?: InputMaybe<Scalars['String']['input']>;
+  limiter_value?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   profile_id?: InputMaybe<Scalars['BigInt']['input']>;
   pump?: InputMaybe<Scalars['String']['input']>;
@@ -697,6 +702,13 @@ export type userprofilesUpdateResponse = {
   records: Array<userprofiles>;
 };
 
+export type InsertStepsMutationVariables = Exact<{
+  ep: Array<stepsInsertInput> | stepsInsertInput;
+}>;
+
+
+export type InsertStepsMutation = { __typename: 'Mutation', insertIntostepsCollection?: { __typename: 'stepsInsertResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } | null };
+
 export type InsertProfilesMutationVariables = Exact<{
   ep: Array<profilesInsertInput> | profilesInsertInput;
 }>;
@@ -704,11 +716,42 @@ export type InsertProfilesMutationVariables = Exact<{
 
 export type InsertProfilesMutation = { __typename: 'Mutation', insertIntoprofilesCollection?: { __typename: 'profilesInsertResponse', affectedCount: number, records: Array<{ __typename: 'profiles', id: string }> } | null };
 
+export type ProfileDetailsQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+}>;
+
+
+export type ProfileDetailsQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', edges: Array<{ __typename: 'profilesEdge', node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null } }> } | null } }> } | null };
+
 export type ProfilesListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', edges: Array<{ __typename: 'profilesEdge', node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null } }> } | null };
+export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', edges: Array<{ __typename: 'profilesEdge', node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null } }> } | null } }> } | null };
 
+export const InsertStepsDocument = gql`
+    mutation InsertSteps($ep: [stepsInsertInput!]!) {
+  __typename
+  insertIntostepsCollection(objects: $ep) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertStepsGQL extends Apollo.Mutation<InsertStepsMutation, InsertStepsMutationVariables> {
+    override document = InsertStepsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const InsertProfilesDocument = gql`
     mutation InsertProfiles($ep: [profilesInsertInput!]!) {
   __typename
@@ -733,6 +776,66 @@ export const InsertProfilesDocument = gql`
       super(apollo);
     }
   }
+export const ProfileDetailsDocument = gql`
+    query ProfileDetails($id: BigInt) {
+  __typename
+  profilesCollection(filter: {id: {eq: $id}}) {
+    __typename
+    edges {
+      __typename
+      node {
+        __typename
+        id
+        created_at
+        title
+        author
+        notes
+        type
+        beverage_type
+        target_volume
+        target_weight
+        stepsCollection {
+          __typename
+          edges {
+            __typename
+            node {
+              __typename
+              id
+              temperature
+              sensor
+              pump
+              transition
+              flow
+              seconds
+              volume
+              weight
+              exit_type
+              exit_condition
+              exit_value
+              limiter_value
+              limiter_range
+              profile_id
+              name
+              index
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ProfileDetailsGQL extends Apollo.Query<ProfileDetailsQuery, ProfileDetailsQueryVariables> {
+    override document = ProfileDetailsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ProfilesListDocument = gql`
     query ProfilesList {
   __typename
@@ -751,6 +854,32 @@ export const ProfilesListDocument = gql`
         beverage_type
         target_volume
         target_weight
+        stepsCollection {
+          __typename
+          edges {
+            __typename
+            node {
+              __typename
+              id
+              temperature
+              sensor
+              pump
+              transition
+              flow
+              seconds
+              volume
+              weight
+              exit_type
+              exit_condition
+              exit_value
+              limiter_value
+              limiter_range
+              profile_id
+              name
+              index
+            }
+          }
+        }
       }
     }
   }

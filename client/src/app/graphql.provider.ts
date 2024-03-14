@@ -46,6 +46,7 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
     const token = supabase.session?.access_token
 
     return {
+      connectToDevTools: true,
       headers: {
         ...headers,
         apiKey: environment.supabaseKey,

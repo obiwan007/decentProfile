@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Profile } from '../models/profile';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { plainToClassFromExist } from 'class-transformer';
 import { Observable, of as observableOf, merge, BehaviorSubject } from 'rxjs';
 import 'reflect-metadata';
+import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
 
 @Injectable({
   providedIn: 'root',
@@ -82,9 +83,19 @@ export class ProfileServiceService {
   ];
 
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _insertProfile: InsertProfilesGQL, private _insertSteps: InsertStepsGQL, private _http: HttpClient) { }
 
 
+  mapFromGraphQl(p: ProfileDetailsQuery): Profile[] | undefined {
+
+    const nodes = p.profilesCollection?.edges.map(e => {
+      const node: any = { ...e.node };
+      node.steps = e.node.stepsCollection?.edges.map(e => e.node);
+      return node;
+    });
+    console.log("Mapped", nodes, p);
+    return nodes?.map(n => plainToClassFromExist(new Profile(), n));
+  }
 
   getProfileById(id: string): Promise<Profile> {
     console.log("Loading Profile: ", id);
@@ -125,5 +136,56 @@ export class ProfileServiceService {
     observer();
 
     return observable;
+  }
+
+  insertProfile(p: Profile): Promise<boolean> {
+    return new Promise<boolean>(resolver => {
+      const v: profilesInsertInput = {
+        author: p.author,
+        beverage_type: p.beverage_type,
+        isPublic: true,
+        notes: p.notes,
+        target_volume: p.target_volume,
+        target_weight: p.target_weight,
+        title: p.title,
+        type: p.type,
+      };
+      this._insertProfile.mutate({ ep: [v] }).subscribe(res => {
+        const id = res.data?.insertIntoprofilesCollection?.records[0].id;
+        console.log("ID:", id);
+        p.id = id!;
+        this.insertStepsForProfile(p).then(() => resolver(true));
+      });
+    });
+
+  }
+
+  insertStepsForProfile(p: Profile): Promise<boolean> {
+    return new Promise<boolean>(resolver => {
+      const v: stepsInsertInput[] = p.steps.map((s, i) => ({
+        profile_id: p.id,
+        exit_condition: s.exit?.condition,
+        exit_type: s.exit?.type,
+        exit_value: s.exit?.value,
+        flow: s.flow,
+        index: i,
+        limiter_range: s.limiter?.range,
+        limiter_value: s.limiter?.value,
+        name: s.name,
+        pump: s.pump,
+        seconds: s.seconds,
+        sensor: s.sensor,
+        temperature: s.temperature,
+        transition: s.transition,
+        volume: s.volume,
+        weight: s.weight,
+      }));
+
+      this._insertSteps.mutate({ ep: v }).subscribe(res => {
+        const id = res.data?.insertIntostepsCollection?.records[0].id;
+        console.log("Steps: ID:", id);
+        resolver(true);
+      });
+    });
   }
 }
