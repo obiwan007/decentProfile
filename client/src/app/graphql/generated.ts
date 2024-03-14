@@ -90,8 +90,8 @@ export type DatetimeFilter = {
 };
 
 export enum FilterIs {
-  NotNull = 'NOT_NULL',
-  Null = 'NULL'
+  NOT_NULL = 'NOT_NULL',
+  NULL = 'NULL'
 }
 
 /** Boolean expression comparing fields on type "Float" */
@@ -107,7 +107,7 @@ export type FloatFilter = {
 };
 
 /** Boolean expression comparing fields on type "ID" */
-export type IdFilter = {
+export type IDFilter = {
   eq?: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -127,86 +127,86 @@ export type IntFilter = {
 export type Mutation = {
   __typename?: 'Mutation';
   /** Deletes zero or more records from the `profiles` collection */
-  deleteFromprofilesCollection: ProfilesDeleteResponse;
+  deleteFromprofilesCollection: profilesDeleteResponse;
   /** Deletes zero or more records from the `steps` collection */
-  deleteFromstepsCollection: StepsDeleteResponse;
+  deleteFromstepsCollection: stepsDeleteResponse;
   /** Deletes zero or more records from the `userprofiles` collection */
-  deleteFromuserprofilesCollection: UserprofilesDeleteResponse;
+  deleteFromuserprofilesCollection: userprofilesDeleteResponse;
   /** Adds one or more `profiles` records to the collection */
-  insertIntoprofilesCollection?: Maybe<ProfilesInsertResponse>;
+  insertIntoprofilesCollection?: Maybe<profilesInsertResponse>;
   /** Adds one or more `steps` records to the collection */
-  insertIntostepsCollection?: Maybe<StepsInsertResponse>;
+  insertIntostepsCollection?: Maybe<stepsInsertResponse>;
   /** Adds one or more `userprofiles` records to the collection */
-  insertIntouserprofilesCollection?: Maybe<UserprofilesInsertResponse>;
+  insertIntouserprofilesCollection?: Maybe<userprofilesInsertResponse>;
   /** Updates zero or more records in the `profiles` collection */
-  updateprofilesCollection: ProfilesUpdateResponse;
+  updateprofilesCollection: profilesUpdateResponse;
   /** Updates zero or more records in the `steps` collection */
-  updatestepsCollection: StepsUpdateResponse;
+  updatestepsCollection: stepsUpdateResponse;
   /** Updates zero or more records in the `userprofiles` collection */
-  updateuserprofilesCollection: UserprofilesUpdateResponse;
+  updateuserprofilesCollection: userprofilesUpdateResponse;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationDeleteFromprofilesCollectionArgs = {
+export type MutationdeleteFromprofilesCollectionArgs = {
   atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<ProfilesFilter>;
+  filter?: InputMaybe<profilesFilter>;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationDeleteFromstepsCollectionArgs = {
+export type MutationdeleteFromstepsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<StepsFilter>;
+  filter?: InputMaybe<stepsFilter>;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationDeleteFromuserprofilesCollectionArgs = {
+export type MutationdeleteFromuserprofilesCollectionArgs = {
   atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<UserprofilesFilter>;
+  filter?: InputMaybe<userprofilesFilter>;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationInsertIntoprofilesCollectionArgs = {
-  objects: Array<ProfilesInsertInput>;
+export type MutationinsertIntoprofilesCollectionArgs = {
+  objects: Array<profilesInsertInput>;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationInsertIntostepsCollectionArgs = {
-  objects: Array<StepsInsertInput>;
+export type MutationinsertIntostepsCollectionArgs = {
+  objects: Array<stepsInsertInput>;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationInsertIntouserprofilesCollectionArgs = {
-  objects: Array<UserprofilesInsertInput>;
+export type MutationinsertIntouserprofilesCollectionArgs = {
+  objects: Array<userprofilesInsertInput>;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationUpdateprofilesCollectionArgs = {
+export type MutationupdateprofilesCollectionArgs = {
   atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<ProfilesFilter>;
-  set: ProfilesUpdateInput;
+  filter?: InputMaybe<profilesFilter>;
+  set: profilesUpdateInput;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationUpdatestepsCollectionArgs = {
+export type MutationupdatestepsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<StepsFilter>;
-  set: StepsUpdateInput;
+  filter?: InputMaybe<stepsFilter>;
+  set: stepsUpdateInput;
 };
 
 
 /** The root type for creating and mutating data */
-export type MutationUpdateuserprofilesCollectionArgs = {
+export type MutationupdateuserprofilesCollectionArgs = {
   atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<UserprofilesFilter>;
-  set: UserprofilesUpdateInput;
+  filter?: InputMaybe<userprofilesFilter>;
+  set: userprofilesUpdateInput;
 };
 
 export type Node = {
@@ -246,53 +246,53 @@ export type Query = {
   /** Retrieve a record by its `ID` */
   node?: Maybe<Node>;
   /** A pagable collection of type `profiles` */
-  profilesCollection?: Maybe<ProfilesConnection>;
+  profilesCollection?: Maybe<profilesConnection>;
   /** A pagable collection of type `steps` */
-  stepsCollection?: Maybe<StepsConnection>;
+  stepsCollection?: Maybe<stepsConnection>;
   /** A pagable collection of type `userprofiles` */
-  userprofilesCollection?: Maybe<UserprofilesConnection>;
+  userprofilesCollection?: Maybe<userprofilesConnection>;
 };
 
 
 /** The root type for querying data */
-export type QueryNodeArgs = {
+export type QuerynodeArgs = {
   nodeId: Scalars['ID']['input'];
 };
 
 
 /** The root type for querying data */
-export type QueryProfilesCollectionArgs = {
+export type QueryprofilesCollectionArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<ProfilesFilter>;
+  filter?: InputMaybe<profilesFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ProfilesOrderBy>>;
+  orderBy?: InputMaybe<Array<profilesOrderBy>>;
 };
 
 
 /** The root type for querying data */
-export type QueryStepsCollectionArgs = {
+export type QuerystepsCollectionArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<StepsFilter>;
+  filter?: InputMaybe<stepsFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<StepsOrderBy>>;
+  orderBy?: InputMaybe<Array<stepsOrderBy>>;
 };
 
 
 /** The root type for querying data */
-export type QueryUserprofilesCollectionArgs = {
+export type QueryuserprofilesCollectionArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<UserprofilesFilter>;
+  filter?: InputMaybe<userprofilesFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<UserprofilesOrderBy>>;
+  orderBy?: InputMaybe<Array<userprofilesOrderBy>>;
 };
 
 /** Boolean expression comparing fields on type "String" */
@@ -325,14 +325,14 @@ export type TimeFilter = {
 };
 
 /** Boolean expression comparing fields on type "UUID" */
-export type UuidFilter = {
+export type UUIDFilter = {
   eq?: InputMaybe<Scalars['UUID']['input']>;
   in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   is?: InputMaybe<FilterIs>;
   neq?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-export type Profiles = Node & {
+export type profiles = Node & {
   __typename?: 'profiles';
   author?: Maybe<Scalars['String']['output']>;
   beverage_type?: Maybe<Scalars['String']['output']>;
@@ -343,65 +343,67 @@ export type Profiles = Node & {
   nodeId: Scalars['ID']['output'];
   notes?: Maybe<Scalars['String']['output']>;
   steps?: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
-  stepsCollection?: Maybe<StepsConnection>;
+  stepsCollection?: Maybe<stepsConnection>;
   target_volume?: Maybe<Scalars['Float']['output']>;
   target_weight?: Maybe<Scalars['Float']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
+  user_id?: Maybe<Scalars['UUID']['output']>;
 };
 
 
-export type ProfilesStepsCollectionArgs = {
+export type profilesstepsCollectionArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<StepsFilter>;
+  filter?: InputMaybe<stepsFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<StepsOrderBy>>;
+  orderBy?: InputMaybe<Array<stepsOrderBy>>;
 };
 
-export type ProfilesConnection = {
+export type profilesConnection = {
   __typename?: 'profilesConnection';
-  edges: Array<ProfilesEdge>;
+  edges: Array<profilesEdge>;
   pageInfo: PageInfo;
 };
 
-export type ProfilesDeleteResponse = {
+export type profilesDeleteResponse = {
   __typename?: 'profilesDeleteResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Profiles>;
+  records: Array<profiles>;
 };
 
-export type ProfilesEdge = {
+export type profilesEdge = {
   __typename?: 'profilesEdge';
   cursor: Scalars['String']['output'];
-  node: Profiles;
+  node: profiles;
 };
 
-export type ProfilesFilter = {
+export type profilesFilter = {
   /** Returns true only if all its inner filters are true, otherwise returns false */
-  and?: InputMaybe<Array<ProfilesFilter>>;
+  and?: InputMaybe<Array<profilesFilter>>;
   author?: InputMaybe<StringFilter>;
   beverage_type?: InputMaybe<StringFilter>;
   created_at?: InputMaybe<DatetimeFilter>;
   id?: InputMaybe<BigIntFilter>;
   isPublic?: InputMaybe<BooleanFilter>;
-  nodeId?: InputMaybe<IdFilter>;
+  nodeId?: InputMaybe<IDFilter>;
   /** Negates a filter */
-  not?: InputMaybe<ProfilesFilter>;
+  not?: InputMaybe<profilesFilter>;
   notes?: InputMaybe<StringFilter>;
   /** Returns true if at least one of its inner filters is true, otherwise returns false */
-  or?: InputMaybe<Array<ProfilesFilter>>;
+  or?: InputMaybe<Array<profilesFilter>>;
   target_volume?: InputMaybe<FloatFilter>;
   target_weight?: InputMaybe<FloatFilter>;
   title?: InputMaybe<StringFilter>;
   type?: InputMaybe<StringFilter>;
+  user_id?: InputMaybe<UUIDFilter>;
 };
 
-export type ProfilesInsertInput = {
+export type profilesInsertInput = {
   author?: InputMaybe<Scalars['String']['input']>;
   beverage_type?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -412,17 +414,18 @@ export type ProfilesInsertInput = {
   target_weight?: InputMaybe<Scalars['Float']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-export type ProfilesInsertResponse = {
+export type profilesInsertResponse = {
   __typename?: 'profilesInsertResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Profiles>;
+  records: Array<profiles>;
 };
 
-export type ProfilesOrderBy = {
+export type profilesOrderBy = {
   author?: InputMaybe<OrderByDirection>;
   beverage_type?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
@@ -433,9 +436,10 @@ export type ProfilesOrderBy = {
   target_weight?: InputMaybe<OrderByDirection>;
   title?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
+  user_id?: InputMaybe<OrderByDirection>;
 };
 
-export type ProfilesUpdateInput = {
+export type profilesUpdateInput = {
   author?: InputMaybe<Scalars['String']['input']>;
   beverage_type?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -446,17 +450,18 @@ export type ProfilesUpdateInput = {
   target_weight?: InputMaybe<Scalars['Float']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-export type ProfilesUpdateResponse = {
+export type profilesUpdateResponse = {
   __typename?: 'profilesUpdateResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Profiles>;
+  records: Array<profiles>;
 };
 
-export type Steps = Node & {
+export type steps = Node & {
   __typename?: 'steps';
   exitCondition?: Maybe<Scalars['String']['output']>;
   exitType?: Maybe<Scalars['String']['output']>;
@@ -469,39 +474,40 @@ export type Steps = Node & {
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
   profile_id?: Maybe<Scalars['BigInt']['output']>;
-  profiles?: Maybe<Profiles>;
+  profiles?: Maybe<profiles>;
   pump?: Maybe<Scalars['String']['output']>;
   seconds?: Maybe<Scalars['Float']['output']>;
   sensor?: Maybe<Scalars['String']['output']>;
   temperature?: Maybe<Scalars['Float']['output']>;
   transition?: Maybe<Scalars['String']['output']>;
+  user_id?: Maybe<Scalars['UUID']['output']>;
   volume?: Maybe<Scalars['Float']['output']>;
   weight?: Maybe<Scalars['Float']['output']>;
 };
 
-export type StepsConnection = {
+export type stepsConnection = {
   __typename?: 'stepsConnection';
-  edges: Array<StepsEdge>;
+  edges: Array<stepsEdge>;
   pageInfo: PageInfo;
 };
 
-export type StepsDeleteResponse = {
+export type stepsDeleteResponse = {
   __typename?: 'stepsDeleteResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Steps>;
+  records: Array<steps>;
 };
 
-export type StepsEdge = {
+export type stepsEdge = {
   __typename?: 'stepsEdge';
   cursor: Scalars['String']['output'];
-  node: Steps;
+  node: steps;
 };
 
-export type StepsFilter = {
+export type stepsFilter = {
   /** Returns true only if all its inner filters are true, otherwise returns false */
-  and?: InputMaybe<Array<StepsFilter>>;
+  and?: InputMaybe<Array<stepsFilter>>;
   exitCondition?: InputMaybe<StringFilter>;
   exitType?: InputMaybe<StringFilter>;
   flow?: InputMaybe<FloatFilter>;
@@ -510,22 +516,23 @@ export type StepsFilter = {
   limiterRange?: InputMaybe<StringFilter>;
   limiterValue?: InputMaybe<FloatFilter>;
   name?: InputMaybe<StringFilter>;
-  nodeId?: InputMaybe<IdFilter>;
+  nodeId?: InputMaybe<IDFilter>;
   /** Negates a filter */
-  not?: InputMaybe<StepsFilter>;
+  not?: InputMaybe<stepsFilter>;
   /** Returns true if at least one of its inner filters is true, otherwise returns false */
-  or?: InputMaybe<Array<StepsFilter>>;
+  or?: InputMaybe<Array<stepsFilter>>;
   profile_id?: InputMaybe<BigIntFilter>;
   pump?: InputMaybe<StringFilter>;
   seconds?: InputMaybe<FloatFilter>;
   sensor?: InputMaybe<StringFilter>;
   temperature?: InputMaybe<FloatFilter>;
   transition?: InputMaybe<StringFilter>;
+  user_id?: InputMaybe<UUIDFilter>;
   volume?: InputMaybe<FloatFilter>;
   weight?: InputMaybe<FloatFilter>;
 };
 
-export type StepsInsertInput = {
+export type stepsInsertInput = {
   exitCondition?: InputMaybe<Scalars['String']['input']>;
   exitType?: InputMaybe<Scalars['String']['input']>;
   flow?: InputMaybe<Scalars['Float']['input']>;
@@ -539,19 +546,20 @@ export type StepsInsertInput = {
   sensor?: InputMaybe<Scalars['String']['input']>;
   temperature?: InputMaybe<Scalars['Float']['input']>;
   transition?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
   volume?: InputMaybe<Scalars['Float']['input']>;
   weight?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type StepsInsertResponse = {
+export type stepsInsertResponse = {
   __typename?: 'stepsInsertResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Steps>;
+  records: Array<steps>;
 };
 
-export type StepsOrderBy = {
+export type stepsOrderBy = {
   exitCondition?: InputMaybe<OrderByDirection>;
   exitType?: InputMaybe<OrderByDirection>;
   flow?: InputMaybe<OrderByDirection>;
@@ -566,11 +574,12 @@ export type StepsOrderBy = {
   sensor?: InputMaybe<OrderByDirection>;
   temperature?: InputMaybe<OrderByDirection>;
   transition?: InputMaybe<OrderByDirection>;
+  user_id?: InputMaybe<OrderByDirection>;
   volume?: InputMaybe<OrderByDirection>;
   weight?: InputMaybe<OrderByDirection>;
 };
 
-export type StepsUpdateInput = {
+export type stepsUpdateInput = {
   exitCondition?: InputMaybe<Scalars['String']['input']>;
   exitType?: InputMaybe<Scalars['String']['input']>;
   flow?: InputMaybe<Scalars['Float']['input']>;
@@ -584,19 +593,20 @@ export type StepsUpdateInput = {
   sensor?: InputMaybe<Scalars['String']['input']>;
   temperature?: InputMaybe<Scalars['Float']['input']>;
   transition?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
   volume?: InputMaybe<Scalars['Float']['input']>;
   weight?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type StepsUpdateResponse = {
+export type stepsUpdateResponse = {
   __typename?: 'stepsUpdateResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Steps>;
+  records: Array<steps>;
 };
 
-export type Userprofiles = Node & {
+export type userprofiles = Node & {
   __typename?: 'userprofiles';
   avatar_url?: Maybe<Scalars['String']['output']>;
   full_name?: Maybe<Scalars['String']['output']>;
@@ -608,43 +618,43 @@ export type Userprofiles = Node & {
   website?: Maybe<Scalars['String']['output']>;
 };
 
-export type UserprofilesConnection = {
+export type userprofilesConnection = {
   __typename?: 'userprofilesConnection';
-  edges: Array<UserprofilesEdge>;
+  edges: Array<userprofilesEdge>;
   pageInfo: PageInfo;
 };
 
-export type UserprofilesDeleteResponse = {
+export type userprofilesDeleteResponse = {
   __typename?: 'userprofilesDeleteResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Userprofiles>;
+  records: Array<userprofiles>;
 };
 
-export type UserprofilesEdge = {
+export type userprofilesEdge = {
   __typename?: 'userprofilesEdge';
   cursor: Scalars['String']['output'];
-  node: Userprofiles;
+  node: userprofiles;
 };
 
-export type UserprofilesFilter = {
+export type userprofilesFilter = {
   /** Returns true only if all its inner filters are true, otherwise returns false */
-  and?: InputMaybe<Array<UserprofilesFilter>>;
+  and?: InputMaybe<Array<userprofilesFilter>>;
   avatar_url?: InputMaybe<StringFilter>;
   full_name?: InputMaybe<StringFilter>;
-  id?: InputMaybe<UuidFilter>;
-  nodeId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<UUIDFilter>;
+  nodeId?: InputMaybe<IDFilter>;
   /** Negates a filter */
-  not?: InputMaybe<UserprofilesFilter>;
+  not?: InputMaybe<userprofilesFilter>;
   /** Returns true if at least one of its inner filters is true, otherwise returns false */
-  or?: InputMaybe<Array<UserprofilesFilter>>;
+  or?: InputMaybe<Array<userprofilesFilter>>;
   updated_at?: InputMaybe<DatetimeFilter>;
   username?: InputMaybe<StringFilter>;
   website?: InputMaybe<StringFilter>;
 };
 
-export type UserprofilesInsertInput = {
+export type userprofilesInsertInput = {
   avatar_url?: InputMaybe<Scalars['String']['input']>;
   full_name?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
@@ -653,15 +663,15 @@ export type UserprofilesInsertInput = {
   website?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UserprofilesInsertResponse = {
+export type userprofilesInsertResponse = {
   __typename?: 'userprofilesInsertResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Userprofiles>;
+  records: Array<userprofiles>;
 };
 
-export type UserprofilesOrderBy = {
+export type userprofilesOrderBy = {
   avatar_url?: InputMaybe<OrderByDirection>;
   full_name?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
@@ -670,7 +680,7 @@ export type UserprofilesOrderBy = {
   website?: InputMaybe<OrderByDirection>;
 };
 
-export type UserprofilesUpdateInput = {
+export type userprofilesUpdateInput = {
   avatar_url?: InputMaybe<Scalars['String']['input']>;
   full_name?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
@@ -679,24 +689,59 @@ export type UserprofilesUpdateInput = {
   website?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UserprofilesUpdateResponse = {
+export type userprofilesUpdateResponse = {
   __typename?: 'userprofilesUpdateResponse';
   /** Count of the records impacted by the mutation */
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
-  records: Array<Userprofiles>;
+  records: Array<userprofiles>;
 };
 
-export type ProfilesQueryVariables = Exact<{ [key: string]: never; }>;
+export type InsertProfilesMutationVariables = Exact<{
+  ep: Array<profilesInsertInput> | profilesInsertInput;
+}>;
 
 
-export type ProfilesQuery = { __typename?: 'Query', profilesCollection?: { __typename?: 'profilesConnection', edges: Array<{ __typename?: 'profilesEdge', node: { __typename?: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null } }> } | null };
+export type InsertProfilesMutation = { __typename: 'Mutation', insertIntoprofilesCollection?: { __typename: 'profilesInsertResponse', affectedCount: number, records: Array<{ __typename: 'profiles', id: string }> } | null };
 
-export const ProfilesDocument = gql`
-    query profiles {
+export type ProfilesListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', edges: Array<{ __typename: 'profilesEdge', node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null } }> } | null };
+
+export const InsertProfilesDocument = gql`
+    mutation InsertProfiles($ep: [profilesInsertInput!]!) {
+  __typename
+  insertIntoprofilesCollection(objects: $ep) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertProfilesGQL extends Apollo.Mutation<InsertProfilesMutation, InsertProfilesMutationVariables> {
+    override document = InsertProfilesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ProfilesListDocument = gql`
+    query ProfilesList {
+  __typename
   profilesCollection {
+    __typename
     edges {
+      __typename
       node {
+        __typename
         id
         created_at
         title
@@ -712,13 +757,13 @@ export const ProfilesDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ProfilesGQL extends Apollo.Query<ProfilesQuery, ProfilesQueryVariables> {
-  override document = ProfilesDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ProfilesListGQL extends Apollo.Query<ProfilesListQuery, ProfilesListQueryVariables> {
+    override document = ProfilesListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}

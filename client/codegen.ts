@@ -41,8 +41,12 @@ const config: CodegenConfig = {
   ignoreNoDocuments: true,
   generates: {
     'src/app/graphql/generated.ts': {
+      overwrite: true,
       plugins: ['typescript', 'typescript-operations', 'typescript-apollo-angular'],
+      documentTransforms: [addTypenameSelectionDocumentTransform],
       config: {
+        preset: 'client',
+        namingConvention: 'keep',
         addExplicitOverride: true,
         scalars: {
           UUID: 'string',

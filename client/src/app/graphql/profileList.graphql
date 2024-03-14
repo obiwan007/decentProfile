@@ -1,4 +1,4 @@
-query profiles {
+query ProfilesList {
   profilesCollection {
     edges {
       node {

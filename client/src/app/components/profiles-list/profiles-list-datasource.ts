@@ -7,7 +7,7 @@ import { Profile } from '../../models/profile';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { Apollo, gql } from 'apollo-angular';
 import { inject } from '@angular/core';
-import { ProfilesGQL, ProfilesQuery } from '../../graphql/generated';
+import { ProfilesListGQL, } from '../../graphql/generated';
 
 /**
  * Data source for the ProfilesList view. This class should
@@ -25,7 +25,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   maxlength: number = 0;
   apollo = inject(Apollo);
 
-  profilesGQL = inject(ProfilesGQL);
+  _profilesGQL = inject(ProfilesListGQL);
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
@@ -40,7 +40,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    */
   connect(): Observable<Profile[]> {
 
-    const s = this.profilesGQL.watch().valueChanges
+    const s = this._profilesGQL.watch().valueChanges
       .pipe(map(result => result.data && result.data.profilesCollection?.edges))
       .pipe(map(data => data!.map(d => d.node)));
     return s as Observable<any[]>;
