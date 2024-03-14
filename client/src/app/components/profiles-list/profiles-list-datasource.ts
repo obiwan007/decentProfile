@@ -5,8 +5,9 @@ import { catchError, finalize, map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
 import { Profile } from '../../models/profile';
 import { ProfileServiceService } from '../../services/profile-service.service';
-
-
+import { Apollo, gql } from 'apollo-angular';
+import { inject } from '@angular/core';
+import { ProfilesGQL, ProfilesQuery } from '../../graphql/generated';
 
 /**
  * Data source for the ProfilesList view. This class should
@@ -22,6 +23,9 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
   maxlength: number = 0;
+  apollo = inject(Apollo);
+
+  profilesGQL = inject(ProfilesGQL);
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
@@ -35,7 +39,11 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<Profile[]> {
-    return this.profilesSubject.asObservable();
+
+    const s = this.profilesGQL.watch().valueChanges
+      .pipe(map(result => result.data && result.data.profilesCollection?.edges))
+      .pipe(map(data => data!.map(d => d.node)));
+    return s as Observable<any[]>;
     // if (this.paginator && this.sort) {
     //   // Combine everything that affects the rendered data into one update
     //   // stream for the data-table to consume.
@@ -47,6 +55,11 @@ export class ProfilesListDataSource extends DataSource<Profile> {
     // } else {
     //   throw Error('Please set the paginator and sort on the data source before connecting.');
     // }
+  }
+
+  mapId(data: any[]) {
+    console.log("Map", data, data.map(d => d.node));
+    return data.map(d => d.node);
   }
 
   /**

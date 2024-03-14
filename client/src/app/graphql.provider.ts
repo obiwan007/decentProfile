@@ -48,6 +48,7 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
     return {
       headers: {
         ...headers,
+        apiKey: environment.supabaseKey,
         Authorization: token ? `Bearer ${token}` : '',
       },
     }

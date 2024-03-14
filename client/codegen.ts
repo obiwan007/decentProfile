@@ -37,13 +37,13 @@ const config: CodegenConfig = {
   // documents: 'src/**/*.tsx',
   documents: 'src/**/*.graphql',
   overwrite: true,
+
   ignoreNoDocuments: true,
   generates: {
-    'src/app/gql/': {
-      preset: 'client',
-      documentTransforms: [addTypenameSelectionDocumentTransform],
-      plugins: [],
+    'src/app/graphql/generated.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-apollo-angular'],
       config: {
+        addExplicitOverride: true,
         scalars: {
           UUID: 'string',
           Date: 'string',
@@ -56,6 +56,27 @@ const config: CodegenConfig = {
         },
       },
     },
+    // 'src/app/gql/': {
+    //   preset: 'client',
+
+    //   // documentTransforms: [addTypenameSelectionDocumentTransform],
+
+    //   // plugins: ['apollo-angular'],
+    //   plugins: ['typescript', 'typescript-operations', 'typescript-apollo-angular'],
+    //   config: {
+    //     addExplicitOverride: true,
+    //     scalars: {
+    //       UUID: 'string',
+    //       Date: 'string',
+    //       Time: 'string',
+    //       Datetime: 'string',
+    //       JSON: 'string',
+    //       BigInt: 'string',
+    //       BigFloat: 'string',
+    //       Opaque: 'any',
+    //     },
+    //   },
+    // },
   },
   hooks: {
     afterAllFileWrite: ['npm run prettier'], // optional
