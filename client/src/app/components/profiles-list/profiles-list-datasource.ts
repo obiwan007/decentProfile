@@ -7,7 +7,9 @@ import { Profile } from '../../models/profile';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { Apollo, gql } from 'apollo-angular';
 import { inject } from '@angular/core';
-import { ProfilesListGQL, } from '../../graphql/generated';
+import { OrderByDirection, ProfilesListGQL, ProfilesListQueryVariables, profilesOrderBy, } from '../../graphql/generated';
+import { VariablesInAllowedPositionRule } from 'graphql';
+import { PageInfo } from '../../models/dataWithPageinfo';
 
 /**
  * Data source for the ProfilesList view. This class should
@@ -22,15 +24,20 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   private profilesSubject = new BehaviorSubject<Profile[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
-  maxlength: number = 0;
+  maxlength: number = 11;
   apollo = inject(Apollo);
 
   _profilesGQL = inject(ProfilesListGQL);
+  pageInfo: PageInfo | undefined;
+  lastPage: number = 0;
+  lastCursor: string | null | undefined;
+  lastOrder: [profilesOrderBy] | undefined;
+  cursorHist: string[] = [''];
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
 
-    this.maxlength = _profileSrv.getProfilesCount();
+
   }
 
   /**
@@ -39,12 +46,12 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<Profile[]> {
-    // return this.profilesSubject.asObservable();
+    return this.profilesSubject.asObservable();
 
-    const s = this._profilesGQL.watch().valueChanges
-      .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data)));
+    // const s = this._profilesGQL.watch().valueChanges
+    //   .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data)));
 
-    return s as Observable<any[]>;
+    // return s as Observable<any[]>;
 
     // const s = this._profilesGQL.watch().valueChanges
     //   .pipe(map(result => result.data && result.data.profilesCollection?.edges))
@@ -98,18 +105,80 @@ export class ProfilesListDataSource extends DataSource<Profile> {
 
   loadProfiles(filter = '',
     sortDirection = 'asc', pageIndex = 0, pageSize = this._profileSrv.allProfiles.length) {
-
+    console.log(this.paginator, this.sort);
     this.loadingSubject.next(true);
+    let cursor = this.lastCursor;
+    let goForward = false;
+    if ((this.paginator?.pageIndex ?? 0) > this.lastPage) {
+      cursor = this.pageInfo?.endCursor;
+      goForward = true;
+
+    } else if ((this.paginator?.pageIndex ?? 0) < this.lastPage) {
+      cursor = this.cursorHist.pop();
+      cursor = this.cursorHist.pop();
+      if (cursor === '') cursor = undefined;
+    }
+
+    this.lastPage = (this.paginator?.pageIndex ?? 0);
+    this.lastCursor = cursor;
+
+    let order: [profilesOrderBy] | undefined;
+    if (this.sort?.active) {
+      const s: profilesOrderBy = {};
+      const sortBy: string = this.sort?.active;
+      (s as any)[sortBy] = this.sort?.direction === 'asc' ? OrderByDirection.AscNullsLast : OrderByDirection.DescNullsLast;
+      order = [s];
+
+      if (JSON.stringify(order) != JSON.stringify(this.lastOrder)) {
+        this.lastOrder = order;
+        this.lastCursor = undefined;
+        cursor = undefined;
+        this.paginator!.pageIndex = 0;
+      }
+    }
 
 
-    this._profileSrv.getProfilesFromIndex(filter, sortDirection,
-      pageIndex, pageSize).pipe(
+
+    const vars: ProfilesListQueryVariables = {
+      first: this.paginator?.pageSize,
+      cursor,
+      order
+    };
+    const s = this._profilesGQL.watch(vars).valueChanges
+      .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data))).subscribe(res => {
+        this.pageInfo = res.pageInfo;
+        this.maxlength = res.totalCount;
+        if (goForward) {
+          this.cursorHist.push(this.pageInfo?.startCursor!);
+        }
+        this.profilesSubject.next(res.data);
+      });
+
+
+
+
+
+    // this._profileSrv.getProfilesFromIndex(filter, sortDirection,
+    //   pageIndex, pageSize).pipe(
+    //     catchError(() => of([])),
+    //     finalize(() => this.loadingSubject.next(false))
+    //   )
+    //   .subscribe(profiles => {
+    //     this.profilesSubject.next(profiles);
+    //     // profiles.forEach(p => this._profileSrv.insertProfile(p));
+
+    //   });
+  }
+
+  public insertDefaultProfiles() {
+    this._profileSrv.getProfilesFromIndex("", "asc",
+      0, 1000).pipe(
         catchError(() => of([])),
         finalize(() => this.loadingSubject.next(false))
       )
       .subscribe(profiles => {
         this.profilesSubject.next(profiles);
-        // profiles.forEach(p => this._profileSrv.insertProfile(p));
+        profiles.forEach(p => this._profileSrv.insertProfile(p));
 
       });
   }

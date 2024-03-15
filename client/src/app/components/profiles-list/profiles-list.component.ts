@@ -23,6 +23,7 @@ export class ProfilesListComponent implements AfterViewInit {
   @Output()
   onClick: EventEmitter<Profile> = new EventEmitter();
 
+  pageSize = 10;
   dataSource: ProfilesListDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -34,16 +35,25 @@ export class ProfilesListComponent implements AfterViewInit {
   constructor(private _profileSrv: ProfileServiceService) {
     console.log("Loading Profile");
     this.dataSource = new ProfilesListDataSource(this._profileSrv);
+    // this.dataSource.insertDefaultProfiles();
   }
 
   ngAfterViewInit(): void {
 
+    this.sort.active = "title";
+    this.sort.direction = "asc";
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;
     this.dataSource.loadProfiles();
     this.loadLessonsPage();
     this.paginator.page
+      .pipe(
+        tap(() => this.loadLessonsPage())
+      )
+      .subscribe();
+
+    this.sort.sortChange
       .pipe(
         tap(() => this.loadLessonsPage())
       )

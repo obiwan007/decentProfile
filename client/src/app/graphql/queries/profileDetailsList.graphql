@@ -12,7 +12,7 @@ query ProfileDetails($id: BigInt) {
         target_volume
         target_weight
         isPublic
-        stepsCollection {
+        stepsCollection(orderBy: [{index: AscNullsLast}] ) {
           edges {
             node {
               id

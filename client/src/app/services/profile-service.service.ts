@@ -4,7 +4,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { plainToClassFromExist } from 'class-transformer';
 import { Observable, of as observableOf, merge, BehaviorSubject } from 'rxjs';
 import 'reflect-metadata';
-import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
+import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsQuery, ProfilesListQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
+import { ResultData } from '../models/dataWithPageinfo';
 
 @Injectable({
   providedIn: 'root',
@@ -86,7 +87,7 @@ export class ProfileServiceService {
   constructor(private _insertProfile: InsertProfilesGQL, private _insertSteps: InsertStepsGQL, private _http: HttpClient) { }
 
 
-  mapFromGraphQl(p: ProfileDetailsQuery): Profile[] | undefined {
+  mapFromGraphQl(p: ProfilesListQuery): ResultData<Profile[]> {
 
     const nodes = p.profilesCollection?.edges.map(e => {
       const node: any = { ...e.node };
@@ -94,7 +95,10 @@ export class ProfileServiceService {
       return node;
     });
     console.log("Mapped", nodes, p);
-    return nodes?.map(n => plainToClassFromExist(new Profile(), n));
+    return new ResultData<Profile[]>(nodes?.map(n => plainToClassFromExist(new Profile(), n)) ?? [],
+      p.profilesCollection?.pageInfo!,
+      p.profilesCollection?.totalCount!);
+
   }
 
   getProfileById(id: string): Promise<Profile> {

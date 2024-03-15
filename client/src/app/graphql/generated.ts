@@ -366,6 +366,8 @@ export type profilesConnection = {
   __typename?: 'profilesConnection';
   edges: Array<profilesEdge>;
   pageInfo: PageInfo;
+  /** The total number of records matching the `filter` criteria */
+  totalCount: Scalars['Int']['output'];
 };
 
 export type profilesDeleteResponse = {
@@ -728,10 +730,14 @@ export type ProfileDetailsQueryVariables = Exact<{
 
 export type ProfileDetailsQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', edges: Array<{ __typename: 'profilesEdge', node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, isPublic?: boolean | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null, isPublic?: boolean | null } }> } | null } }> } | null };
 
-export type ProfilesListQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProfilesListQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  order?: InputMaybe<Array<profilesOrderBy> | profilesOrderBy>;
+}>;
 
 
-export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', edges: Array<{ __typename: 'profilesEdge', node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, isPublic?: boolean | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null, isPublic?: boolean | null } }> } | null } }> } | null };
+export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', totalCount: number, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'profilesEdge', cursor: string, node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, isPublic?: boolean | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null, isPublic?: boolean | null } }> } | null } }> } | null };
 
 export const InsertStepsDocument = gql`
     mutation InsertSteps($ep: [stepsInsertInput!]!) {
@@ -800,7 +806,7 @@ export const ProfileDetailsDocument = gql`
         target_volume
         target_weight
         isPublic
-        stepsCollection {
+        stepsCollection(orderBy: [{index: AscNullsLast}]) {
           __typename
           edges {
             __typename
@@ -844,12 +850,21 @@ export const ProfileDetailsDocument = gql`
     }
   }
 export const ProfilesListDocument = gql`
-    query ProfilesList {
+    query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!]) {
   __typename
-  profilesCollection {
+  profilesCollection(first: $first, after: $cursor, orderBy: $order) {
     __typename
+    pageInfo {
+      __typename
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
     edges {
       __typename
+      cursor
       node {
         __typename
         id
@@ -862,7 +877,7 @@ export const ProfilesListDocument = gql`
         target_volume
         target_weight
         isPublic
-        stepsCollection {
+        stepsCollection(orderBy: [{index: AscNullsLast}]) {
           __typename
           edges {
             __typename
