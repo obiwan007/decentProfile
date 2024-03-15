@@ -1,5 +1,5 @@
-query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!]) {
-  profilesCollection(first: $first,  after: $cursor, orderBy: $order) {    
+query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!], $filter: profilesFilter,) {
+  profilesCollection(first: $first,  after: $cursor, orderBy: $order, filter: $filter) {    
     pageInfo{
       hasNextPage
       hasPreviousPage

@@ -10,18 +10,30 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { RenderStepsComponent } from '../../components/render-steps/render-steps.component';
 import { ProfileChartComponent } from '../../components/profile-chart/profile-chart.component';
+import { MatFormFieldModule, MatHint } from '@angular/material/form-field';
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { FilterData } from '../../components/profiles-list/profiles-list-datasource';
 
 @Component({
   selector: 'app-profile-list-page',
   standalone: true,
   imports: [ProfilesListComponent, ProfileDetailsComponent,
-    RenderStepsComponent,
-    JsonPipe, MatButtonModule, MatCardModule, ProfileChartComponent],
+    RenderStepsComponent, MatFormFieldModule, MatSelectModule, MatInputModule, MatHint,
+    JsonPipe, MatButtonModule, MatCardModule, ProfileChartComponent
+  ],
   templateUrl: './profile-list-page.component.html',
   styleUrl: './profile-list-page.component.css'
 })
 export class ProfileListPageComponent {
+
   selectedProfile: Profile | undefined;
+
+  filter: FilterData = new FilterData();
+
+  types: string[] = ["pressure", "flow", "advanced"];
+
+  beverages: string[] = ["espresso", "filter", "pour-over", "tea_portafilter", "cleaning"];
   /**
    *
    */
@@ -61,5 +73,14 @@ export class ProfileListPageComponent {
     //   }
     // );
   }
-
+  filterForType($event: MatSelectChange) {
+    console.log("event", $event)
+    this.filter = structuredClone(this.filter);
+    this.filter.typesFilter = [...$event.value];
+  }
+  filterForBeverage($event: MatSelectChange) {
+    console.log("event", $event)
+    this.filter = structuredClone(this.filter);
+    this.filter.beverageFilter = [...$event.value];
+  }
 }

@@ -1,6 +1,35 @@
 <div class="flex flex-row p-2">
     <div class="flex-1 m-2">
-        <app-profiles-list (onClick)="onClick($event)"></app-profiles-list>
+        <div class="flex flex-col">
+
+            <div class="flex flex-row">
+                <mat-form-field class="mr-1">
+                    <mat-label>Type</mat-label>
+                    <mat-select multiple (selectionChange)="filterForType($event)">
+                        @for (food of types; track food) {
+                        <mat-option [value]="food">{{food}}</mat-option>
+                        }
+                    </mat-select>
+
+
+                </mat-form-field>
+                <mat-form-field>
+
+                    <mat-label>Beverage</mat-label>
+                    <mat-select multiple (selectionChange)="filterForBeverage($event)">
+                        @for (food of beverages; track food) {
+                        <mat-option [value]="food">{{food}}</mat-option>
+                        }
+                    </mat-select>
+
+
+                </mat-form-field>
+
+            </div>
+            <!-- Last name query. -->
+
+            <app-profiles-list [filter]="filter" (onClick)="onClick($event)"></app-profiles-list>
+        </div>
     </div>
     @if(selectedProfile){
     <div class="flex-1">

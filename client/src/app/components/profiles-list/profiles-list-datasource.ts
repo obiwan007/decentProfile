@@ -7,9 +7,14 @@ import { Profile } from '../../models/profile';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { Apollo, gql } from 'apollo-angular';
 import { inject } from '@angular/core';
-import { OrderByDirection, ProfilesListGQL, ProfilesListQueryVariables, profilesOrderBy, } from '../../graphql/generated';
+import { InputMaybe, OrderByDirection, ProfilesListGQL, ProfilesListQueryVariables, profilesFilter, profilesOrderBy, } from '../../graphql/generated';
 import { VariablesInAllowedPositionRule } from 'graphql';
 import { PageInfo } from '../../models/dataWithPageinfo';
+
+export class FilterData {
+  typesFilter: string[] = [];
+  beverageFilter: string[] = [];
+}
 
 /**
  * Data source for the ProfilesList view. This class should
@@ -17,6 +22,7 @@ import { PageInfo } from '../../models/dataWithPageinfo';
  * (including sorting, pagination, and filtering).
  */
 export class ProfilesListDataSource extends DataSource<Profile> {
+
   data: Profile[] = [];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
@@ -33,6 +39,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   lastCursor: string | null | undefined;
   lastOrder: [profilesOrderBy] | undefined;
   cursorHist: string[] = [''];
+  private _filter: FilterData = new FilterData();
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
@@ -103,8 +110,15 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   //   }
   // }
 
-  loadProfiles(filter = '',
-    sortDirection = 'asc', pageIndex = 0, pageSize = this._profileSrv.allProfiles.length) {
+  setFilter(_filter: FilterData) {
+    this._filter = _filter;
+    this.cursorHist = [""];
+    this.lastCursor = undefined;
+    this.lastPage = 0;
+    this.loadProfiles();
+  }
+
+  loadProfiles(f = '', sortDirection = 'asc', pageIndex = 0, pageSize = this._profileSrv.allProfiles.length) {
     console.log(this.paginator, this.sort);
     this.loadingSubject.next(true);
     let cursor = this.lastCursor;
@@ -137,12 +151,25 @@ export class ProfilesListDataSource extends DataSource<Profile> {
       }
     }
 
+    const orCollection: InputMaybe<profilesFilter[]> = [];
+    this._filter.typesFilter.forEach(t => {
+      orCollection.push({ type: { eq: t }, });
+    })
+    this._filter.beverageFilter.forEach(t => {
+      orCollection.push({ beverage_type: { eq: t }, });
+    })
+    const filter: profilesFilter = {
+      or: [
+        ...orCollection,
+      ]
+    }
 
 
     const vars: ProfilesListQueryVariables = {
       first: this.paginator?.pageSize,
       cursor,
-      order
+      order,
+      filter,
     };
     const s = this._profilesGQL.watch(vars).valueChanges
       .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data))).subscribe(res => {

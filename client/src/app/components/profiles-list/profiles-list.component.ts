@@ -2,10 +2,12 @@ import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from
 import { MatTableModule, MatTable } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { ProfilesListDataSource } from './profiles-list-datasource';
+import { FilterData, ProfilesListDataSource } from './profiles-list-datasource';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { Profile } from '../../models/profile';
 import { tap } from 'rxjs/operators';
+
+
 
 @Component({
   selector: 'app-profiles-list',
@@ -23,6 +25,17 @@ export class ProfilesListComponent implements AfterViewInit {
   @Output()
   onClick: EventEmitter<Profile> = new EventEmitter();
 
+  private _filter: FilterData = new FilterData();
+  @Input()
+  public set filter(value: FilterData) {
+    this._filter = value;
+    this.dataSource.setFilter(this._filter);
+  }
+  public get filter(): FilterData {
+    return this._filter;
+  }
+
+
   pageSize = 10;
   dataSource: ProfilesListDataSource;
 
@@ -39,9 +52,10 @@ export class ProfilesListComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.sort.sort({ id: "title", start: "asc", disableClear: false });//active = "title";  
+    }, 0);
 
-    this.sort.active = "title";
-    this.sort.direction = "asc";
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;

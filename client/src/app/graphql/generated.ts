@@ -739,6 +739,7 @@ export type ProfilesListQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   order?: InputMaybe<Array<profilesOrderBy> | profilesOrderBy>;
+  filter?: InputMaybe<profilesFilter>;
 }>;
 
 
@@ -863,9 +864,14 @@ export const ProfileDetailsDocument = gql`
     }
   }
 export const ProfilesListDocument = gql`
-    query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!]) {
+    query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!], $filter: profilesFilter) {
   __typename
-  profilesCollection(first: $first, after: $cursor, orderBy: $order) {
+  profilesCollection(
+    first: $first
+    after: $cursor
+    orderBy: $order
+    filter: $filter
+  ) {
     __typename
     pageInfo {
       __typename
