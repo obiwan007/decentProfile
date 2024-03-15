@@ -2,9 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Profile } from '../models/profile';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { plainToClassFromExist } from 'class-transformer';
-import { Observable, of as observableOf, merge, BehaviorSubject } from 'rxjs';
+import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
 import 'reflect-metadata';
-import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsQuery, ProfilesListQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
+import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
 import { ResultData } from '../models/dataWithPageinfo';
 
 @Injectable({
@@ -84,7 +84,7 @@ export class ProfileServiceService {
   ];
 
 
-  constructor(private _insertProfile: InsertProfilesGQL, private _insertSteps: InsertStepsGQL, private _http: HttpClient) { }
+  constructor(private _loadProfileById: ProfileDetailsGQL, private _insertProfile: InsertProfilesGQL, private _insertSteps: InsertStepsGQL, private _http: HttpClient) { }
 
 
   mapFromGraphQl(p: ProfilesListQuery): ResultData<Profile[]> {
@@ -100,8 +100,20 @@ export class ProfileServiceService {
       p.profilesCollection?.totalCount!);
 
   }
+  mapFromGraphQlProfile(p: ProfileDetailsQuery): ResultData<Profile> {
 
-  getProfileById(id: string): Promise<Profile> {
+    const nodes = p.profilesCollection?.edges.map(e => {
+      const node: any = { ...e.node };
+      node.steps = e.node.stepsCollection?.edges.map(e => e.node);
+      return node;
+    });
+    console.log("Mapped", nodes, p);
+    return new ResultData<Profile>(plainToClassFromExist(new Profile(), nodes![0]) ?? [],
+      p.profilesCollection?.pageInfo!,
+      1);
+
+  }
+  getAssetProfileById(id: string): Promise<Profile> {
     console.log("Loading Profile: ", id);
 
     return new Promise<Profile>(ret => {
@@ -116,6 +128,14 @@ export class ProfileServiceService {
           ret(p);
         });
     });
+  }
+
+  getProfileById(id: string): Observable<ResultData<Profile>> {
+    const vars: ProfileDetailsQueryVariables = {
+      id: id,
+    }
+    return this._loadProfileById.fetch(vars)
+      .pipe(map(result => this.mapFromGraphQlProfile(result.data)));
   }
 
   getProfilesCount(): number {
@@ -133,7 +153,7 @@ export class ProfileServiceService {
       const to = Math.min(this.allProfiles.length, index + pageSize);
       for (let i = index; i < to; i++) {
         console.log("Loading Id:", this.allProfiles[i]);
-        ret.push(await this.getProfileById(this.allProfiles[i]));
+        ret.push(await this.getAssetProfileById(this.allProfiles[i]));
       }
       value.next(ret);
     };
@@ -173,6 +193,7 @@ export class ProfileServiceService {
         exit_type: s.exit?.type,
         exit_value: s.exit?.value,
         flow: s.flow,
+        pressure: s.pressure,
         index: i,
         limiter_range: s.limiter?.range,
         limiter_value: s.limiter?.value,

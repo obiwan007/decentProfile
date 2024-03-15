@@ -1,5 +1,11 @@
 query ProfileDetails($id: BigInt) {
   profilesCollection(filter: {id: {eq: $id}}) {
+    pageInfo{
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
     edges {
       node {
         id
@@ -21,6 +27,7 @@ query ProfileDetails($id: BigInt) {
               pump
               transition
               flow
+              pressure
               seconds
               volume
               weight

@@ -32,8 +32,8 @@ export class ProfileListPageComponent {
     console.log("params", activatedRoute.snapshot.queryParams)
     const { id } = activatedRoute.snapshot.queryParams;
     if (id) {
-      this._profileSrv.getProfileById(id).then(p => {
-        this.selectedProfile = p;
+      this._profileSrv.getProfileById(id).subscribe(p => {
+        this.selectedProfile = p.data;
       });
     }
   }

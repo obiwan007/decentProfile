@@ -29,6 +29,7 @@ query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!]) {
               pump
               transition
               flow
+              pressure
               seconds
               volume
               weight
