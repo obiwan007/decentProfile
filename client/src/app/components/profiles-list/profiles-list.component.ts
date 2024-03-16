@@ -9,6 +9,7 @@ import { tap } from 'rxjs/operators';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule, JsonPipe } from '@angular/common';
 
 
 
@@ -17,9 +18,12 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './profiles-list.component.html',
   styleUrl: './profiles-list.component.css',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule,
+  imports: [
+    CommonModule,
+    MatTableModule, MatPaginatorModule, MatSortModule,
     MatFormFieldModule, MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    JsonPipe,
   ]
 })
 export class ProfilesListComponent implements AfterViewInit {
@@ -51,7 +55,7 @@ export class ProfilesListComponent implements AfterViewInit {
   dataSource: ProfilesListDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['title', 'type', 'author', 'beverage_type'];
+  displayedColumns = ['title', 'type', 'author', 'beverage_type', 'isDefault', 'isPublic'];
 
   /**
    *

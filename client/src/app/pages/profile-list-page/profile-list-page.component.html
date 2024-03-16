@@ -53,6 +53,11 @@
                         aria-label="Example icon-button with share icon">
                     <mat-icon>share</mat-icon>
                 </button>
+                <button (click)="onSave()" mat-icon-button title="Download profile" class="example-icon"
+                        aria-label="Example icon-button with share icon">
+                    <mat-icon>save_alt</mat-icon>
+                </button>
+
             </mat-toolbar>
             <div class="m-2" style="height:350px">
                 <app-profile-chart [profile]="selectedProfile"></app-profile-chart>

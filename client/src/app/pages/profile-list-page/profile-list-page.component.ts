@@ -99,4 +99,8 @@ export class ProfileListPageComponent {
 
     this.router.navigateByUrl(urlTree);
   }
+
+  onSave() {
+    this._profileSrv.saveProfile(this.selectedProfile);
+  }
 }

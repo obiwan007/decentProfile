@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Profile } from '../models/profile';
+import { Exit, Limiter, Profile, Step } from '../models/profile';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { plainToClassFromExist } from 'class-transformer';
+import { instanceToPlain, plainToClassFromExist, serialize } from 'class-transformer';
 import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
 import 'reflect-metadata';
 import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
@@ -12,6 +12,7 @@ import { ResultData } from '../models/dataWithPageinfo';
   // deps: [HttpClientModule]
 })
 export class ProfileServiceService {
+
 
   allProfiles: string[] = [
     "Blooming espresso.json",
@@ -92,23 +93,59 @@ export class ProfileServiceService {
     const nodes = p.profilesCollection?.edges.map(e => {
       const node: any = { ...e.node };
       node.steps = e.node.stepsCollection?.edges.map(e => e.node);
+
       return node;
     });
-    console.log("Mapped", nodes, p);
-    return new ResultData<Profile[]>(nodes?.map(n => plainToClassFromExist(new Profile(), n)) ?? [],
+    const ret = new ResultData<Profile[]>(nodes?.map(n => this.mapFromGraphQlSingle(new Profile(), n)) ?? [],
       p.profilesCollection?.pageInfo!,
       p.profilesCollection?.totalCount!);
+    console.log("Mapped", ret.data);
+
+    return ret;
+
 
   }
+
+  mapFromGraphQlSingle(p: Profile, n: any) {
+    const n2 = structuredClone(n);
+    delete n2.stepsCollection;
+    (n2.steps as Step[]).forEach(s => {
+      const sRaw = (s as any);
+      if (sRaw.exit_type) {
+        const e = new Exit();
+        e.condition = sRaw.exit_condition;
+        e.type = sRaw.exit_type;
+        e.value = sRaw.exit_value;
+        s.exit = e;
+      }
+      delete sRaw.exit_type;
+      delete sRaw.exit_value;
+      delete sRaw.exit_condition;
+
+      if (sRaw.limiter_range) {
+        const e = new Limiter();
+        e.range = sRaw.limiter_range;
+        e.value = sRaw.limiter_value;
+        s.limiter = e;
+      }
+      delete sRaw.limiter_range;
+      delete sRaw.limiter_value;
+    });
+    return plainToClassFromExist(p, n2);
+
+  }
+
   mapFromGraphQlProfile(p: ProfileDetailsQuery): ResultData<Profile> {
 
     const nodes = p.profilesCollection?.edges.map(e => {
       const node: any = { ...e.node };
       node.steps = e.node.stepsCollection?.edges.map(e => e.node);
+
       return node;
     });
     console.log("Mapped", nodes, p);
-    return new ResultData<Profile>(plainToClassFromExist(new Profile(), nodes![0]) ?? [],
+
+    return new ResultData<Profile>(this.mapFromGraphQlSingle(new Profile(), nodes![0]) ?? [],
       p.profilesCollection?.pageInfo!,
       1);
 
@@ -195,7 +232,7 @@ export class ProfileServiceService {
         flow: s.flow,
         pressure: s.pressure,
         index: i,
-        limiter_range: s.limiter?.range,
+        limiter_range: s.limiter?.range.toString(),
         limiter_value: s.limiter?.value,
         name: s.name,
         pump: s.pump,
@@ -214,5 +251,25 @@ export class ProfileServiceService {
         resolver(true);
       });
     });
+  }
+
+  convertToJson(selectedProfile: Profile) {
+    return JSON.stringify(instanceToPlain(selectedProfile), null, 2);
+  }
+
+  async saveProfile(selectedProfile: Profile | undefined) {
+    const s = this.convertToJson(selectedProfile!);
+
+    this.writeContents(s, selectedProfile?.title + '.json', 'application/json');
+    // const s = serialize(selectedProfile);    
+
+  }
+
+  writeContents(content: any, fileName: string, contentType: string) {
+    var a = document.createElement('a');
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
   }
 }

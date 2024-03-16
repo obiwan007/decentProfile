@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { Profile, Step } from '../../models/profile';
 import { RenderStepComponent } from '../render-step/render-step.component';
 
@@ -23,6 +23,9 @@ import { ProfileServiceService } from '../../services/profile-service.service';
 })
 export class BasicProfileEditComponent {
 
+  @ViewChild('chart')
+  chart!: ProfileChartComponent;
+
   @Input()
   profile: Profile | undefined;
 
@@ -41,5 +44,10 @@ export class BasicProfileEditComponent {
   save() {
     this._profileService.insertProfile(this.profile!);
 
+  }
+
+  stepChanged(step: Step) {
+    console.log(this.chart);
+    this.chart?.updateStep(step);
   }
 }

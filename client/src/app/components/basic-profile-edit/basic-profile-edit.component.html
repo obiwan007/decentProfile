@@ -51,26 +51,26 @@
                     <div class="slider">
                         <div class="label">Time ({{step.seconds}} s)</div>
                         <mat-slider ngDefaultControl min="1" max="1000" step="1" discrete>
-                            <input matSliderThumb [(ngModel)]="step.seconds">
+                            <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.seconds">
                         </mat-slider>
                     </div>
                     <div class="slider">
                         <div class="label">Pressure ({{step.pressure}} bar)</div>
                         <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
-                            <input matSliderThumb [(ngModel)]="step.pressure">
+                            <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.pressure">
                         </mat-slider>
                     </div>
                     <div class="slider">
                         <div class="label">Flow ({{step.flow}} ml/s)</div>
                         <mat-slider ngDefaultControl min="0" max="20" step="0.5" discrete>
-                            <input matSliderThumb [(ngModel)]="step.flow">
+                            <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.flow">
                         </mat-slider>
                     </div>
                     <div class="slider">
                         <div class="label">Temperature ({{step.temperature}} °C)</div>
                         <mat-slider ngDefaultControl min="50" max="100" step="1"
                                     discrete>
-                            <input matSliderThumb [(ngModel)]="step.temperature">
+                            <input (ngModelChange)="stepChanged(step)" matSliderThumb [(ngModel)]="step.temperature">
                         </mat-slider>
                     </div>
                 </mat-card-content>
@@ -78,7 +78,7 @@
         </div>
         <div class="m-2">
             <mat-card *ngIf="profile">
-                <app-profile-chart [profile]="profile"></app-profile-chart>
+                <app-profile-chart #chart [profile]="profile" [step]="step"></app-profile-chart>
             </mat-card>
         </div>
     </div>

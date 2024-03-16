@@ -20,6 +20,7 @@ query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!], $fi
         target_volume
         target_weight
         isPublic
+        isDefault
         stepsCollection(orderBy: [{index: AscNullsLast}] ) {
           edges {
             node {

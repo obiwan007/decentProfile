@@ -18,6 +18,7 @@ query ProfileDetails($id: BigInt) {
         target_volume
         target_weight
         isPublic
+        isDefault
         stepsCollection(orderBy: [{index: AscNullsLast}] ) {
           edges {
             node {
