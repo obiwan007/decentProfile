@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { SupabaseService } from '../../services/supabase.service'
 import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-auth',
@@ -22,6 +23,7 @@ export class AuthComponent {
 
   constructor(
     private readonly supabase: SupabaseService,
+    private readonly router: Router,
     private readonly formBuilder: FormBuilder
   ) { }
 
@@ -51,7 +53,7 @@ export class AuthComponent {
 
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message)
+        // alert(error.message)
       }
     } finally {
       this.signInForm.reset()

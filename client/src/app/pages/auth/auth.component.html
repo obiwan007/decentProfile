@@ -1,4 +1,6 @@
-<div class="flex-center flex-col">
+<div class="flex-center flex-col p-5">
+
+
     <div class="form-widget w-full" aria-live="polite">
         <h1 class="header">Login or Register</h1>
         <p class="description">Sign in via magic link with your email below</p>
@@ -28,18 +30,29 @@
                 </mat-form-field>
             </div>
             <div class="flex flex-row">
-                <button mat-raised-button type="submit" class="button block" [disabled]="loading">
-                    {{ loading ? 'Loading' : 'Send magic link' }}
-                </button>
-                <button mat-raised-button (click)="signInPassword(false)" class="button block" [disabled]="loading">
-                    {{ loading ? 'Loading' : 'Login with Password' }}
-                </button>
-                <button mat-raised-button (click)="signInPassword(true)" class="button block" [disabled]="loading">
-                    {{ loading ? 'Loading' : 'Registering as new User' }}
-                </button>
-                <button mat-raised-button (click)="signInOAuth('github')" class="button block" [disabled]="loading">
-                    {{ loading ? 'Loading' : 'Sign in with Github' }}
-                </button>
+                <div class="pr-2">
+                    <button mat-raised-button type="submit" class="button block" [disabled]="loading">
+                        {{ loading ? 'Loading' : 'Send magic link' }}
+                    </button>
+                </div>
+                <div class="pr-2">
+                    <button class="pr-2" mat-raised-button (click)="signInPassword(false)" class="button block"
+                            [disabled]="loading">
+                        {{ loading ? 'Loading' : 'Login with Password' }}
+                    </button>
+                </div>
+                <div class="pr-2">
+                    <button class="pr-2" mat-raised-button (click)="signInPassword(true)" class="button block"
+                            [disabled]="loading">
+                        {{ loading ? 'Loading' : 'Registering as new User' }}
+                    </button>
+                </div>
+                <div class="pr-2">
+                    <button class="p-px" mat-raised-button (click)="signInOAuth('github')" class="button block"
+                            [disabled]="loading">
+                        {{ loading ? 'Loading' : 'Sign in with Github' }}
+                    </button>
+                </div>
             </div>
         </form>
     </div>
