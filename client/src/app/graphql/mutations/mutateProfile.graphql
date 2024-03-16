@@ -1,0 +1,9 @@
+mutation InsertProfiles($ep: [profilesInsertInput!]!) {
+  insertIntoprofilesCollection(objects: $ep) {
+    affectedCount
+    records {
+      id
+      
+    }
+  }
+}

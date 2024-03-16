@@ -5,8 +5,17 @@ import { catchError, finalize, map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
 import { Profile } from '../../models/profile';
 import { ProfileServiceService } from '../../services/profile-service.service';
+import { Apollo, gql } from 'apollo-angular';
+import { inject } from '@angular/core';
+import { InputMaybe, OrderByDirection, ProfilesListGQL, ProfilesListQueryVariables, profilesFilter, profilesOrderBy, } from '../../graphql/generated';
+import { VariablesInAllowedPositionRule } from 'graphql';
+import { PageInfo } from '../../models/dataWithPageinfo';
 
-
+export class FilterData {
+  typesFilter: string[] = [];
+  beverageFilter: string[] = [];
+  authorFilter: string[] = [];
+}
 
 /**
  * Data source for the ProfilesList view. This class should
@@ -14,6 +23,7 @@ import { ProfileServiceService } from '../../services/profile-service.service';
  * (including sorting, pagination, and filtering).
  */
 export class ProfilesListDataSource extends DataSource<Profile> {
+
   data: Profile[] = [];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
@@ -21,12 +31,21 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   private profilesSubject = new BehaviorSubject<Profile[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
-  maxlength: number = 0;
+  maxlength: number = 11;
+  apollo = inject(Apollo);
+
+  _profilesGQL = inject(ProfilesListGQL);
+  pageInfo: PageInfo | undefined;
+  lastPage: number = 0;
+  lastCursor: string | null | undefined;
+  lastOrder: [profilesOrderBy] | undefined;
+  cursorHist: string[] = [''];
+  private _filter: FilterData = new FilterData();
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
 
-    this.maxlength = _profileSrv.getProfilesCount();
+
   }
 
   /**
@@ -36,17 +55,35 @@ export class ProfilesListDataSource extends DataSource<Profile> {
    */
   connect(): Observable<Profile[]> {
     return this.profilesSubject.asObservable();
+
+    // const s = this._profilesGQL.watch().valueChanges
+    //   .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data)));
+
+    // return s as Observable<any[]>;
+
+    // const s = this._profilesGQL.watch().valueChanges
+    //   .pipe(map(result => result.data && result.data.profilesCollection?.edges))
+    //   .pipe(map(data => data!.map(d => d.node)));
+    // return s as Observable<any[]>;
+
+
     // if (this.paginator && this.sort) {
     //   // Combine everything that affects the rendered data into one update
     //   // stream for the data-table to consume.
     //   // const data = await this.getPagedData(this.getSortedData([...this.data]))
     //   return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
     //     .pipe(map(() => {
+    //       console.log("Data:", this.data);
     //       return this.data;
     //     }));
     // } else {
     //   throw Error('Please set the paginator and sort on the data source before connecting.');
     // }
+  }
+
+  mapId(data: any[]) {
+    console.log("Map", data, data.map(d => d.node));
+    return data.map(d => d.node);
   }
 
   /**
@@ -74,18 +111,107 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   //   }
   // }
 
-  loadProfiles(filter = '',
-    sortDirection = 'asc', pageIndex = 0, pageSize = 3) {
+  setFilter(_filter: FilterData) {
+    this._filter = _filter;
+    this.cursorHist = [""];
+    this.lastCursor = undefined;
+    this.lastPage = 0;
+    this.loadProfiles();
+  }
 
+  loadProfiles(f = '', sortDirection = 'asc', pageIndex = 0, pageSize = this._profileSrv.allProfiles.length) {
+    console.log(this.paginator, this.sort);
     this.loadingSubject.next(true);
+    let cursor = this.lastCursor;
+    let goForward = false;
+    if ((this.paginator?.pageIndex ?? 0) > this.lastPage) {
+      cursor = this.pageInfo?.endCursor;
+      goForward = true;
+
+    } else if ((this.paginator?.pageIndex ?? 0) < this.lastPage) {
+      cursor = this.cursorHist.pop();
+      cursor = this.cursorHist.pop();
+      if (cursor === '') cursor = undefined;
+    }
+
+    this.lastPage = (this.paginator?.pageIndex ?? 0);
+    this.lastCursor = cursor;
+
+    let order: [profilesOrderBy] | undefined;
+    if (this.sort?.active) {
+      const s: profilesOrderBy = {};
+      const sortBy: string = this.sort?.active;
+      (s as any)[sortBy] = this.sort?.direction === 'asc' ? OrderByDirection.AscNullsLast : OrderByDirection.DescNullsLast;
+      order = [s];
+
+      if (JSON.stringify(order) != JSON.stringify(this.lastOrder)) {
+        this.lastOrder = order;
+        this.lastCursor = undefined;
+        cursor = undefined;
+        this.paginator!.pageIndex = 0;
+      }
+    }
+
+    const orCollection: InputMaybe<profilesFilter[]> = [];
+    this._filter.typesFilter.forEach(t => {
+      orCollection.push({ type: { eq: t }, });
+    })
+    this._filter.beverageFilter.forEach(t => {
+      orCollection.push({ beverage_type: { eq: t }, });
+    })
+    this._filter.authorFilter.forEach(t => {
+      orCollection.push({ author: { eq: t }, });
+    })
+    const filter: profilesFilter = {
+      or: [
+        ...orCollection,
+      ]
+    }
 
 
-    this._profileSrv.getProfilesFromIndex(filter, sortDirection,
-      pageIndex, pageSize).pipe(
+    const vars: ProfilesListQueryVariables = {
+      first: this.paginator?.pageSize,
+      cursor,
+      order,
+      filter,
+    };
+    const s = this._profilesGQL.watch(vars).valueChanges
+      .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data))).subscribe(res => {
+        this.pageInfo = res.pageInfo;
+        this.maxlength = res.totalCount;
+        if (goForward) {
+          this.cursorHist.push(this.pageInfo?.startCursor!);
+        }
+        this.profilesSubject.next(res.data);
+      });
+
+
+
+
+
+    // this._profileSrv.getProfilesFromIndex(filter, sortDirection,
+    //   pageIndex, pageSize).pipe(
+    //     catchError(() => of([])),
+    //     finalize(() => this.loadingSubject.next(false))
+    //   )
+    //   .subscribe(profiles => {
+    //     this.profilesSubject.next(profiles);
+    //     // profiles.forEach(p => this._profileSrv.insertProfile(p));
+
+    //   });
+  }
+
+  public insertDefaultProfiles() {
+    this._profileSrv.getProfilesFromIndex("", "asc",
+      0, 1000).pipe(
         catchError(() => of([])),
         finalize(() => this.loadingSubject.next(false))
       )
-      .subscribe(lessons => this.profilesSubject.next(lessons));
+      .subscribe(profiles => {
+        this.profilesSubject.next(profiles);
+        profiles.forEach(p => this._profileSrv.insertProfile(p));
+
+      });
   }
 
   /**

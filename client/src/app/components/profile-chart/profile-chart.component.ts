@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './profile-chart.component.css'
 })
 export class ProfileChartComponent {
+
   @Input()
   public get profile(): Profile | undefined {
     return this._profile;
@@ -22,8 +23,17 @@ export class ProfileChartComponent {
     this.updateChart();
   }
   private _profile: Profile | undefined;
+  private _step: Step | undefined;
   @Input()
-  step: Step | undefined;
+  public set step(value: Step | undefined) {
+    this._step = value;
+    console.log("Step updated", this.step)
+    this.updateChart();
+  }
+
+  public get step(): Step | undefined {
+    return this._step;
+  }
 
   colors = ["#cae8cc", "#abebaf", "#f7ddba", "#f5cf9d", "#eda8ba", "#eda8ba"];
 
@@ -44,7 +54,19 @@ export class ProfileChartComponent {
 
       data: [],
       type: 'spline'
-    }],
+    },
+    {
+
+      data: [],
+      type: 'spline'
+    },
+    {
+
+      data: [],
+      type: 'spline',
+      yAxis: 1,
+    }
+    ],
     xAxis: {
       reversed: false,
       title: {
@@ -60,18 +82,36 @@ export class ProfileChartComponent {
       maxPadding: 0.05,
       showLastLabel: true
     },
-    yAxis: {
-      title: {
-        text: 'Pressure'
+    yAxis: [
+      {
+        title: {
+          text: 'Pressure/Flow'
+        },
+        labels: {
+          format: '{value} bar'
+        },
+        accessibility: {
+          rangeDescription: 'Range: 0s to 20°C.'
+        },
+        lineWidth: 2
       },
-      labels: {
-        format: '{value} bar'
-      },
-      accessibility: {
-        rangeDescription: 'Range: 0s to 20°C.'
-      },
-      lineWidth: 2
-    },
+      {
+        title: {
+          text: 'Temperatur'
+        },
+        labels: {
+          format: '{value} °C'
+        },
+        min: 50,
+        max: 110,
+        accessibility: {
+          rangeDescription: 'Range: 0s to 20°C.'
+        },
+        lineWidth: 2,
+        opposite: true,
+      }
+
+    ],
   }
   ngOnInit() {
 
@@ -85,17 +125,30 @@ export class ProfileChartComponent {
     if (this.chartOptions.series && this.profile) {
 
       this.chartOptions.title!.text = this.profile.title;
-      const series = this.chartOptions.series[0] as Highcharts.SeriesLineOptions;
-      series.data = [];
-      series.name = this.profile.type;
-      series.data?.push([0, 0]);
+      const seriesP = this.chartOptions.series[0] as Highcharts.SeriesLineOptions;
+      seriesP.data = [];
+      seriesP.name = "Pressure [bar]";
+      seriesP.data?.push([0, 0]);
+
+      const seriesF = this.chartOptions.series[1] as Highcharts.SeriesLineOptions;
+      seriesF.data = [];
+      seriesF.name = "Flow [ml/s]";
+      seriesF.data?.push([0, 0]);
+
+      const seriesT = this.chartOptions.series[2] as Highcharts.SeriesLineOptions;
+      seriesT.data = [];
+      seriesT.name = "Temperature [°C]";
+      seriesT.data?.push([0, 0]);
+
       const bands: Highcharts.XAxisPlotBandsOptions[] = (this.chartOptions.xAxis as Highcharts.XAxisOptions).plotBands = [];
       let t = 0;
       let lastT = 0;
       let i = 0;
       this.profile?.steps.forEach(step => {
         t += step.seconds;
-        series.data?.push([t, step.pressure]);
+        seriesP.data?.push([t, step.pressure]);
+        seriesF.data?.push([t, step.flow]);
+        seriesT.data?.push([t, step.temperature]);
 
         bands.push({
           from: lastT,
@@ -113,7 +166,11 @@ export class ProfileChartComponent {
         i++;
       });
 
-      console.log("Series:", this.profile, series.data);
+      console.log("Series:", this.profile, seriesP.data);
     }
+  }
+
+  updateStep(step: Step) {
+    this.updateChart();
   }
 }

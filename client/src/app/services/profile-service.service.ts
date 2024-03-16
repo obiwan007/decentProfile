@@ -1,15 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Profile } from '../models/profile';
+import { Injectable, inject } from '@angular/core';
+import { Exit, Limiter, Profile, Step } from '../models/profile';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { plainToClassFromExist } from 'class-transformer';
-import { Observable, of as observableOf, merge, BehaviorSubject } from 'rxjs';
+import { instanceToPlain, plainToClassFromExist, serialize } from 'class-transformer';
+import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
 import 'reflect-metadata';
+import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
+import { ResultData } from '../models/dataWithPageinfo';
 
 @Injectable({
   providedIn: 'root',
   // deps: [HttpClientModule]
 })
 export class ProfileServiceService {
+
 
   allProfiles: string[] = [
     "Blooming espresso.json",
@@ -82,11 +85,72 @@ export class ProfileServiceService {
   ];
 
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _loadProfileById: ProfileDetailsGQL, private _insertProfile: InsertProfilesGQL, private _insertSteps: InsertStepsGQL, private _http: HttpClient) { }
 
 
+  mapFromGraphQl(p: ProfilesListQuery): ResultData<Profile[]> {
 
-  getProfileById(id: string): Promise<Profile> {
+    const nodes = p.profilesCollection?.edges.map(e => {
+      const node: any = { ...e.node };
+      node.steps = e.node.stepsCollection?.edges.map(e => e.node);
+
+      return node;
+    });
+    const ret = new ResultData<Profile[]>(nodes?.map(n => this.mapFromGraphQlSingle(new Profile(), n)) ?? [],
+      p.profilesCollection?.pageInfo!,
+      p.profilesCollection?.totalCount!);
+    console.log("Mapped", ret.data);
+
+    return ret;
+
+
+  }
+
+  mapFromGraphQlSingle(p: Profile, n: any) {
+    const n2 = structuredClone(n);
+    delete n2.stepsCollection;
+    (n2.steps as Step[]).forEach(s => {
+      const sRaw = (s as any);
+      if (sRaw.exit_type) {
+        const e = new Exit();
+        e.condition = sRaw.exit_condition;
+        e.type = sRaw.exit_type;
+        e.value = sRaw.exit_value;
+        s.exit = e;
+      }
+      delete sRaw.exit_type;
+      delete sRaw.exit_value;
+      delete sRaw.exit_condition;
+
+      if (sRaw.limiter_range) {
+        const e = new Limiter();
+        e.range = sRaw.limiter_range;
+        e.value = sRaw.limiter_value;
+        s.limiter = e;
+      }
+      delete sRaw.limiter_range;
+      delete sRaw.limiter_value;
+    });
+    return plainToClassFromExist(p, n2);
+
+  }
+
+  mapFromGraphQlProfile(p: ProfileDetailsQuery): ResultData<Profile> {
+
+    const nodes = p.profilesCollection?.edges.map(e => {
+      const node: any = { ...e.node };
+      node.steps = e.node.stepsCollection?.edges.map(e => e.node);
+
+      return node;
+    });
+    console.log("Mapped", nodes, p);
+
+    return new ResultData<Profile>(this.mapFromGraphQlSingle(new Profile(), nodes![0]) ?? [],
+      p.profilesCollection?.pageInfo!,
+      1);
+
+  }
+  getAssetProfileById(id: string): Promise<Profile> {
     console.log("Loading Profile: ", id);
 
     return new Promise<Profile>(ret => {
@@ -101,6 +165,14 @@ export class ProfileServiceService {
           ret(p);
         });
     });
+  }
+
+  getProfileById(id: string): Observable<ResultData<Profile>> {
+    const vars: ProfileDetailsQueryVariables = {
+      id: id,
+    }
+    return this._loadProfileById.fetch(vars)
+      .pipe(map(result => this.mapFromGraphQlProfile(result.data)));
   }
 
   getProfilesCount(): number {
@@ -118,12 +190,86 @@ export class ProfileServiceService {
       const to = Math.min(this.allProfiles.length, index + pageSize);
       for (let i = index; i < to; i++) {
         console.log("Loading Id:", this.allProfiles[i]);
-        ret.push(await this.getProfileById(this.allProfiles[i]));
+        ret.push(await this.getAssetProfileById(this.allProfiles[i]));
       }
       value.next(ret);
     };
     observer();
 
     return observable;
+  }
+
+  insertProfile(p: Profile): Promise<boolean> {
+    p.isPublic = true;
+    return new Promise<boolean>(resolver => {
+      const v: profilesInsertInput = {
+        author: p.author,
+        beverage_type: p.beverage_type,
+        isPublic: p.isPublic,
+        notes: p.notes,
+        target_volume: p.target_volume,
+        target_weight: p.target_weight,
+        title: p.title,
+        type: p.type,
+      };
+      this._insertProfile.mutate({ ep: [v] }).subscribe(res => {
+        const id = res.data?.insertIntoprofilesCollection?.records[0].id;
+        console.log("ID:", id);
+        p.id = id!;
+        this.insertStepsForProfile(p).then(() => resolver(true));
+      });
+    });
+
+  }
+
+  insertStepsForProfile(p: Profile): Promise<boolean> {
+    return new Promise<boolean>(resolver => {
+      const v: stepsInsertInput[] = p.steps.map((s, i) => ({
+        profile_id: p.id,
+        exit_condition: s.exit?.condition,
+        exit_type: s.exit?.type,
+        exit_value: s.exit?.value,
+        flow: s.flow,
+        pressure: s.pressure,
+        index: i,
+        limiter_range: s.limiter?.range.toString(),
+        limiter_value: s.limiter?.value,
+        name: s.name,
+        pump: s.pump,
+        seconds: s.seconds,
+        sensor: s.sensor,
+        temperature: s.temperature,
+        transition: s.transition,
+        volume: s.volume,
+        weight: s.weight,
+        isPublic: p.isPublic,
+      }));
+
+      this._insertSteps.mutate({ ep: v }).subscribe(res => {
+        const id = res.data?.insertIntostepsCollection?.records[0].id;
+        console.log("Steps: ID:", id);
+        resolver(true);
+      });
+    });
+  }
+
+  convertToJson(selectedProfile: Profile) {
+    return JSON.stringify(instanceToPlain(selectedProfile), null, 2);
+  }
+
+  async saveProfile(selectedProfile: Profile | undefined) {
+    const s = this.convertToJson(selectedProfile!);
+
+    this.writeContents(s, selectedProfile?.title + '.json', 'application/json');
+    // const s = serialize(selectedProfile);    
+
+  }
+
+  writeContents(content: any, fileName: string, contentType: string) {
+    var a = document.createElement('a');
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
   }
 }

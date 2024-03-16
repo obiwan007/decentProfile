@@ -1,5 +1,5 @@
 import { NonNullableFormBuilder } from "@angular/forms"
-import { Transform, Type } from "class-transformer"
+import { Exclude, Transform, Type } from "class-transformer"
 
 
 export enum ProfileType {
@@ -45,9 +45,21 @@ export class Profile {
     reference_file!: string
     changes_since_last_espresso!: string
     version!: string
+    @Exclude({ toPlainOnly: true })
+    isPublic: boolean = false
+    @Type(() => Boolean)
+    @Exclude({ toPlainOnly: true })
+    isDefault: boolean = false
+    @Exclude({ toPlainOnly: true })
+    __typename!: string;
+
 }
 
 export class Step {
+    @Exclude({ toPlainOnly: true })
+    __typename!: string;
+    @Exclude({ toPlainOnly: true })
+    id!: number;
     name!: string
     @Type(() => Number)
     temperature!: number;
@@ -68,6 +80,12 @@ export class Step {
     exit?: Exit
     @Type(() => Limiter)
     limiter?: Limiter
+    @Exclude({ toPlainOnly: true })
+    isPublic: boolean = false
+    @Exclude({ toPlainOnly: true })
+    index!: number;
+    @Exclude({ toPlainOnly: true })
+    profile_id!: number;
 }
 
 export class Exit {
@@ -80,5 +98,6 @@ export class Exit {
 export class Limiter {
     @Type(() => Number)
     value!: number
-    range!: string
+    @Type(() => Number)
+    range!: number
 }

@@ -31,8 +31,8 @@ export class ProfileEditPageComponent {
 
     const { id } = activatedRoute.snapshot.queryParams;
     if (id) {
-      this._profileSrv.getProfileById(id).then(p => {
-        this.profile = p;
+      this._profileSrv.getProfileById(id).subscribe(p => {
+        this.profile = p.data;
       });
     }
   }
