@@ -6,6 +6,15 @@
     min-height: 100%;
 }
 
+video {
+    object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
 /* Add some content at the bottom of the video/page */
 .content {
     position: fixed;
@@ -30,4 +39,13 @@
 #myBtn:hover {
     background: #ddd;
     color: black;
+}
+
+.viewport-header {
+    position: relative;
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
