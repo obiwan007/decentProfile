@@ -6,6 +6,9 @@ import { FilterData, ProfilesListDataSource } from './profiles-list-datasource';
 import { ProfileServiceService } from '../../services/profile-service.service';
 import { Profile } from '../../models/profile';
 import { tap } from 'rxjs/operators';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -14,7 +17,10 @@ import { tap } from 'rxjs/operators';
   templateUrl: './profiles-list.component.html',
   styleUrl: './profiles-list.component.css',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule,]
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule,
+    MatFormFieldModule, MatSelectModule,
+    MatIconModule
+  ]
 })
 export class ProfilesListComponent implements AfterViewInit {
 
@@ -29,12 +35,17 @@ export class ProfilesListComponent implements AfterViewInit {
   @Input()
   public set filter(value: FilterData) {
     this._filter = value;
-    this.dataSource.setFilter(this._filter);
+
   }
   public get filter(): FilterData {
     return this._filter;
   }
 
+  types: string[] = ["pressure", "flow", "advanced"];
+
+  authors: string[] = ["Decent", "Damian", "Stéphane"];
+
+  beverages: string[] = ["espresso", "filter", "pour-over", "tea_portafilter", "cleaning"];
 
   pageSize = 10;
   dataSource: ProfilesListDataSource;
@@ -86,5 +97,16 @@ export class ProfilesListComponent implements AfterViewInit {
       this.paginator.pageIndex,
       this.paginator.pageSize);
   }
-
+  filterForType($event: MatSelectChange) {
+    this.filter.typesFilter = [...$event.value];
+    this.dataSource.setFilter(this._filter);
+  }
+  filterForBeverage($event: MatSelectChange) {
+    this.filter.beverageFilter = [...$event.value];
+    this.dataSource.setFilter(this._filter);
+  }
+  filterForAuthor($event: MatSelectChange) {
+    this.filter.authorFilter = [...$event.value];
+    this.dataSource.setFilter(this._filter);
+  }
 }

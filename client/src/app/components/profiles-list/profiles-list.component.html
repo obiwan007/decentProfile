@@ -9,19 +9,82 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <div mat-sort-header>Title</div>
+
+      </th>
       <td mat-cell *matCellDef="let row">{{row.title}}</td>
     </ng-container>
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <div mat-sort-header>
+          <mat-form-field class="mr-1" style="width:88px;">
+            <!-- <mat-label>Type</mat-label> -->
+
+            <mat-label>Type</mat-label>
+            <mat-select panelWidth="150px" matInput multiple (selectionChange)="filterForType($event)">
+              <!-- <mat-select-trigger>
+                <mat-icon>filter</mat-icon>
+              </mat-select-trigger> -->
+              @for (food of types; track food) {
+              <mat-option [value]="food">{{food}}</mat-option>
+              }
+            </mat-select>
+
+
+          </mat-form-field>
+        </div>
+
+      </th>
       <td mat-cell *matCellDef="let row">{{row.type}}</td>
     </ng-container>
     <ng-container matColumnDef="author">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Author</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <div mat-sort-header>
+          <mat-form-field class="mr-1" style="width:128px;">
+            <!-- <mat-label>Type</mat-label> -->
+
+            <mat-label>Author</mat-label>
+            <mat-select panelWidth="180px" matInput multiple (selectionChange)="filterForAuthor($event)">
+              <!-- <mat-select-trigger>
+                <mat-icon>filter</mat-icon>
+              </mat-select-trigger> -->
+              @for (food of authors; track food) {
+              <mat-option [value]="food">{{food}}</mat-option>
+              }
+            </mat-select>
+
+
+          </mat-form-field>
+        </div>
+
+
+      </th>
       <td mat-cell *matCellDef="let row">{{row.author}}</td>
     </ng-container>
     <ng-container matColumnDef="beverage_type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Beverage</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <div mat-sort-header>
+          <mat-form-field class="mr-1" style="width:128px;">
+            <!-- <mat-label>Type</mat-label> -->
+
+            <mat-label>Beverage</mat-label>
+            <mat-select panelWidth="180px" matInput multiple (selectionChange)="filterForBeverage($event)">
+              <!-- <mat-select-trigger>
+                <mat-icon>filter</mat-icon>
+              </mat-select-trigger> -->
+              @for (food of beverages; track food) {
+              <mat-option [value]="food">{{food}}</mat-option>
+              }
+            </mat-select>
+
+
+          </mat-form-field>
+        </div>
+
+
+
+      </th>
       <td mat-cell *matCellDef="let row">{{row.beverage_type}}</td>
     </ng-container>
 

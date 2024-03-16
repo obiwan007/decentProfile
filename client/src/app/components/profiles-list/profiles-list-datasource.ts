@@ -14,6 +14,7 @@ import { PageInfo } from '../../models/dataWithPageinfo';
 export class FilterData {
   typesFilter: string[] = [];
   beverageFilter: string[] = [];
+  authorFilter: string[] = [];
 }
 
 /**
@@ -157,6 +158,9 @@ export class ProfilesListDataSource extends DataSource<Profile> {
     })
     this._filter.beverageFilter.forEach(t => {
       orCollection.push({ beverage_type: { eq: t }, });
+    })
+    this._filter.authorFilter.forEach(t => {
+      orCollection.push({ author: { eq: t }, });
     })
     const filter: profilesFilter = {
       or: [

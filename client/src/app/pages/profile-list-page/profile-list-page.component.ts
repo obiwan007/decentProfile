@@ -14,13 +14,17 @@ import { MatFormFieldModule, MatHint } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FilterData } from '../../components/profiles-list/profiles-list-datasource';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-profile-list-page',
   standalone: true,
   imports: [ProfilesListComponent, ProfileDetailsComponent,
     RenderStepsComponent, MatFormFieldModule, MatSelectModule, MatInputModule, MatHint,
-    JsonPipe, MatButtonModule, MatCardModule, ProfileChartComponent
+    JsonPipe, MatButtonModule, MatCardModule, ProfileChartComponent,
+    MatToolbarModule,
+    MatIconModule,
   ],
   templateUrl: './profile-list-page.component.html',
   styleUrl: './profile-list-page.component.css'
@@ -82,5 +86,17 @@ export class ProfileListPageComponent {
     console.log("event", $event)
     this.filter = structuredClone(this.filter);
     this.filter.beverageFilter = [...$event.value];
+  }
+  onEdit() {
+
+    const queryParams: Params = { id: this.selectedProfile?.id };
+
+    const urlTree = this.router.createUrlTree(["profiles/edit"], {
+      queryParams: queryParams,
+      queryParamsHandling: "merge",
+      preserveFragment: true
+    });
+
+    this.router.navigateByUrl(urlTree);
   }
 }
