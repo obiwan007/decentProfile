@@ -10,12 +10,14 @@ import { ViewModeDirective } from '../editable/view-mode.directive';
 import { EditModeDirective } from '../editable/edit-mode.directive';
 import { MatInputModule } from '@angular/material/input';
 import { FocusableDirective } from '../editable/focusable.directive';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-profile-details',
   standalone: true,
   imports: [JsonPipe, MatCardModule, CommonModule,
     ReactiveFormsModule,
+    MatIconModule,
     FormsModule,
     MatButtonModule,
     MatInputModule,

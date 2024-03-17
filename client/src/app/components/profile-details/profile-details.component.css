@@ -2,3 +2,7 @@
     margin-top: 5px;
     font-weight: bold;
 }
+
+.mat-form-field.mat-form-field {
+    width: 100%;
+}

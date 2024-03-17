@@ -3,11 +3,14 @@ import { ViewModeDirective } from './view-mode.directive';
 import { EditModeDirective } from './edit-mode.directive';
 import { Subject, filter, fromEvent, switchMapTo, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-editable',
   standalone: true,
-  imports: [CommonModule, ViewModeDirective, EditModeDirective],
+  imports: [CommonModule, ViewModeDirective, EditModeDirective,
+    MatIconModule,
+  ],
   templateUrl: './editable.component.html',
   styleUrl: './editable.component.scss'
 })

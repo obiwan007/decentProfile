@@ -13,11 +13,25 @@ import { MatCardModule } from '@angular/material/card';
 import { ProfileChartComponent } from '../profile-chart/profile-chart.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileServiceService } from '../../services/profile-service.service';
+import { EditableComponent } from '../editable/editable.component';
+import { EditModeDirective } from '../editable/edit-mode.directive';
+import { FocusableDirective } from '../editable/focusable.directive';
+import { ViewModeDirective } from '../editable/view-mode.directive';
 @Component({
   selector: 'app-basic-profile-edit',
   standalone: true,
-  imports: [ProfileChartComponent, MatCardModule, RenderStepComponent, ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
-    AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, CommonModule, FormsModule, ReactiveFormsModule, MatInputModule],
+  imports: [ProfileChartComponent,
+    MatCardModule,
+    RenderStepComponent,
+    ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
+    AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, CommonModule, FormsModule,
+    ReactiveFormsModule, MatInputModule,
+    EditableComponent,
+    ViewModeDirective,
+    EditModeDirective,
+    FocusableDirective,
+
+  ],
   templateUrl: './basic-profile-edit.component.html',
   styleUrl: './basic-profile-edit.component.css'
 })

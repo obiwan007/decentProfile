@@ -1,5 +1,5 @@
 @if(profile){
-<div class="w-full">
+<div style="background:green;" class="w-full">
     <mat-card>
         <mat-card-header>
             <mat-card-title>
@@ -19,7 +19,8 @@
             @if(selectable){
             <mat-selection-list [multiple]="false">
                 @for(step of profile.steps; track profile.id){
-                <mat-list-option [selected]="step===currentStep" (click)="onSelected(step)" [value]="step">
+                <mat-list-option [selected]="step===currentStep" (click)="onSelected(step)"
+                                 [value]="step">
                     {{step.name}}</mat-list-option>
                 }
             </mat-selection-list>
