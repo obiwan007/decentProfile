@@ -36,7 +36,8 @@ export class AuthComponent {
       alert('Check your email for the login link!')
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message)
+        console.error(error.message);
+        //alert(error.message)
       }
     } finally {
       this.signInForm.reset()
@@ -59,6 +60,7 @@ export class AuthComponent {
       this.signInForm.reset()
       this.loading = false
     }
+    this.router.navigateByUrl("profiles");
   }
 
   async signInPassword(doSignUp: boolean): Promise<void> {
@@ -77,7 +79,7 @@ export class AuthComponent {
 
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message)
+        console.error(error.message);
       }
     } finally {
       this.signInForm.reset()

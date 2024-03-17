@@ -4,11 +4,25 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { EditableComponent } from '../editable/editable.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ViewModeDirective } from '../editable/view-mode.directive';
+import { EditModeDirective } from '../editable/edit-mode.directive';
+import { MatInputModule } from '@angular/material/input';
+import { FocusableDirective } from '../editable/focusable.directive';
 
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [JsonPipe, MatCardModule, MatButtonModule, CommonModule],
+  imports: [JsonPipe, MatCardModule, CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatButtonModule,
+    MatInputModule,
+    ViewModeDirective,
+    EditModeDirective,
+    FocusableDirective,
+    EditableComponent],
   templateUrl: './profile-details.component.html',
   styleUrl: './profile-details.component.css'
 })
