@@ -7,11 +7,23 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { AuthComponent } from './pages/auth/auth.component';
 import { AccountComponent } from './pages/account/account.component';
 import { LandingComponent } from './pages/landing/landing.component';
+import { authGuard } from './authguard';
 
 export const routes: Routes = [
+    {
+        path: '', component: ProfileListPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'profiles', component: ProfileListPageComponent,
+        canActivate: [authGuard],
+    },
     { path: 'landing', component: LandingComponent },
-    { path: 'profiles', component: ProfileListPageComponent },
-    { path: 'profiles/edit', component: ProfileEditPageComponent },
+
+    {
+        path: 'profiles/edit', component: ProfileEditPageComponent,
+        canActivate: [authGuard],
+    },
     {
         path: 'login',
         component: AuthComponent,
@@ -19,7 +31,11 @@ export const routes: Routes = [
     {
         path: 'account',
         component: AccountComponent,
+        canActivate: [authGuard],
     },
-    { path: '', redirectTo: '/landing', pathMatch: 'full' },
+    // {
+    //     path: '', redirectTo: '/profiles', pathMatch: 'full',
+    //     canActivate: [authGuard],
+    // },
     { path: '**', component: PageNotFoundComponent }
 ];

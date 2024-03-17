@@ -10,6 +10,7 @@ import {
 } from '@supabase/supabase-js'
 import { environment } from '../../environments/environment'
 import { BehaviorSubject } from 'rxjs'
+import { Router } from '@angular/router'
 
 export interface UserProfile {
   id?: string
@@ -27,7 +28,7 @@ export class SupabaseService {
 
   _session$: BehaviorSubject<AuthSession | null>;
 
-  constructor() {
+  constructor(private router: Router) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
     this._session$ = new BehaviorSubject<AuthSession | null>(null);
 
@@ -48,6 +49,10 @@ export class SupabaseService {
       this._session = data.session
     })
     return this._session
+  }
+
+  loadSession(): Promise<any> {
+    return this.supabase.auth.getSession();
   }
 
   userprofile(user: User) {
@@ -78,8 +83,9 @@ export class SupabaseService {
     return this.supabase.auth.signUp({ email, password })
   }
 
-  signOut() {
-    return this.supabase.auth.signOut()
+  async signOut() {
+    await this.supabase.auth.signOut()
+    this.router.navigate(['/landing']);
   }
 
   updateUserProfile(profile: UserProfile) {
