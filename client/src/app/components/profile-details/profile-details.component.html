@@ -1,13 +1,13 @@
 @if(profile){
 
-<mat-card style="width:100%" class="w-full">
+<mat-card>
     <mat-card-header>
         <mat-card-title>
             <app-editable>
                 <ng-template viewMode>{{profile.title}}</ng-template>
                 <ng-template editMode>
-                    <div class="">
-                        <mat-form-field class="flex">
+                    <div class="w-full">
+                        <mat-form-field class="w-full">
                             <input type="text" matInput [(ngModel)]="profile.title" focusable editableOnEnter>
                         </mat-form-field>
                     </div>
@@ -30,14 +30,14 @@
                 {{profile.notes}}
             </ng-template>
             <ng-template editMode>
-                <div class="flex w-full">
-                    <mat-form-field class="flex w-full">
-                        <mat-label>Notes</mat-label>
-                        <textarea [style.width.%]="100" type="text" matInput [(ngModel)]="profile.notes"
-                                  focusable
-                                  editableOnEnter></textarea>
-                    </mat-form-field>
-                </div>
+
+                <mat-form-field class="flex w-full">
+                    <mat-label>Notes</mat-label>
+                    <textarea type="text" matInput [(ngModel)]="profile.notes"
+                              focusable
+                              editableOnEnter></textarea>
+                </mat-form-field>
+
             </ng-template>
         </app-editable>
 

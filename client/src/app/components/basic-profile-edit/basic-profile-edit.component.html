@@ -1,10 +1,10 @@
 <div class="flex flex-row" style="padding:15px">
     <div class="flex flex-col w-2/6">
-        <button (click)="save()" mat-raised-button>Save</button>
-        <div class="flex m-2">
+        <button (click)=" save()" mat-raised-button>Save</button>
+        <div class="p-2">
             <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
         </div>
-        <div class="flex m-2">
+        <div class="m-2">
             <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"
                               [profile]="profile"></app-render-steps>
         </div>
@@ -40,7 +40,17 @@
             <mat-card *ngIf="profile">
                 <mat-card-header>
                     <mat-card-title>
-                        {{step.name}}
+                        <app-editable>
+                            <ng-template viewMode>{{step.name}}</ng-template>
+                            <ng-template editMode>
+                                <div class="">
+                                    <mat-form-field class="flex">
+                                        <input type="text" matInput [(ngModel)]="step.name" focusable
+                                               editableOnEnter>
+                                    </mat-form-field>
+                                </div>
+                            </ng-template>
+                        </app-editable>
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
