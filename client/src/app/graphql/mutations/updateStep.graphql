@@ -1,0 +1,8 @@
+mutation UpdateSteps($id: BigInt!, $set: stepsUpdateInput!) {
+  updatestepsCollection(set: $set, filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  }
+}   

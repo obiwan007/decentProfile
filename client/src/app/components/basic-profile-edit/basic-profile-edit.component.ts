@@ -17,6 +17,8 @@ import { EditableComponent } from '../editable/editable.component';
 import { EditModeDirective } from '../editable/edit-mode.directive';
 import { FocusableDirective } from '../editable/focusable.directive';
 import { ViewModeDirective } from '../editable/view-mode.directive';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-basic-profile-edit',
   standalone: true,
@@ -30,6 +32,8 @@ import { ViewModeDirective } from '../editable/view-mode.directive';
     ViewModeDirective,
     EditModeDirective,
     FocusableDirective,
+    MatToolbarModule,
+    MatIconModule,
 
   ],
   templateUrl: './basic-profile-edit.component.html',
@@ -56,8 +60,7 @@ export class BasicProfileEditComponent {
   }
 
   save() {
-    this._profileService.insertProfile(this.profile!);
-
+    this._profileService.updateProfile(this.profile!);
   }
 
   stepChanged(step: Step) {

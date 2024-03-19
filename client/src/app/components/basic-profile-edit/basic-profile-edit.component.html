@@ -1,6 +1,25 @@
+<mat-toolbar>
+    <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
+            aria-label="Example icon-button with share icon">
+        <mat-icon>save</mat-icon>
+    </button>
+    <button mat-icon-button title="Copy profile" class="example-icon favorite-icon"
+            aria-label="Example icon-button with heart icon">
+        <mat-icon>file_copy</mat-icon>
+    </button>
+    <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
+            aria-label="Example icon-button with heart icon">
+        <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button title="Share profile" class="example-icon"
+            aria-label="Example icon-button with share icon">
+        <mat-icon>share</mat-icon>
+    </button>
+
+
+</mat-toolbar>
 <div class="flex flex-row" style="padding:15px">
     <div class="flex flex-col w-2/6">
-        <button (click)=" save()" mat-raised-button>Save</button>
         <div class="p-2">
             <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
         </div>
