@@ -1,5 +1,6 @@
 .full-width-table {
   width: 100%;
+
 }
 
 .mat-column-type {
@@ -80,4 +81,9 @@
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
+}
+
+.highlight {
+  background: #bcbcbc;
+  /* green */
 }
