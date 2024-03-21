@@ -36,6 +36,8 @@ export class ProfilesListComponent implements AfterViewInit {
   onClick: EventEmitter<Profile> = new EventEmitter();
 
   private _filter: FilterData = new FilterData();
+  selectedProfile?: Profile;
+
   @Input()
   public set filter(value: FilterData) {
     this._filter = value;
@@ -55,7 +57,7 @@ export class ProfilesListComponent implements AfterViewInit {
   dataSource: ProfilesListDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['title', 'type', 'author', 'beverage_type', 'isDefault', 'isPublic'];
+  displayedColumns = ['title', 'type', 'author', 'beverage_type'];
 
   /**
    *
@@ -92,6 +94,7 @@ export class ProfilesListComponent implements AfterViewInit {
 
   onRowClicked(row: Profile) {
     this.onClick.emit(row);
+    this.selectedProfile = row;
   }
 
   loadLessonsPage() {

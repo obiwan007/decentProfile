@@ -719,6 +719,13 @@ export type userprofilesUpdateResponse = {
   records: Array<userprofiles>;
 };
 
+export type InsertProfilesMutationVariables = Exact<{
+  ep: Array<profilesInsertInput> | profilesInsertInput;
+}>;
+
+
+export type InsertProfilesMutation = { __typename: 'Mutation', insertIntoprofilesCollection?: { __typename: 'profilesInsertResponse', affectedCount: number, records: Array<{ __typename: 'profiles', id: string }> } | null };
+
 export type InsertStepsMutationVariables = Exact<{
   ep: Array<stepsInsertInput> | stepsInsertInput;
 }>;
@@ -726,12 +733,21 @@ export type InsertStepsMutationVariables = Exact<{
 
 export type InsertStepsMutation = { __typename: 'Mutation', insertIntostepsCollection?: { __typename: 'stepsInsertResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } | null };
 
-export type InsertProfilesMutationVariables = Exact<{
-  ep: Array<profilesInsertInput> | profilesInsertInput;
+export type UpdateProfilesMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+  set: profilesUpdateInput;
 }>;
 
 
-export type InsertProfilesMutation = { __typename: 'Mutation', insertIntoprofilesCollection?: { __typename: 'profilesInsertResponse', affectedCount: number, records: Array<{ __typename: 'profiles', id: string }> } | null };
+export type UpdateProfilesMutation = { __typename: 'Mutation', updateprofilesCollection: { __typename: 'profilesUpdateResponse', affectedCount: number, records: Array<{ __typename: 'profiles', id: string }> } };
+
+export type UpdateStepsMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+  set: stepsUpdateInput;
+}>;
+
+
+export type UpdateStepsMutation = { __typename: 'Mutation', updatestepsCollection: { __typename: 'stepsUpdateResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } };
 
 export type ProfileDetailsQueryVariables = Exact<{
   id?: InputMaybe<Scalars['BigInt']['input']>;
@@ -750,6 +766,30 @@ export type ProfilesListQueryVariables = Exact<{
 
 export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', totalCount: number, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'profilesEdge', cursor: string, node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, isPublic?: boolean | null, isDefault?: boolean | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, pressure?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null, isPublic?: boolean | null } }> } | null } }> } | null };
 
+export const InsertProfilesDocument = gql`
+    mutation InsertProfiles($ep: [profilesInsertInput!]!) {
+  __typename
+  insertIntoprofilesCollection(objects: $ep) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertProfilesGQL extends Apollo.Mutation<InsertProfilesMutation, InsertProfilesMutationVariables> {
+    override document = InsertProfilesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const InsertStepsDocument = gql`
     mutation InsertSteps($ep: [stepsInsertInput!]!) {
   __typename
@@ -774,10 +814,10 @@ export const InsertStepsDocument = gql`
       super(apollo);
     }
   }
-export const InsertProfilesDocument = gql`
-    mutation InsertProfiles($ep: [profilesInsertInput!]!) {
+export const UpdateProfilesDocument = gql`
+    mutation UpdateProfiles($id: BigInt!, $set: profilesUpdateInput!) {
   __typename
-  insertIntoprofilesCollection(objects: $ep) {
+  updateprofilesCollection(set: $set, filter: {id: {eq: $id}}) {
     __typename
     affectedCount
     records {
@@ -791,8 +831,32 @@ export const InsertProfilesDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class InsertProfilesGQL extends Apollo.Mutation<InsertProfilesMutation, InsertProfilesMutationVariables> {
-    override document = InsertProfilesDocument;
+  export class UpdateProfilesGQL extends Apollo.Mutation<UpdateProfilesMutation, UpdateProfilesMutationVariables> {
+    override document = UpdateProfilesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateStepsDocument = gql`
+    mutation UpdateSteps($id: BigInt!, $set: stepsUpdateInput!) {
+  __typename
+  updatestepsCollection(set: $set, filter: {id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateStepsGQL extends Apollo.Mutation<UpdateStepsMutation, UpdateStepsMutationVariables> {
+    override document = UpdateStepsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

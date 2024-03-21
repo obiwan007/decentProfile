@@ -4,8 +4,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { instanceToPlain, plainToClassFromExist, serialize } from 'class-transformer';
 import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
 import 'reflect-metadata';
-import { InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, profilesInsertInput, stepsInsertInput } from '../graphql/generated';
+import {
+  InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateProfilesGQL, UpdateStepsGQL, profilesInsertInput, profilesUpdateInput,
+  stepsInsertInput, stepsUpdateInput
+} from '../graphql/generated';
 import { ResultData } from '../models/dataWithPageinfo';
+import { cloneDeep } from '@apollo/client/utilities';
 
 @Injectable({
   providedIn: 'root',
@@ -85,7 +89,12 @@ export class ProfileServiceService {
   ];
 
 
-  constructor(private _loadProfileById: ProfileDetailsGQL, private _insertProfile: InsertProfilesGQL, private _insertSteps: InsertStepsGQL, private _http: HttpClient) { }
+  constructor(private _loadProfileById: ProfileDetailsGQL,
+    private _insertProfile: InsertProfilesGQL,
+    private _updateProfile: UpdateProfilesGQL,
+    private _insertSteps: InsertStepsGQL,
+    private _updateSteps: UpdateStepsGQL,
+    private _http: HttpClient) { }
 
 
   mapFromGraphQl(p: ProfilesListQuery): ResultData<Profile[]> {
@@ -199,9 +208,15 @@ export class ProfileServiceService {
     return observable;
   }
 
-  insertProfile(p: Profile): Promise<boolean> {
+  copyProfile(p: Profile): Promise<string> {
+    const pNew = cloneDeep(p);
+    pNew.title += " copy";
+    return this.insertProfile(pNew);
+  }
+
+  insertProfile(p: Profile): Promise<string> {
     p.isPublic = true;
-    return new Promise<boolean>(resolver => {
+    return new Promise<string>(resolver => {
       const v: profilesInsertInput = {
         author: p.author,
         beverage_type: p.beverage_type,
@@ -216,10 +231,106 @@ export class ProfileServiceService {
         const id = res.data?.insertIntoprofilesCollection?.records[0].id;
         console.log("ID:", id);
         p.id = id!;
-        this.insertStepsForProfile(p).then(() => resolver(true));
+        this.insertStepsForProfile(p).then(() => resolver(p.id));
       });
     });
 
+  }
+  updateProfile(p: Profile): Promise<boolean> {
+    p.isPublic = true;
+    return new Promise<boolean>(resolver => {
+      const v: profilesUpdateInput = {
+        author: p.author,
+        beverage_type: p.beverage_type,
+        isPublic: p.isPublic,
+        notes: p.notes,
+        target_volume: p.target_volume,
+        target_weight: p.target_weight,
+        title: p.title,
+        type: p.type,
+      };
+      this._updateProfile.mutate({ id: p.id, set: v }).subscribe(async res => {
+        const id = res.data?.updateprofilesCollection?.records[0].id;
+        console.log("ID:", id);
+        p.id = id!;
+        let i = 0;
+        for (const s of p.steps) {
+          s.index = i;
+          i++;
+          if (s.id > 0) {
+            await this.updateStep(p, s);
+          } else {
+            await this.insertStep(p, s);
+          }
+        }
+
+      });
+    });
+
+  }
+
+  updateStep(p: Profile, s: Step): Promise<boolean> {
+    p.isPublic = true;
+    return new Promise<boolean>(resolver => {
+      const v: stepsUpdateInput = {
+        profile_id: p.id,
+        exit_condition: s.exit?.condition,
+        exit_type: s.exit?.type,
+        exit_value: s.exit?.value,
+        flow: s.flow,
+        pressure: s.pressure,
+        index: s.index,
+        limiter_range: s.limiter?.range.toString(),
+        limiter_value: s.limiter?.value,
+        name: s.name,
+        pump: s.pump,
+        seconds: s.seconds,
+        sensor: s.sensor,
+        temperature: s.temperature,
+        transition: s.transition,
+        volume: s.volume,
+        weight: s.weight,
+        isPublic: p.isPublic,
+      };
+
+      this._updateSteps.mutate({ id: p.id, set: v }).subscribe(res => {
+        const id = res.data?.updatestepsCollection?.records[0].id;
+        console.log("ID:", id);
+        p.id = id!;
+      });
+    });
+
+  }
+
+  insertStep(p: Profile, s: Step): Promise<boolean> {
+    return new Promise<boolean>(resolver => {
+      const v: stepsInsertInput = {
+        profile_id: p.id,
+        exit_condition: s.exit?.condition,
+        exit_type: s.exit?.type,
+        exit_value: s.exit?.value,
+        flow: s.flow,
+        pressure: s.pressure,
+        index: s.index,
+        limiter_range: s.limiter?.range.toString(),
+        limiter_value: s.limiter?.value,
+        name: s.name,
+        pump: s.pump,
+        seconds: s.seconds,
+        sensor: s.sensor,
+        temperature: s.temperature,
+        transition: s.transition,
+        volume: s.volume,
+        weight: s.weight,
+        isPublic: p.isPublic,
+      };
+
+      this._insertSteps.mutate({ ep: v }).subscribe(res => {
+        const id = res.data?.insertIntostepsCollection?.records[0].id;
+        console.log("Steps: ID:", id);
+        resolver(true);
+      });
+    });
   }
 
   insertStepsForProfile(p: Profile): Promise<boolean> {

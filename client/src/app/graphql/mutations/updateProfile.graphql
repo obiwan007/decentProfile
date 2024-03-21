@@ -1,0 +1,8 @@
+mutation UpdateProfiles($id: BigInt!, $set: profilesUpdateInput!) {
+  updateprofilesCollection(set: $set, filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  }
+}

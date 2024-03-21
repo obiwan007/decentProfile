@@ -31,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ProfileListPageComponent {
 
+
   selectedProfile: Profile | undefined;
 
   filter: FilterData = new FilterData();
@@ -89,7 +90,11 @@ export class ProfileListPageComponent {
   }
   onEdit() {
 
-    const queryParams: Params = { id: this.selectedProfile?.id };
+    this.navigateToProfile(this.selectedProfile?.id!);
+  }
+
+  private navigateToProfile(id: string) {
+    const queryParams: Params = { id };
 
     const urlTree = this.router.createUrlTree(["profiles/edit"], {
       queryParams: queryParams,
@@ -102,5 +107,10 @@ export class ProfileListPageComponent {
 
   onSave() {
     this._profileSrv.saveProfile(this.selectedProfile);
+  }
+
+  async onCopy() {
+    const id = await this._profileSrv.copyProfile(this.selectedProfile!);
+    this.navigateToProfile(id);
   }
 }
