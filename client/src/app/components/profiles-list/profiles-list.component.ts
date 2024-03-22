@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
 import { MatListItem, MatListItemIcon, MatListModule } from '@angular/material/list';
 import { MatLineModule } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -25,6 +26,8 @@ import { MatLineModule } from '@angular/material/core';
     MatTableModule, MatPaginatorModule, MatSortModule,
     MatFormFieldModule, MatSelectModule,
     MatIconModule,
+    FormsModule,
+
     MatListModule,
     MatLineModule,
     MatListItem,
@@ -35,6 +38,8 @@ import { MatLineModule } from '@angular/material/core';
   ]
 })
 export class ProfilesListComponent implements AfterViewInit {
+
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -115,7 +120,12 @@ export class ProfilesListComponent implements AfterViewInit {
       .subscribe();
 
   }
+  compareObjects(o1: any, o2: any) {
 
+    console.log("Compare", o1, o2)
+    if (o2.value === o1.value) return true;
+    return false;
+  }
   onRowClicked(row: Profile) {
     this.onClick.emit(row);
     this.selectedProfile = row;

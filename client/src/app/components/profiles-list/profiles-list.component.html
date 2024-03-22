@@ -4,7 +4,9 @@
 
       <mat-form-field class="mr-1" style="width:128px;">
         <mat-label>Filter</mat-label>
-        <mat-select [(value)]="selected" panelWidth="180px" matInput multiple
+        <mat-select
+                    [compareWith]="compareObjects"
+                    [(ngModel)]="selected" panelWidth="180px" matInput multiple
                     (selectionChange)="filterForBeverage($event)">
 
           <mat-optgroup label="Type">
@@ -16,7 +18,8 @@
           <mat-optgroup label="Beverage">
             @for (food of beverages; track food) {
 
-            <mat-option [value]="{value: food, groupValue: 'beverage'}">{{food}}</mat-option>
+            <mat-option
+                        [value]="{value: food, groupValue: 'beverage'}">{{food}}</mat-option>
 
             }
           </mat-optgroup>
