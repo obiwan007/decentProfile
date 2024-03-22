@@ -11,6 +11,7 @@ import { EditModeDirective } from '../editable/edit-mode.directive';
 import { MatInputModule } from '@angular/material/input';
 import { FocusableDirective } from '../editable/focusable.directive';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-profile-details',
@@ -24,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
     ViewModeDirective,
     EditModeDirective,
     FocusableDirective,
+    MatSlideToggleModule,
     EditableComponent],
   templateUrl: './profile-details.component.html',
   styleUrl: './profile-details.component.css'
@@ -35,6 +37,9 @@ export class ProfileDetailsComponent {
 
   @Input()
   showButtons: boolean = true;
+
+  @Input()
+  edit: boolean = false;
   /**
    *
    */

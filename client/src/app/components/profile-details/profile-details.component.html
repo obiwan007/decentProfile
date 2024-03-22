@@ -23,6 +23,16 @@
         <div>{{profile.author}}</div>
         <div class="title">Beverage</div>
         <div>{{profile.beverage_type}}</div>
+        <div class="title">Default</div>
+        <div>{{profile.isDefault? "Yes" : "No"}}</div>
+        <div class="title">Public</div>
+        <div><mat-slide-toggle *ngIf="!profile.isDefault && edit==true"
+                              [(ngModel)]="profile.isPublic">{{profile.isPublic? "Yes" :
+                "No"}}</mat-slide-toggle>
+        </div>
+        <div *ngIf="profile.isDefault || edit==false">{{profile.isPublic? "Yes" : "No"}}
+
+        </div>
         <div class="title">Notes</div>
 
         <app-editable>

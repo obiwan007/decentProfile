@@ -21,7 +21,7 @@
 <div class="flex flex-row" style="padding:15px">
     <div class="flex flex-col w-2/6">
         <div class="p-2">
-            <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
+            <app-profile-details [edit]="true" [showButtons]="false" [profile]="profile"></app-profile-details>
         </div>
         <div class="m-2">
             <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"

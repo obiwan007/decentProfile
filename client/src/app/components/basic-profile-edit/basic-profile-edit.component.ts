@@ -59,8 +59,8 @@ export class BasicProfileEditComponent {
     this.step = step;
   }
 
-  save() {
-    this._profileService.updateProfile(this.profile!);
+  async save() {
+    await this._profileService.updateProfile(this.profile!);
   }
 
   stepChanged(step: Step) {

@@ -237,7 +237,6 @@ export class ProfileServiceService {
 
   }
   updateProfile(p: Profile): Promise<boolean> {
-    p.isPublic = true;
     return new Promise<boolean>(resolver => {
       const v: profilesUpdateInput = {
         author: p.author,
@@ -270,7 +269,6 @@ export class ProfileServiceService {
   }
 
   updateStep(p: Profile, s: Step): Promise<boolean> {
-    p.isPublic = true;
     return new Promise<boolean>(resolver => {
       const v: stepsUpdateInput = {
         profile_id: p.id,

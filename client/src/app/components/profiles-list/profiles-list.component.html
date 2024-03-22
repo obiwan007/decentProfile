@@ -48,8 +48,8 @@
         row.beverage_type=='cleaning'?'cleaning_services' : 'star' }}
       </mat-icon>
       <div matLine>{{row.title}}
-        <mat-icon *ngIf="row.isDefault">star</mat-icon>
-        <mat-icon *ngIf="row.isPublic">accessibility</mat-icon>
+        <mat-icon *ngIf="row.isDefault" title="Default profile">star</mat-icon>
+        <mat-icon *ngIf="row.isPublic" title="Public profile">accessibility</mat-icon>
       </div>
       <div matLine>{{row.type}} {{row.beverage_type}} by {{row.author}}
 
