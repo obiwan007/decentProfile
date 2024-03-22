@@ -6,14 +6,15 @@ import { ProfileDetailsComponent } from '../../components/profile-details/profil
 import { RenderStepsComponent } from '../../components/render-steps/render-steps.component';
 import { AdvancedProfileEditComponent } from '../../components/advanced-profile-edit/advanced-profile-edit.component';
 import { BasicProfileEditComponent } from '../../components/basic-profile-edit/basic-profile-edit.component';
+import { DFlowProfileEditComponent } from '../../components/d-flow-profile-edit/d-flow-profile-edit.component';
 
 @Component({
-  selector: 'app-profile-edit-page',
-  standalone: true,
-  imports: [ProfileDetailsComponent, RenderStepsComponent,
-    AdvancedProfileEditComponent, BasicProfileEditComponent],
-  templateUrl: './profile-edit-page.component.html',
-  styleUrl: './profile-edit-page.component.css'
+    selector: 'app-profile-edit-page',
+    standalone: true,
+    imports: [ProfileDetailsComponent, RenderStepsComponent,
+      AdvancedProfileEditComponent, BasicProfileEditComponent, DFlowProfileEditComponent],
+    templateUrl: './profile-edit-page.component.html',
+    styleUrl: './profile-edit-page.component.css'
 })
 export class ProfileEditPageComponent {
   profile: Profile | undefined;
