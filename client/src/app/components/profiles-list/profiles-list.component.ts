@@ -45,6 +45,7 @@ export class ProfilesListComponent implements AfterViewInit {
 
   private _filter: FilterData = new FilterData();
   selectedProfile?: Profile;
+  selected: any;
 
   @Input()
   public set filter(value: FilterData) {
@@ -73,12 +74,26 @@ export class ProfilesListComponent implements AfterViewInit {
   constructor(private _profileSrv: ProfileServiceService) {
     console.log("Loading Profile");
     this.dataSource = new ProfilesListDataSource(this._profileSrv);
+
+    const f = localStorage.getItem("filter");
+    if (f) {
+      this.selected = JSON.parse(f);
+      this.filterForBeverage({ source: this as any, value: this.selected });
+    } else {
+      this.selected = [{
+        value: 'default', groupValue: 'default',
+      },
+      {
+        value: 'public', groupValue: 'default',
+      }
+      ];
+    }
     // this.dataSource.insertDefaultProfiles();
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.sort.sort({ id: "title", start: "asc", disableClear: false });//active = "title";  
+      this.sort?.sort({ id: "title", start: "asc", disableClear: false });//active = "title";  
     }, 0);
 
     this.dataSource.sort = this.sort;
@@ -93,7 +108,7 @@ export class ProfilesListComponent implements AfterViewInit {
       )
       .subscribe();
 
-    this.sort.sortChange
+    this.sort?.sortChange
       .pipe(
         tap(() => this.loadLessonsPage())
       )
@@ -115,7 +130,7 @@ export class ProfilesListComponent implements AfterViewInit {
   }
 
   filterForBeverage($event: MatSelectChange) {
-    console.log("Filter: ", $event)
+    console.log("Filter: ", this.selected)
 
     this.filter.typesFilter = [...$event.value
       .filter((f: any) => f.groupValue === 'type')
@@ -127,8 +142,14 @@ export class ProfilesListComponent implements AfterViewInit {
       .filter((f: any) => f.groupValue === 'author')
       .map((m: any) => m.value)];
 
+    this.filter.defaultFilter = $event.value.find((v: any) => v.value === "default") ? true : false;
+    this.filter.publicFilter = $event.value.find((v: any) => v.value === "public") ? true : false;
     //this.filter.beverageFilter = [...$event.value];
+
+    console.log(this.filter.publicFilter)
     this.dataSource.setFilter(this._filter);
+
+    localStorage.setItem("filter", JSON.stringify(this.selected));
   }
 
 }

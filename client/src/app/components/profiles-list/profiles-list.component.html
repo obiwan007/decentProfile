@@ -4,7 +4,8 @@
 
       <mat-form-field class="mr-1" style="width:128px;">
         <mat-label>Filter</mat-label>
-        <mat-select panelWidth="180px" matInput multiple (selectionChange)="filterForBeverage($event)">
+        <mat-select [(value)]="selected" panelWidth="180px" matInput multiple
+                    (selectionChange)="filterForBeverage($event)">
 
           <mat-optgroup label="Type">
             @for (food of types; track food) {
@@ -25,6 +26,13 @@
             <mat-option [value]="{value: food, groupValue: 'author'}">{{food}}</mat-option>
             }
           </mat-optgroup>
+
+          <mat-optgroup label="default">
+
+            <mat-option [value]="{value: 'default', groupValue: 'default'}">default</mat-option>
+            <mat-option [value]="{value:  'public', groupValue: 'default'}">public</mat-option>
+
+          </mat-optgroup>
         </mat-select>
       </mat-form-field>
 
@@ -39,7 +47,8 @@
         row.beverage_type=='filter'? 'filter_list_alt' :
         row.beverage_type=='cleaning'?'cleaning_services' : 'star' }}
       </mat-icon>
-      <div matLine>{{row.title}} <mat-icon *ngIf="row.isDefault">star</mat-icon>
+      <div matLine>{{row.title}}
+        <mat-icon *ngIf="row.isDefault">star</mat-icon>
         <mat-icon *ngIf="row.isPublic">accessibility</mat-icon>
       </div>
       <div matLine>{{row.type}} {{row.beverage_type}} by {{row.author}}

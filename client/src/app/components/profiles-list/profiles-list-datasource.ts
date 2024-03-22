@@ -15,6 +15,8 @@ export class FilterData {
   typesFilter: string[] = [];
   beverageFilter: string[] = [];
   authorFilter: string[] = [];
+  defaultFilter: boolean = false;
+  publicFilter: boolean = false;
 }
 
 /**
@@ -167,6 +169,24 @@ export class ProfilesListDataSource extends DataSource<Profile> {
     const filter: profilesFilter = {
       and: []
     };
+
+    //if (this._filter.defaultFilter)
+    // filter.and!.push(
+    //   {
+    //     or: [
+    //       { isDefault: { eq: this._filter.defaultFilter }, },
+    //       { isPublic: { eq: this._filter.publicFilter }, },
+    //     ]
+    //   },
+    // );
+
+    filter.and!.push(
+      { isDefault: { eq: this._filter.defaultFilter }, },
+    );
+    filter.and!.push(
+      { isPublic: { eq: this._filter.publicFilter }, },
+    );
+
     if (orCollection1.length > 0)
       filter.and!.push(
         {
