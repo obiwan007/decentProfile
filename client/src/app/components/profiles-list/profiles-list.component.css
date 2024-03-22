@@ -87,3 +87,12 @@
   background: #bcbcbc;
   /* green */
 }
+
+.mat-list-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.wrapper {
+  height: auto !important;
+  width: 100%
+}

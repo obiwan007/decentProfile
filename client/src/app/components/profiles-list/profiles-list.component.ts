@@ -9,7 +9,9 @@ import { tap } from 'rxjs/operators';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
+import { MatListItem, MatListItemIcon, MatListModule } from '@angular/material/list';
+import { MatLineModule } from '@angular/material/core';
 
 
 
@@ -23,7 +25,13 @@ import { CommonModule, JsonPipe } from '@angular/common';
     MatTableModule, MatPaginatorModule, MatSortModule,
     MatFormFieldModule, MatSelectModule,
     MatIconModule,
+    MatListModule,
+    MatLineModule,
+    MatListItem,
+    MatIconModule,
+    MatListItemIcon,
     JsonPipe,
+    AsyncPipe,
   ]
 })
 export class ProfilesListComponent implements AfterViewInit {
@@ -75,7 +83,8 @@ export class ProfilesListComponent implements AfterViewInit {
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    this.table.dataSource = this.dataSource;
+    if (this.table)
+      this.table.dataSource = this.dataSource;
     this.dataSource.loadProfiles();
     this.loadLessonsPage();
     this.paginator.page
@@ -104,16 +113,22 @@ export class ProfilesListComponent implements AfterViewInit {
       this.paginator.pageIndex,
       this.paginator.pageSize);
   }
-  filterForType($event: MatSelectChange) {
-    this.filter.typesFilter = [...$event.value];
-    this.dataSource.setFilter(this._filter);
-  }
+
   filterForBeverage($event: MatSelectChange) {
-    this.filter.beverageFilter = [...$event.value];
+    console.log("Filter: ", $event)
+
+    this.filter.typesFilter = [...$event.value
+      .filter((f: any) => f.groupValue === 'type')
+      .map((m: any) => m.value)];
+    this.filter.beverageFilter = [...$event.value
+      .filter((f: any) => f.groupValue === 'beverage')
+      .map((m: any) => m.value)];
+    this.filter.authorFilter = [...$event.value
+      .filter((f: any) => f.groupValue === 'author')
+      .map((m: any) => m.value)];
+
+    //this.filter.beverageFilter = [...$event.value];
     this.dataSource.setFilter(this._filter);
   }
-  filterForAuthor($event: MatSelectChange) {
-    this.filter.authorFilter = [...$event.value];
-    this.dataSource.setFilter(this._filter);
-  }
+
 }

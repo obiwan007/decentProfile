@@ -1,10 +1,10 @@
 <div class="flex flex-row p-2">
-    <div class=" " [class]="selectedProfile? 'flex-1' : 'w-full'">
+    <div [class]="selectedProfile? 'w-3/6' : 'w-full'">
 
         <app-profiles-list [filter]="filter" (onClick)="onClick($event)"></app-profiles-list>
     </div>
     @if(selectedProfile){
-    <div class="">
+    <div class="w-3/6">
         <div class="flex flex-col m-2">
             <mat-toolbar>
                 <button (click)="onEdit()" mat-icon-button title="Edit profile" class="example-icon"
