@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { HighchartsChartModule } from 'highcharts-angular';
-import { Profile, Step } from '../../models/profile';
+import { Profile, Step, ProfileType } from '../../models/profile';
 
 import * as Highcharts from 'highcharts';
 import { MatCardModule } from '@angular/material/card';
@@ -165,7 +165,8 @@ export class ProfileChartComponent {
         lastT = t;
         i++;
       });
-
+      if(this.profile.type === ProfileType.pressure) {seriesF.visible = false;}
+      if(this.profile.type === ProfileType.flow) {seriesP.visible = false;}
       console.log("Series:", this.profile, seriesP.data);
     }
   }
