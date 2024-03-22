@@ -129,16 +129,19 @@ export class ProfileChartComponent {
       seriesP.data = [];
       seriesP.name = "Pressure [bar]";
       seriesP.data?.push([0, 0]);
+      seriesP.color = 'green';
 
       const seriesF = this.chartOptions.series[1] as Highcharts.SeriesLineOptions;
       seriesF.data = [];
       seriesF.name = "Flow [ml/s]";
       seriesF.data?.push([0, 0]);
+      seriesF.color = 'blue';
 
       const seriesT = this.chartOptions.series[2] as Highcharts.SeriesLineOptions;
       seriesT.data = [];
       seriesT.name = "Temperature [°C]";
       seriesT.data?.push([0, 0]);
+      seriesT.color = 'red';
 
       const bands: Highcharts.XAxisPlotBandsOptions[] = (this.chartOptions.xAxis as Highcharts.XAxisOptions).plotBands = [];
       let t = 0;
