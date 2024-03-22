@@ -59,7 +59,7 @@ export class ProfilesListComponent implements AfterViewInit {
 
   authors: string[] = ["Decent", "Damian", "Stéphane"];
 
-  beverages: string[] = ["espresso", "filter", "pour-over", "tea_portafilter", "cleaning"];
+  beverages: string[] = ["espresso", "filter", "pourover", "tea_portafilter", "cleaning"];
 
   pageSize = 10;
   dataSource: ProfilesListDataSource;

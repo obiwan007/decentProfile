@@ -152,21 +152,63 @@ export class ProfilesListDataSource extends DataSource<Profile> {
       }
     }
 
-    const orCollection: InputMaybe<profilesFilter[]> = [];
+    const orCollection1: InputMaybe<profilesFilter[]> = [];
+    const orCollection2: InputMaybe<profilesFilter[]> = [];
+    const orCollection3: InputMaybe<profilesFilter[]> = [];
     this._filter.typesFilter.forEach(t => {
-      orCollection.push({ type: { eq: t }, });
+      orCollection1.push({ type: { eq: t }, });
     })
     this._filter.beverageFilter.forEach(t => {
-      orCollection.push({ beverage_type: { eq: t }, });
+      orCollection2.push({ beverage_type: { eq: t }, });
     })
     this._filter.authorFilter.forEach(t => {
-      orCollection.push({ author: { eq: t }, });
+      orCollection3.push({ author: { eq: t }, });
     })
     const filter: profilesFilter = {
-      or: [
-        ...orCollection,
-      ]
-    }
+      and: []
+    };
+    if (orCollection1.length > 0)
+      filter.and!.push(
+        {
+          or: [
+            ...orCollection1,
+          ]
+        },
+      );
+
+    if (orCollection2.length > 0)
+      filter.and!.push(
+        {
+          or: [
+            ...orCollection2,
+          ]
+        },
+      );
+    if (orCollection3.length > 0)
+      filter.and!.push(
+        {
+          or: [
+            ...orCollection3,
+          ]
+        },
+      );
+    // {
+    //   or: [
+    //     ...orCollection1,
+    //   ]
+    // },
+    // {
+    //   or: [
+    //     ...orCollection2,
+    //   ]
+    // },
+    // {
+    //   or: [
+    //     ...orCollection3,
+    //   ]
+    // }
+
+
 
 
     const vars: ProfilesListQueryVariables = {
