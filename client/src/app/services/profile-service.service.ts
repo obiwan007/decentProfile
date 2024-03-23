@@ -228,7 +228,6 @@ export class ProfileServiceService {
   }
 
   insertProfile(p: Profile): Promise<string> {
-    p.isPublic = true;
     return new Promise<string>(resolver => {
       const v: profilesInsertInput = {
         author: p.author,
