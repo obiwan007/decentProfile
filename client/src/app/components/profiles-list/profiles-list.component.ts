@@ -13,7 +13,9 @@ import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
 import { MatListItem, MatListItemIcon, MatListModule } from '@angular/material/list';
 import { MatLineModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
-
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { UploadFileComponent } from '../upload-file/upload-file.component';
 
 
 @Component({
@@ -33,11 +35,14 @@ import { FormsModule } from '@angular/forms';
     MatListItem,
     MatIconModule,
     MatListItemIcon,
+    MatToolbarModule,
+    MatDialogModule,
     JsonPipe,
     AsyncPipe,
   ]
 })
 export class ProfilesListComponent implements AfterViewInit {
+
 
 
 
@@ -76,7 +81,8 @@ export class ProfilesListComponent implements AfterViewInit {
   /**
    *
    */
-  constructor(private _profileSrv: ProfileServiceService) {
+  constructor(private _profileSrv: ProfileServiceService,
+    private dialog: MatDialog) {
     console.log("Loading Profile");
     this.dataSource = new ProfilesListDataSource(this._profileSrv);
 
@@ -121,14 +127,20 @@ export class ProfilesListComponent implements AfterViewInit {
 
   }
   compareObjects(o1: any, o2: any) {
-
-    console.log("Compare", o1, o2)
     if (o2.value === o1.value) return true;
     return false;
   }
   onRowClicked(row: Profile) {
     this.onClick.emit(row);
     this.selectedProfile = row;
+  }
+
+  openUpload() {
+    const dialogRef = this.dialog.open(UploadFileComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   loadLessonsPage() {

@@ -176,6 +176,19 @@ export class ProfileServiceService {
     });
   }
 
+  getProfileFromJson(json: object): Profile {
+    const p = plainToClassFromExist(new Profile(), json);
+    p.isPublic = false;
+    p.isDefault = false;
+    p.id = "";
+    p.steps.forEach((s, i) => {
+      s.id = 0;
+      s.index = i;
+    });
+    return p;
+  }
+
+
   getProfileById(id: string): Observable<ResultData<Profile>> {
     const vars: ProfileDetailsQueryVariables = {
       id: id,
@@ -367,6 +380,14 @@ export class ProfileServiceService {
   }
 
   async saveProfile(selectedProfile: Profile | undefined) {
+    const s = this.convertToJson(selectedProfile!);
+
+    this.writeContents(s, selectedProfile?.title + '.json', 'application/json');
+    // const s = serialize(selectedProfile);    
+
+  }
+
+  async loadProfile(selectedProfile: Profile | undefined) {
     const s = this.convertToJson(selectedProfile!);
 
     this.writeContents(s, selectedProfile?.title + '.json', 'application/json');

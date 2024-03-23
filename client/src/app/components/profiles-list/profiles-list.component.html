@@ -1,43 +1,53 @@
 <div class="mat-elevation-z8">
   <mat-list class="wrapper full-width-table">
     <div>
+      <mat-toolbar>
 
-      <mat-form-field class="mr-1" style="width:128px;">
-        <mat-label>Filter</mat-label>
-        <mat-select
-                    [compareWith]="compareObjects"
-                    [(ngModel)]="selected" panelWidth="180px" matInput multiple
-                    (selectionChange)="filterForBeverage($event)">
 
-          <mat-optgroup label="Type">
-            @for (food of types; track food) {
-            <mat-option [value]="{value: food, groupValue: 'type'}">{{food}}</mat-option>
-            }
-          </mat-optgroup>
 
-          <mat-optgroup label="Beverage">
-            @for (food of beverages; track food) {
+        <button (click)="openUpload()" mat-icon-button title="Upload profile" class="example-icon"
+                aria-label="Example icon-button with share icon">
+          <mat-icon>upload</mat-icon>
+        </button>
+        <span class="spacer"></span>
+        <mat-form-field class="mr-1" style="width:128px;">
+          <mat-label>Filter</mat-label>
+          <mat-select
+                      [compareWith]="compareObjects"
+                      [(ngModel)]="selected" panelWidth="180px" matInput multiple
+                      (selectionChange)="filterForBeverage($event)">
 
-            <mat-option
-                        [value]="{value: food, groupValue: 'beverage'}">{{food}}</mat-option>
+            <mat-optgroup label="Type">
+              @for (food of types; track food) {
+              <mat-option [value]="{value: food, groupValue: 'type'}">{{food}}</mat-option>
+              }
+            </mat-optgroup>
 
-            }
-          </mat-optgroup>
+            <mat-optgroup label="Beverage">
+              @for (food of beverages; track food) {
 
-          <mat-optgroup label="authors">
-            @for (food of authors; track food) {
-            <mat-option [value]="{value: food, groupValue: 'author'}">{{food}}</mat-option>
-            }
-          </mat-optgroup>
+              <mat-option
+                          [value]="{value: food, groupValue: 'beverage'}">{{food}}</mat-option>
 
-          <mat-optgroup label="default">
+              }
+            </mat-optgroup>
 
-            <mat-option [value]="{value: 'default', groupValue: 'default'}">default</mat-option>
-            <mat-option [value]="{value:  'public', groupValue: 'default'}">public</mat-option>
+            <mat-optgroup label="authors">
+              @for (food of authors; track food) {
+              <mat-option [value]="{value: food, groupValue: 'author'}">{{food}}</mat-option>
+              }
+            </mat-optgroup>
 
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field>
+            <mat-optgroup label="default">
+
+              <mat-option [value]="{value: 'default', groupValue: 'default'}">default</mat-option>
+              <mat-option [value]="{value:  'public', groupValue: 'default'}">public</mat-option>
+
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+      </mat-toolbar>
+
 
 
     </div>
