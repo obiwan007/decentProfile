@@ -1,6 +1,7 @@
-<h2 mat-dialog-title>Profile Upload</h2>
+<h2 mat-dialog-title>Profile Upload (JSON format only)</h2>
 <mat-dialog-content class="mat-typography">
     <input type="file" class="file-input"
+           accept=".json"
            (change)="onFileSelected($event)" #fileUpload>
 
     <div class="file-upload">
