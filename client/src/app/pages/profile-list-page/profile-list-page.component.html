@@ -1,7 +1,7 @@
 <div class="flex flex-row p-2">
     <div [class]="selectedProfile? 'w-2/6' : 'w-full'">
 
-        <app-profiles-list [filter]="filter" (onClick)="onClick($event)"></app-profiles-list>
+        <app-profiles-list #profileList [filter]="filter" (onClick)="onClick($event)"></app-profiles-list>
     </div>
     @if(selectedProfile){
     <div class="w-4/6">
@@ -17,7 +17,7 @@
                         aria-label="Example icon-button with heart icon">
                     <mat-icon>file_copy</mat-icon>
                 </button>
-                <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
+                <button (click)="onDelete()" mat-icon-button title="Delete profile" class="example-icon favorite-icon"
                         aria-label="Example icon-button with heart icon">
                     <mat-icon>delete</mat-icon>
                 </button>

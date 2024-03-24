@@ -5,6 +5,10 @@ import { instanceToPlain, plainToClassFromExist, serialize } from 'class-transfo
 import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
 import 'reflect-metadata';
 import {
+  DeleteProfileGQL,
+  DeleteProfileMutationVariables,
+  DeleteStepsForProfileGQL,
+  DeleteStepsForProfileMutationVariables,
   InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateProfilesGQL, UpdateStepsGQL, profilesInsertInput, profilesUpdateInput,
   stepsInsertInput, stepsUpdateInput
 } from '../graphql/generated';
@@ -94,6 +98,8 @@ export class ProfileServiceService {
     private _updateProfile: UpdateProfilesGQL,
     private _insertSteps: InsertStepsGQL,
     private _updateSteps: UpdateStepsGQL,
+    private _deleteSteps: DeleteStepsForProfileGQL,
+    private _deleteProfile: DeleteProfileGQL,
     private _http: HttpClient) { }
 
 
@@ -248,6 +254,39 @@ export class ProfileServiceService {
     });
 
   }
+  deleteStepForProfileId(id: string): Promise<string[] | undefined> {
+    return new Promise<string[] | undefined>(resolver => {
+      const v: DeleteStepsForProfileMutationVariables = {
+        id: id,
+
+      };
+
+      this._deleteSteps.mutate({ ...v }).subscribe(res => {
+        const id = res.data?.deleteFromstepsCollection?.records.map(m => m.id);
+        console.log("ID:", id);
+        resolver(id);
+      });
+    });
+
+  }
+
+  deleteProfile(id: string): Promise<string | undefined> {
+    return new Promise<string | undefined>(async resolver => {
+      const v: DeleteProfileMutationVariables = {
+        id: id,
+      };
+      const stepIds = await this.deleteStepForProfileId(id);
+      console.log("Steps deleted ", stepIds);
+      this._deleteProfile.mutate(v).subscribe(res => {
+        const id = res.data?.deleteFromprofilesCollection?.records[0].id;
+        console.log("Deleted Profile ID:", id);
+        resolver(id);
+      });
+    });
+
+  }
+
+
   updateProfile(p: Profile): Promise<boolean> {
     return new Promise<boolean>(resolver => {
       const v: profilesUpdateInput = {

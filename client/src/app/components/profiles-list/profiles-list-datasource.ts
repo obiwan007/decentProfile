@@ -10,6 +10,8 @@ import { inject } from '@angular/core';
 import { InputMaybe, OrderByDirection, ProfilesListGQL, ProfilesListQueryVariables, profilesFilter, profilesOrderBy, } from '../../graphql/generated';
 import { VariablesInAllowedPositionRule } from 'graphql';
 import { PageInfo } from '../../models/dataWithPageinfo';
+import { WatchQueryOptions } from '@apollo/client';
+import { SharedWatchQueryOptions } from '@apollo/client/core/watchQueryOptions';
 
 export class FilterData {
   typesFilter: string[] = [];
@@ -237,6 +239,8 @@ export class ProfilesListDataSource extends DataSource<Profile> {
       order,
       filter,
     };
+
+
     const s = this._profilesGQL.watch(vars).valueChanges
       .pipe(map(result => this._profileSrv.mapFromGraphQl(result.data))).subscribe(res => {
         this.pageInfo = res.pageInfo;
