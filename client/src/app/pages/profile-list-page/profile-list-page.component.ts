@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ProfilesListComponent } from '../../components/profiles-list/profiles-list.component';
 import { Profile } from '../../models/profile';
 import { ProfileDetailsComponent } from '../../components/profile-details/profile-details.component';
@@ -31,6 +31,8 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ProfileListPageComponent {
 
+  @ViewChild('profileList')
+  profileList: ProfilesListComponent | undefined;
 
   selectedProfile: Profile | undefined;
 
@@ -92,7 +94,16 @@ export class ProfileListPageComponent {
 
     this.navigateToProfile(this.selectedProfile?.id!);
   }
-
+  async onDelete() {
+    if (this.selectedProfile) {
+      await this._profileSrv.deleteProfile(this.selectedProfile.id);
+      this.selectedProfile = undefined;
+      if (this.profileList) {
+        this.profileList.selectedProfile = undefined;
+        this.profileList.dataSource.loadProfiles();
+      }
+    }
+  }
   private navigateToProfile(id: string) {
     const queryParams: Params = { id };
 

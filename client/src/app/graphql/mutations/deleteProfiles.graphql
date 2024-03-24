@@ -1,0 +1,10 @@
+mutation DeleteProfile($id: BigInt!) {
+
+  deleteFromprofilesCollection(filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  }  
+  
+}

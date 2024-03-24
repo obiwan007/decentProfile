@@ -96,3 +96,7 @@
   height: auto !important;
   width: 100%
 }
+
+.spacer {
+  width: 15px;
+}

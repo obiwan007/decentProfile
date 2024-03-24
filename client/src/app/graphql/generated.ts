@@ -719,6 +719,20 @@ export type userprofilesUpdateResponse = {
   records: Array<userprofiles>;
 };
 
+export type DeleteProfileMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+}>;
+
+
+export type DeleteProfileMutation = { __typename: 'Mutation', deleteFromprofilesCollection: { __typename: 'profilesDeleteResponse', affectedCount: number, records: Array<{ __typename: 'profiles', id: string }> } };
+
+export type DeleteStepsForProfileMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+}>;
+
+
+export type DeleteStepsForProfileMutation = { __typename: 'Mutation', deleteFromstepsCollection: { __typename: 'stepsDeleteResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } };
+
 export type InsertProfilesMutationVariables = Exact<{
   ep: Array<profilesInsertInput> | profilesInsertInput;
 }>;
@@ -766,6 +780,54 @@ export type ProfilesListQueryVariables = Exact<{
 
 export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', totalCount: number, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'profilesEdge', cursor: string, node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, isPublic?: boolean | null, isDefault?: boolean | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, pressure?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null, isPublic?: boolean | null } }> } | null } }> } | null };
 
+export const DeleteProfileDocument = gql`
+    mutation DeleteProfile($id: BigInt!) {
+  __typename
+  deleteFromprofilesCollection(filter: {id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteProfileGQL extends Apollo.Mutation<DeleteProfileMutation, DeleteProfileMutationVariables> {
+    override document = DeleteProfileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteStepsForProfileDocument = gql`
+    mutation DeleteStepsForProfile($id: BigInt!) {
+  __typename
+  deleteFromstepsCollection(atMost: 20, filter: {profile_id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteStepsForProfileGQL extends Apollo.Mutation<DeleteStepsForProfileMutation, DeleteStepsForProfileMutationVariables> {
+    override document = DeleteStepsForProfileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const InsertProfilesDocument = gql`
     mutation InsertProfiles($ep: [profilesInsertInput!]!) {
   __typename

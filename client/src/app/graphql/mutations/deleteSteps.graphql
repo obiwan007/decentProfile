@@ -1,0 +1,10 @@
+mutation DeleteStepsForProfile($id: BigInt!) {
+
+  deleteFromstepsCollection(atMost: 20, filter: {profile_id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  } 
+  
+}

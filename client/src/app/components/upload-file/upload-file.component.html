@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Profile Upload (JSON format only)</h2>
+<mat-dialog-content class="mat-typography">
+    <input type="file" class="file-input"
+           accept=".json"
+           (change)="onFileSelected($event)" #fileUpload>
+
+    <div class="file-upload">
+
+        {{fileName || "No file uploaded yet."}}
+
+        <button mat-mini-fab color="primary" class="upload-btn"
+                (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+        </button>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button [disabled]="profile===undefined" (click)="onSave()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Add
+        Profile</button>
+</mat-dialog-actions>
