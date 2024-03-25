@@ -44,7 +44,7 @@
     "@graphql-codegen/typescript-apollo-angular": "^4.0.0",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@types/jasmine": "~5.1.0",
-    "autoprefixer": "^10.4.18",
+    "autoprefixer": "^10.4.19",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
