@@ -47,7 +47,7 @@ export class DFlowProfileEditComponent implements OnInit {
   dose = 16.0;
   extractionRatio = 2.5;
 
-  tooltips: any = {
+  tooltips: {[id: string]: string} = {
     info_dose: 'Dose - means the weight of the beans or the weight of the coffee puck.\n\n The dose weight is used in calcultating the extraction ratio.\n See pour stop setting for information of extraction ratio. \n\n Being consistant with your grind, dose and puck prep will greatly help you repeatedly extract great espresso.',
     info_infuse_temp: 'Infuse temperature allows you to emulate various machine where the group temperature may start cooler than the water being added. \n See pour temperature for information on how temperature effects extraction and taste.',
     info_infuse_pressure: 'A higher infusion pressure will increase puck resistance\n\n The default is 3 bar, the same as used by LRv2, LRv3 profiles and others, it is tyipcally the upper level used by machines that use preinfusion. \n\n Some manual lever machines like a LA Pavoni have a boiler pressure of 0.8 to 1 bar, infusing is done by raising, fill the group with water at boiler pressure. to emulater this you would set a 1 bar infuse pressure. \n\n Some machines use pressures anywhere in between. \n   Other machines may not hold an infusion presure at all, like a common E61 pump machines   where it apply water straight to extraction pressure, typically 8 or 9 bar.',

@@ -18,7 +18,7 @@
         aria-label="Example icon-button with share icon">
         <mat-icon>restart_alt</mat-icon>
     </button>
-    <mat-icon [matTooltip]="tooltips.info_d_flow" matTooltipClass="multiline-tooltip">info</mat-icon>
+    <mat-icon [matTooltip]="tooltips['info_d_flow']" matTooltipClass="multiline-tooltip">info</mat-icon>
 
 </mat-toolbar>
 <div class="flex flex-row" style="padding:15px">
@@ -31,7 +31,7 @@
 
                 <mat-card-header>
                     <mat-card-title>
-                        Dose <mat-icon [matTooltip]="tooltips.info_dose"
+                        Dose <mat-icon [matTooltip]="tooltips['info_dose']"
                             matTooltipClass="multiline-tooltip">info</mat-icon>
                     </mat-card-title>
                 </mat-card-header>
@@ -52,7 +52,7 @@
 
                 <mat-card-header>
                     <mat-card-title>
-                        Stop <mat-icon [matTooltip]="tooltips.info_pour_stop"
+                        Stop <mat-icon [matTooltip]="tooltips['info_pour_stop']"
                             matTooltipClass="multiline-tooltip">info</mat-icon>
                     </mat-card-title>
                 </mat-card-header>
@@ -111,7 +111,7 @@
                         <div class="label">Temperature ( <input class="inline-input"
                                 (ngModelChange)="stepChanged(profile.steps[1])"
                                 [(ngModel)]="profile.steps[1].temperature"> °C)<mat-icon
-                                [matTooltip]="tooltips.info_infuse_temp"
+                                [matTooltip]="tooltips['info_infuse_temp']"
                                 matTooltipClass="multiline-tooltip">info</mat-icon></div>
                         <mat-slider ngDefaultControl min="50" max="100" step="1" discrete>
                             <input (ngModelChange)="stepChanged(profile.steps[1])" matSliderThumb
@@ -125,7 +125,7 @@
                             <div class="label">Pressure (<input class="inline-input"
                                     (ngModelChange)="stepChanged(profile.steps[1])"
                                     [(ngModel)]="profile.steps[1].pressure"> bar)<mat-icon
-                                    [matTooltip]="tooltips.info_infuse_pressure"
+                                    [matTooltip]="tooltips['info_infuse_pressure']"
                                     matTooltipClass="multiline-tooltip">info</mat-icon></div>
                             <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
                                 <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[1])"
@@ -133,7 +133,7 @@
                             </mat-slider>
                         </div>
                         <hr>
-                        <div class="title">Infuse until either<mat-icon [matTooltip]="tooltips.info_infuse_stop"
+                        <div class="title">Infuse until either<mat-icon [matTooltip]="tooltips['info_infuse_stop']"
                                 matTooltipClass="multiline-tooltip">info</mat-icon></div>
                         <div class="slider">
                             <div class="label">Time (<input class="inline-input"
@@ -200,7 +200,7 @@
                         <div class="label">Temperature (<input class="inline-input"
                                 (ngModelChange)="stepChanged(profile.steps[2])"
                                 [(ngModel)]="profile.steps[2].temperature"> °C)<mat-icon
-                                [matTooltip]="tooltips.info_pour_temp"
+                                [matTooltip]="tooltips['info_pour_temp']"
                                 matTooltipClass="multiline-tooltip">info</mat-icon></div>
                         <mat-slider ngDefaultControl min="50" max="100" step="1" discrete>
                             <input (ngModelChange)="stepChanged(profile.steps[2])" matSliderThumb
@@ -208,7 +208,7 @@
                         </mat-slider>
                     </div>
                     <hr>
-                    <p>Pour Limits<mat-icon [matTooltip]="tooltips.info_pour_limits"
+                    <p>Pour Limits<mat-icon [matTooltip]="tooltips['info_pour_limits']"
                             matTooltipClass="multiline-tooltip">info</mat-icon></p>
                     <div class="slider">
                         <div class="label">Flow ( <input class="inline-input"
