@@ -43,7 +43,7 @@ import { RenderStepsComponent } from '../render-steps/render-steps.component';
   templateUrl: './d-flow-profile-edit.component.html',
   styleUrl: './d-flow-profile-edit.component.scss'
 })
-export class DFlowProfileEditComponent implements OnInit {
+export class DFlowProfileEditComponent extends BasicProfileEditComponent implements OnInit  {
   dose = 16.0;
   extractionRatio = 2.5;
 
@@ -58,17 +58,6 @@ export class DFlowProfileEditComponent implements OnInit {
     info_d_flow: 'The D-Flow editor was developed by Damian. It is available as a plug-in for the de1app. The original code can be found on Github: https://github.com/Damian-AU/D_Flow_Espresso_Profile'
   };
 
-  @ViewChild('chart')
-  chart!: ProfileChartComponent;
-
-  @Input()
-  profile: Profile | undefined;
-
-  @Output()
-  changed: EventEmitter<Profile> = new EventEmitter();
-
-  _profileService = inject(ProfileServiceService);
-
   updateExtractionRatio() {
     if (this.profile?.target_weight && this.profile?.target_weight != 0) {
       this.extractionRatio = this.profile?.target_weight / this.dose;
@@ -76,10 +65,6 @@ export class DFlowProfileEditComponent implements OnInit {
     else if (this.profile?.target_volume && this.profile?.target_volume != 0) {
       this.extractionRatio = this.profile?.target_volume / this.dose;
     }
-  }
-
-  save() {
-    this._profileService.updateProfile(this.profile!);
   }
 
   resetToDefaults() {
@@ -148,10 +133,6 @@ export class DFlowProfileEditComponent implements OnInit {
     }
   }
 
-  stepChanged(step: Step) {
-    console.log(this.chart);
-    this.chart?.updateStep(step);
-  }
   ngOnInit() {
     if (this.dose && (this.profile?.target_weight || this.profile?.target_volume)) {
       this.updateExtractionRatio();
