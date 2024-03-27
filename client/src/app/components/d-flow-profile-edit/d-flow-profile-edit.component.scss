@@ -1,0 +1,12 @@
+.inline-input {
+    width: 25px;
+    text-align: right; 
+}
+::ng-deep .multiline-tooltip {
+    white-space: pre-line !important;
+}
+
+.title {
+    margin-top: 5px;
+    font-weight: bold;
+}
