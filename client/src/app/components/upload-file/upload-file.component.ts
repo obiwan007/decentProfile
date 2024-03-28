@@ -44,8 +44,12 @@ export class UploadFileComponent {
       fileReader.onload = async (e) => {
         console.log("FILE:", fileReader.result);
         if (fileReader.result) {
-          const o = JSON.parse(fileReader.result as string);
-          this.profile = this._profileSrv.getProfileFromJson(o);
+          if (this.fileName.endsWith('json')) {
+            const o = JSON.parse(fileReader.result as string);
+            this.profile = this._profileSrv.getProfileFromJson(o);
+          } else if (this.fileName.endsWith('tcl')) {
+            this.profile = this._profileSrv.getProfileFromTCL(fileReader.result as string);
+          }
 
 
         }
