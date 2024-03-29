@@ -47,7 +47,7 @@ export class ProfilesListComponent implements AfterViewInit {
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  sort: MatSort = new MatSort();
   @ViewChild(MatTable) table!: MatTable<Profile>;
 
   @Output()
