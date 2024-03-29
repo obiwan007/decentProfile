@@ -68,69 +68,9 @@ export class DFlowProfileEditComponent extends BasicProfileEditComponent impleme
   }
 
   resetToDefaults() {
-    if (this.profile) {
-      this.profile.author = 'Damian';
-      this.profile.title = 'D-Flow \/ default';
-      this.profile.notes = 'Damians D-Flow profile. A simple to use advanced profile\n        By Damian Brakel https:\/\/www.diy.brakel.com.au\/';
-      this.profile.beverage_type = 'espresso';
-      this.profile.id = 'D-Flow \/ default';
-      this.profile.steps[0].name = 'Filling';
-      this.profile.steps[0].temperature = 92.0;
-      this.profile.steps[0].sensor = SensorType.coffee;
-      this.profile.steps[0].pump = PumpMode.pressure;
-      this.profile.steps[0].transition = TransitionMode.fast;
-      this.profile.steps[0].pressure = 2.00;
-      this.profile.steps[0].flow = 8;
-      this.profile.steps[0].seconds = 25.00;
-      this.profile.steps[0].volume = 100;
-      this.profile.steps[0].weight = 5.00;
-      this.profile.steps[0].exit = {
-        type: 'pressure',
-        condition: 'over',
-        value: 1.50
-      },
-        this.profile.steps[0].limiter = {
-          value: 0,
-          range: 0.2
-        }
-      this.profile.steps[1].name = 'Infusing';
-      this.profile.steps[1].temperature = 92.0;;
-      this.profile.steps[1].sensor = SensorType.coffee;
-      this.profile.steps[1].pump = PumpMode.pressure;
-      this.profile.steps[1].transition = TransitionMode.fast;
-      this.profile.steps[1].pressure = 3.0;
-      this.profile.steps[1].flow = 8;
-      this.profile.steps[1].seconds = 60.0;
-      this.profile.steps[1].volume = 100.00;
-      this.profile.steps[1].weight = 4.00;
-      this.profile.steps[1].limiter = {
-        value: 0,
-        range: 0.2
-      };
-      this.profile.steps[2].name = 'Pouring';
-      this.profile.steps[2].temperature = 92.0;
-      this.profile.steps[2].sensor = SensorType.coffee;
-      this.profile.steps[2].pump = PumpMode.flow;
-      this.profile.steps[2].transition = TransitionMode.fast;
-      this.profile.steps[2].pressure = 4.8;
-      this.profile.steps[2].flow = 2.0;
-      this.profile.steps[2].seconds = 127;
-      this.profile.steps[2].volume = 0;
-      this.profile.steps[2].weight = 0.00;
-      this.profile.steps[2].limiter = {
-        value: 7.5,
-        range: 0.2
-      }
-      this.profile.tank_temperature = '0';
-      this.profile.target_weight = 40;
-      this.profile.target_volume = 0;
-      this.profile.target_volume_count_start = '2';
-      this.profile.legacy_profile_type = ''
-      this.profile.type = ProfileType.advanced;
-      this.profile.hidden = '0';
-      this.profile.changes_since_last_espresso = ''
-      this.profile.version = '2'
-    }
+  this._profileService.getAssetProfileById('D-Flow____default.json').then((profile) => {
+    this.profile = profile;
+   })
   }
 
   ngOnInit() {
