@@ -208,8 +208,8 @@
                         </mat-slider>
                     </div>
                     <hr>
-                    <p>Pour Limits<mat-icon [matTooltip]="tooltips['info_pour_limits']"
-                            matTooltipClass="multiline-tooltip">info</mat-icon></p>
+                    <div class="title">Pour Limits<mat-icon [matTooltip]="tooltips['info_pour_limits']"
+                        matTooltipClass="multiline-tooltip">info</mat-icon></div>
                     <div class="slider">
                         <div class="label">Flow ( <input class="inline-input"
                                 (ngModelChange)="stepChanged(profile.steps[2])" [(ngModel)]="profile.steps[2].flow">
