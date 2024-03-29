@@ -79,7 +79,7 @@
                     <br>
                     <div class="slider">
                         <div class="label">Time ({{step.seconds}} s)</div>
-                        <mat-slider ngDefaultControl min="1" max="1000" step="1" discrete>
+                        <mat-slider ngDefaultControl min="0" max="1000" step="1" discrete>
                             <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.seconds">
                         </mat-slider>
                     </div>

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Exit, Limiter, Profile, Step } from '../models/profile';
+import { Exit, Limiter, Profile, ProfileType, PumpMode, Step, TransitionMode } from '../models/profile';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { instanceToPlain, plainToClassFromExist, serialize } from 'class-transformer';
 import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
@@ -20,6 +20,46 @@ import { cloneDeep } from '@apollo/client/utilities';
   // deps: [HttpClientModule]
 })
 export class ProfileServiceService {
+
+
+  tclSample = `advanced_shot {}
+  author Decent
+  beverage_type espresso
+  espresso_decline_time 35
+  espresso_hold_time 4
+  espresso_pressure 8.6
+  espresso_temperature 90.0
+  espresso_temperature_0 90.0
+  espresso_temperature_1 88.0
+  espresso_temperature_2 88.0
+  espresso_temperature_3 88.0
+  espresso_temperature_steps_enabled 1
+  final_desired_shot_volume 36
+  final_desired_shot_volume_advanced 0
+  final_desired_shot_volume_advanced_count_start 0
+  final_desired_shot_weight 36
+  final_desired_shot_weight_advanced 36
+  flow_profile_decline 1.2
+  flow_profile_decline_time 17
+  flow_profile_hold 2
+  flow_profile_hold_time 8
+  flow_profile_minimum_pressure 4
+  flow_profile_preinfusion 4
+  flow_profile_preinfusion_time 5
+  preinfusion_flow_rate 4
+  preinfusion_guarantee 0
+  preinfusion_stop_pressure 4.0
+  preinfusion_time 20
+  pressure_end 6.0
+  profile_hide 0
+  profile_language en
+  profile_notes {This profile is gentle on the coffee puck and not too demanding on the barista.  Produces a very acceptable espresso in a wide variety of settings.}
+  profile_title Default
+  profile_video_help https://www.youtube.com/watch?v=zj-Ipuu6XGU
+  read_only 1
+  settings_profile_type settings_2a
+  tank_desired_water_temperature 0
+  water_temperature 80`
 
 
   allProfiles: string[] = [
@@ -100,7 +140,470 @@ export class ProfileServiceService {
     private _updateSteps: UpdateStepsGQL,
     private _deleteSteps: DeleteStepsForProfileGQL,
     private _deleteProfile: DeleteProfileGQL,
-    private _http: HttpClient) { }
+    private _http: HttpClient) {
+
+
+    this.getProfileFromTCL(this.tclSample);
+
+  }
+  getProfileFromTCL(tcl: string) {
+    let p = new Profile();
+    const lines = tcl.split('\n');
+
+    const params: { [key: string]: any } = {};
+
+    lines.forEach(l => {
+      l = l.trim();
+      const i = l.indexOf(' ');
+      params[l.substring(0, i)] = l.substring(i + 1); // "tocirah sneab"
+    });
+    console.log("TCL:", params)
+
+    if (params["settings_profile_type"] == "settings_2a") {
+      console.log('{"Type:":<15s} simple pressure profile')
+      p.type = ProfileType.pressure;
+    }
+    else if (params["settings_profile_type"] == "settings_2b") {
+      console.log('{"Type:":<15s} simple flow profile')
+      p.type = ProfileType.flow;
+    }
+    else if (params["settings_profile_type"] == "settings_2c") {
+      console.log('{"Type:":<15s} advanced profile')
+      p.type = ProfileType.advanced;
+    }
+    else if (params["settings_profile_type"] == "settings_2c2") {
+      console.log('Type:" advanced profile (warning! incorrect settings type 2c2)')
+      params["settings_profile_type"] = "settings_2c"
+      p.type = ProfileType.advanced;
+    }
+    else
+      console.log("Error: unrecognized profile type", params["settings_profile_type"])
+
+
+
+    p.title = params["profile_title"].replace('{', '').replace('}', '')
+    console.log(`Title: ${p.title}`);
+
+    p.author = params["author"].replace('{', '').replace('}', '')
+    console.log(`Author:" ${p.author}`);
+
+    p.notes = params["profile_notes"].replace('{', '').replace('}', '')
+    console.log(`{"Notes:"} ${p.notes}`);
+
+    p.beverage_type = params["beverage_type"];
+
+    p.tank_temperature = params["tank_desired_water_temperature"];
+
+    switch (p.type) {
+      case ProfileType.pressure:
+        p = this.pressureProfile(params, p);
+        break;
+      case ProfileType.flow:
+        p = this.flowProfile(params, p);
+        break;
+      case ProfileType.advanced:
+        p = this.advancedProfile(params, p);
+        break;
+      default:
+        console.log("Error: unrecognized profile type", params["settings_profile_type"])
+    }
+    console.log("TCL Imported:", p);
+    return p;
+  }
+  advancedProfile(params: { [key: string]: any; }, p: Profile) {
+    const adv_shot: string = params["advanced_shot"].substring(1, params["advanced_shot"].length - 1);
+    console.log("Adv:", adv_shot);
+    // console.log("Adv:", adv_shot.split(/[\{\}]+/).filter((f: any) => console.log("Shot:", f)));
+
+    // console.log("Adv3:", adv_shot.match(/[^\{\}]+/g));
+    const steps = this.tokenizeSteps(adv_shot);
+    p.steps = [];
+    steps.forEach(sLine => {
+      const step = new Step();
+      p.steps.push(step);
+      const step_dict: { [key: string]: any } = {};
+      const s = sLine.split(' ');
+
+      for (let i = 0; i < s.length; i += 2) {
+        step_dict[s[i]] = s[i + 1];
+      }
+      console.log("Step: ", sLine);
+      console.log("Step_Dict: ", step_dict);
+
+      step.name = step_dict["name"].replaceAll("_", " ").replace('{', '').replace('}', '');
+      // temperature
+      step.temperature = +step_dict["temperature"];
+      const deg = step.temperature < 110 ? "C" : "F";
+      step.sensor = step_dict["sensor"]
+
+      //# pump => flow or pressure
+      const mfp = step_dict["max_flow_or_pressure"];
+      const mfpr = step_dict["max_flow_or_pressure_range"];
+
+
+      step.pump = step_dict["pump"];
+      step.pressure = +step_dict["pressure"];
+      if (step.pressure < 0) step.pressure = 0;
+
+
+      // # steps page: max_flow_or_pressure is apparently flow limit(for pressure step) * or * pressure limit(for flow step)
+      // if (mfp && +(mfp) > 0)
+      //   // print(", flow limit", mfp, "ml/s", end = '')
+      //     //# limits page: max_flow_or_pressure_range is apparently flow limiter(for pressure step) * or * pressure limiter(for flow step)
+      //   if mfpr and float(mfpr) > 0: print(", flow limiter", mfpr, "ml/s", end = '')
+      // print()
+
+      step.flow = +step_dict["flow"];
+      if (step.flow < 0) step.flow = 0
+      //   print(f'{"flow step:":<15s} {flow:.1f} ml/s', end = '')
+      // # steps page: max_flow_or_pressure is apparently flow limit(for pressure step) * or * pressure limit(for flow step)
+      //     if mfp and float(mfp) > 0:
+      //   print(", pressure limit", mfp, "bar", end = '')
+      //     # limits page: max_flow_or_pressure_range is apparently flow limiter(for pressure step) * or * pressure limiter(for flow step)
+      //     if mfpr and float(mfpr) > 0: print(", pressure limiter", mfpr, "bar", end = '')
+      //   print()
+
+      //# move on by maximum
+      // # seconds, volume, weight = float( step_dict["seconds"] ), float(step_dict["volume"]), float(step_dict["weight"])
+      step.seconds = +step_dict["seconds"];
+      step.weight = +step_dict["weight"];
+      step.volume = +step_dict["volume"];
+      if (!step_dict["weight"]) {
+        step.weight = step.volume;
+      }
+
+      if (step_dict["exit_if"] == "1") {
+        step.exit = new Exit();
+
+        if (step_dict["exit_type"] == "pressure_over") {
+          step.exit.type = "pressure";
+          step.exit.condition = "over"
+          step.exit.value = +step_dict["exit_pressure_over"];
+        }
+        else if (step_dict["exit_type"] == "pressure_under") {
+          step.exit.type = "pressure";
+          step.exit.condition = "under"
+          step.exit.value = +step_dict["exit_pressure_under"];
+        }
+        else if (step_dict["exit_type"] == "flow_over") {
+          step.exit.type = "flow";
+          step.exit.condition = "over"
+          step.exit.value = +step_dict["exit_flow_over"];
+        }
+        else if (step_dict["exit_type"] == "flow_under") {
+          step.exit.type = "flow";
+          step.exit.condition = "under"
+          step.exit.value = +step_dict["exit_flow_under"];
+        }
+        step.transition = step_dict["transition"];
+      }
+      console.log("Step: ", step);
+
+      // seconds, volume, weight = step_dict.get("seconds"), step_dict.get("volume"), step_dict.get("weight")
+      // if seconds: print( f'{"move on if:":<15s} time over {float(seconds):.0f}s', end='' )
+      // if volume and float(volume) > 0: print( f', volume over {float(volume):.0f}ml', end='' )
+      // if weight and float(weight) > 0: print( f', weight over {float(weight):.1f}g', end='' )
+
+    });
+    p.target_weight = +params["final_desired_shot_weight_advanced"];
+    if (p.target_weight > 0)
+      console.log(`desired weight: ${p.target_weight} grams`);
+    else
+      console.log(`desired weight: none`);
+
+    // desired shot volume
+    p.target_volume = +params["final_desired_shot_volume_advanced"];
+    if (p.target_volume > 0)
+      console.log(`{"desired volume:":<15s} ${p.target_volume} ml`);
+    else
+      console.log(`desired volume: none`);
+    return p;
+  }
+  private tokenizeSteps(adv_shot: string) {
+    let open = 0;
+    const lines = [];
+    let lStart = 0;
+    let lEnd = 0;
+    let lStartName = 0;
+    let lEndName = 0;
+    let name = "";
+    let name2 = "";
+    for (let i = 0; i < adv_shot.length; i++) {
+      const c = adv_shot[i];
+      // console.log(c);
+      if (c === '{') {
+        open++;
+        if (open === 1) {
+          lStart = i;
+          name = "";
+          name2 = "";
+        }
+        if (open === 2) {
+          lStartName = i;
+        }
+        console.log("Start", open);
+      }
+      if (c === '}') {
+        open--;
+        if (open === 0) {
+          lEnd = i;
+          console.log(adv_shot.substring(lStart + 1, lEnd));
+          lines.push(adv_shot.substring(lStart + 1, lEnd).replace(name, name2));
+        }
+        if (open === 1) {
+          lEndName = i;
+          console.log(adv_shot.substring(lStartName + 1, lEndName));
+          name = adv_shot.substring(lStartName, lEndName + 1);
+          console.log("Name:", name);
+          name2 = name.replaceAll(" ", "_");
+        }
+        console.log("End", open, lStart, lEnd);
+      }
+    }
+    return lines;
+  }
+
+  flowProfile(params: { [key: string]: any; }, p: Profile) {
+    const temp = +params["espresso_temperature"];
+
+    const deg = temp < 110 ? "C" : "F";
+    p.steps = [];
+    let temp_bump_time_seconds = 0;
+    let first_frame_len = 0;
+    let second_frame_len = 0;
+    if (params["espresso_temperature_steps_enabled"] === "1") {
+      temp_bump_time_seconds = +2;
+      first_frame_len = temp_bump_time_seconds;
+      second_frame_len = Math.max(0, +params["preinfusion_time"] - temp_bump_time_seconds);
+    } else {
+      console.log(`temp ${temp}${deg}`)
+      second_frame_len = +params["preinfusion_time"]
+      params["espresso_temperature_0"] = temp;
+      params["espresso_temperature_1"] = temp;
+      params["espresso_temperature_2"] = temp;
+      params["espresso_temperature_3"] = temp;
+    }
+
+    p.steps.forEach(s => s.sensor = "coffee");
+
+    // Pre Boost
+    if (first_frame_len > 0) {
+      const preBoost = new Step();
+      preBoost.pressure = 1;
+      preBoost.sensor = "coffee"
+      preBoost.flow = +params["preinfusion_flow_rate"];;
+      preBoost.name = "preinfusion boost";
+      preBoost.temperature = +params["espresso_temperature_0"];
+      preBoost.exit = new Exit();
+      preBoost.exit.condition = "over";
+      preBoost.exit.type = "pressure";
+      preBoost.exit.value = +params["preinfusion_stop_pressure"];
+      preBoost.seconds = first_frame_len;
+      p.steps.push(preBoost);
+    }
+
+    // preinfusion
+    if (second_frame_len > 0) {
+      const pre = new Step();
+      pre.seconds = +second_frame_len;
+      pre.temperature = +params["espresso_temperature_1"];
+      pre.flow = +params["preinfusion_flow_rate"];
+      pre.pressure = 1;
+      pre.name = "preinfusion";
+      pre.transition = TransitionMode.fast;
+      pre.pump = PumpMode.flow;
+      pre.sensor = "coffee";
+      p.steps.push(pre);
+    }
+
+    // rise and hold    
+    if (+params["espresso_hold_time"] > 0) {
+      const hold = new Step();
+      hold.name = "hold";
+      hold.seconds = +params["espresso_hold_time"];
+      hold.transition = TransitionMode.fast;;
+      hold.flow = +params["flow_profile_hold"];
+      hold.temperature = +params["espresso_temperature_2"];
+      hold.pump = PumpMode.flow;
+      hold.sensor = "coffee";
+      hold.pressure = 0;
+      hold.volume = 0;
+      hold.weight = 0;
+      hold.limiter = new Limiter();
+      hold.limiter.value = +params["maximum_pressure"];
+      hold.limiter.range = +params["maximum_pressure_range_default"];
+      p.steps.push(hold);
+    }
+
+    // decline
+    if (+params["espresso_hold_time"] > 0) {
+      const dec = new Step();
+      dec.seconds = +params["espresso_decline_time"];
+      dec.name = "decline";
+      dec.temperature = +params["espresso_temperature_3"];
+      dec.sensor = "coffee";
+      dec.pump = PumpMode.flow;
+      dec.transition = TransitionMode.smooth;
+      dec.flow = +params["flow_profile_decline"];
+      dec.pressure = 0;
+      dec.volume = 0;
+      dec.weight = 0;
+      dec.limiter = new Limiter();
+      dec.limiter.value = +params["maximum_pressure"];
+      dec.limiter.range = +params["maximum_pressure_range_default"];
+      p.steps.push(dec);
+    }
+    // desired shot weight
+    p.target_weight = +params["final_desired_shot_weight"];
+    if (p.target_weight > 0)
+      console.log(`{"desired weight:":<15s} ${p.target_weight} grams`);
+    else
+      console.log(`{"desired weight:":<15s} $none`);
+
+    // desired shot volume
+    p.target_volume = +params["final_desired_shot_volume"];
+    if (p.target_volume > 0)
+      console.log(`{"desired volume:":<15s} ${p.target_volume} ml`);
+    else
+      console.log(`desired volume: none`);
+
+    return p;
+  }
+  pressureProfile(params: { [key: string]: any; }, p: Profile) {
+    const temp = +params["espresso_temperature"];
+
+    const deg = temp < 110 ? "C" : "F";
+
+
+    const sPreTemp = new Step();
+    const sPre = new Step();
+    const sRiseWithoutLimit = new Step();
+    const sRiseHold = new Step();
+    const sDecline = new Step();
+
+    p.steps = [];
+
+    if (params["espresso_temperature_steps_enabled"] === "1") {
+      sPreTemp.temperature = +params["espresso_temperature_0"];
+      sPre.temperature = +params["espresso_temperature_0"];
+      sRiseWithoutLimit.temperature = +params["espresso_temperature_1"];
+      sRiseHold.temperature = +params["espresso_temperature_2"];
+      sDecline.temperature = +params["espresso_temperature_3"];
+    } else {
+
+    }
+
+    sPreTemp.name = "preinfusion temp boost";
+    sPreTemp.pump = PumpMode.flow;
+    sPreTemp.transition = TransitionMode.fast;
+    sPreTemp.sensor = "coffee";
+    sPreTemp.pressure = 1;
+    sPreTemp.flow = +params["preinfusion_flow_rate"];
+    sPreTemp.exit = new Exit();
+    sPreTemp.exit.condition = "over";
+    sPreTemp.exit.type = "pressure";
+    sPreTemp.exit.value = +params["preinfusion_stop_pressure"];
+    sPreTemp.seconds = 2;
+    p.steps.push(sPreTemp);
+
+    // preinfusion
+    sPre.seconds = +params["preinfusion_time"];
+    sPre.flow = +params["preinfusion_flow_rate"];
+    sPre.name = "preinfusion";
+    sPre.pump = PumpMode.flow;
+    sPre.pressure = 1;
+    sPre.exit = new Exit();
+    sPre.exit.condition = "over";
+    sPre.exit.type = "pressure";
+    sPre.exit.value = +params["preinfusion_stop_pressure"];
+    p.steps.push(sPre);
+
+    // forced rise without limits
+
+    if (params["espresso_hold_time"]) {
+      if (+params["espresso_hold_time"] > 3) {
+        sRiseWithoutLimit.name = "forced rise without limits";
+        sRiseWithoutLimit.pump = PumpMode.pressure;
+        sRiseWithoutLimit.temperature = +params["espresso_temperature_2"];
+        sRiseWithoutLimit.transition = TransitionMode.fast;
+        sRiseWithoutLimit.sensor = "coffee";
+        sRiseWithoutLimit.pressure = +params["espresso_pressure"];;
+        sRiseWithoutLimit.flow = 0;
+        sRiseWithoutLimit.seconds = +params["espresso_hold_time"] - 3;
+
+        p.steps.push(sRiseWithoutLimit);
+      }
+    }
+
+    // rise and hold
+    sRiseHold.seconds = +params["espresso_hold_time"];
+    sRiseHold.pressure = +params["espresso_pressure"];
+    sRiseHold.name = "rise and hold";
+    sRiseHold.pump = PumpMode.pressure;
+    console.log(`rise and hold: ${sRiseHold.pressure} bar for ${sRiseHold.seconds} seconds`);
+    if (params["maximum_flow"]) {
+      sRiseHold.limiter = new Limiter();
+      sRiseHold.limiter.value = +params["maximum_flow"];
+      console.log(`limit flow to ${sRiseHold.limiter.value} ml/s)`)
+    }
+    sRiseHold.flow = 0;
+    p.steps.push(sRiseHold);
+
+
+    // Second forced rise without limit
+    if (+params["espresso_decline_time"] > 0) {
+      if (+params["espresso_hold_time"] < 3 && +params["espresso_decline_time"] > 3) {
+        const s = new Step();
+        s.name = "forced rise without limits";
+        s.pump = PumpMode.pressure;
+        s.temperature = +params["espresso_temperature_3"];
+        s.transition = TransitionMode.fast;
+        s.sensor = "coffee";
+        s.pressure = +params["espresso_pressure"];;
+        s.flow = 0;
+        s.seconds = +params["espresso_decline_time"] - 3;
+
+        p.steps.push(s);
+      }
+    }
+
+
+    // decline
+    sDecline.seconds = + params["espresso_decline_time"];
+    sDecline.name = "decline";
+    sDecline.pump = PumpMode.pressure;
+    if (sDecline.seconds > 0) {
+      sDecline.pressure = +params["pressure_end"];
+      console.log(`decline: ${sDecline.pressure} bar over ${sDecline.seconds} seconds`);
+    }
+    else {
+      console.log('decline: none');
+    }
+    sDecline.transition = TransitionMode.smooth;
+    sDecline.pump = PumpMode.pressure;
+    sDecline.sensor = "coffee";
+    sDecline.flow = 0;
+    p.steps.push(sDecline);
+
+
+
+
+
+    // desired shot weight
+    p.target_weight = +params["final_desired_shot_weight"];
+    if (p.target_weight > 0)
+      console.log(`desired weight: ${p.target_weight} grams`);
+    else
+      console.log(`desired weight: none`);
+
+    // desired shot volume
+    p.target_volume = +params["final_desired_shot_volume"];
+    if (p.target_volume > 0)
+      console.log(`desired volume: ${p.target_volume} ml`);
+    else
+      console.log(`desired volume: none`);
+    return p;
+  }
 
 
   mapFromGraphQl(p: ProfilesListQuery): ResultData<Profile[]> {
@@ -329,7 +832,7 @@ export class ProfileServiceService {
         flow: s.flow,
         pressure: s.pressure,
         index: s.index,
-        limiter_range: s.limiter?.range.toString(),
+        limiter_range: s.limiter?.range?.toString(),
         limiter_value: s.limiter?.value,
         name: s.name,
         pump: s.pump,
@@ -361,7 +864,7 @@ export class ProfileServiceService {
         flow: s.flow,
         pressure: s.pressure,
         index: s.index,
-        limiter_range: s.limiter?.range.toString(),
+        limiter_range: s.limiter?.range?.toString(),
         limiter_value: s.limiter?.value,
         name: s.name,
         pump: s.pump,
@@ -392,7 +895,7 @@ export class ProfileServiceService {
         flow: s.flow,
         pressure: s.pressure,
         index: i,
-        limiter_range: s.limiter?.range.toString(),
+        limiter_range: s.limiter?.range?.toString(),
         limiter_value: s.limiter?.value,
         name: s.name,
         pump: s.pump,
