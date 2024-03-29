@@ -445,7 +445,7 @@ export class ProfileServiceService {
     const sRiseHold = new Step();
     const sDecline = new Step();
 
-
+    p.steps = [];
 
     if (params["espresso_temperature_steps_enabled"] === "1") {
       sPreTemp.temperature = +params["espresso_temperature_0"];
@@ -454,7 +454,7 @@ export class ProfileServiceService {
       sRiseHold.temperature = +params["espresso_temperature_2"];
       sDecline.temperature = +params["espresso_temperature_3"];
     } else {
-      p.steps.forEach(s => s.temperature = temp);
+
     }
 
     sPreTemp.name = "preinfusion temp boost";
@@ -468,7 +468,7 @@ export class ProfileServiceService {
     sPreTemp.exit.type = "pressure";
     sPreTemp.exit.value = +params["preinfusion_stop_pressure"];
     sPreTemp.seconds = 2;
-
+    p.steps.push(sPreTemp);
 
     // preinfusion
     sPre.seconds = +params["preinfusion_time"];
@@ -480,7 +480,24 @@ export class ProfileServiceService {
     sPre.exit.condition = "over";
     sPre.exit.type = "pressure";
     sPre.exit.value = +params["preinfusion_stop_pressure"];
+    p.steps.push(sPre);
 
+    // forced rise without limits
+
+    if (params["espresso_hold_time"]) {
+      if (+params["espresso_hold_time"] > 3) {
+        sRiseWithoutLimit.name = "forced rise without limits";
+        sRiseWithoutLimit.pump = PumpMode.pressure;
+        sRiseWithoutLimit.temperature = +params["espresso_temperature_2"];
+        sRiseWithoutLimit.transition = TransitionMode.fast;
+        sRiseWithoutLimit.sensor = "coffee";
+        sRiseWithoutLimit.pressure = +params["espresso_pressure"];;
+        sRiseWithoutLimit.flow = 0;
+        sRiseWithoutLimit.seconds = +params["espresso_hold_time"] - 3;
+
+        p.steps.push(sRiseWithoutLimit);
+      }
+    }
 
     // rise and hold
     sRiseHold.seconds = +params["espresso_hold_time"];
@@ -494,6 +511,26 @@ export class ProfileServiceService {
       console.log(`limit flow to ${sRiseHold.limiter.value} ml/s)`)
     }
     sRiseHold.flow = 0;
+    p.steps.push(sRiseHold);
+
+
+    // Second forced rise without limit
+    if (+params["espresso_decline_time"] > 0) {
+      if (+params["espresso_hold_time"] < 3 && +params["espresso_decline_time"] > 3) {
+        const s = new Step();
+        s.name = "forced rise without limits";
+        s.pump = PumpMode.pressure;
+        s.temperature = +params["espresso_temperature_3"];
+        s.transition = TransitionMode.fast;
+        s.sensor = "coffee";
+        s.pressure = +params["espresso_pressure"];;
+        s.flow = 0;
+        s.seconds = +params["espresso_decline_time"] - 3;
+
+        p.steps.push(s);
+      }
+    }
+
 
     // decline
     sDecline.seconds = + params["espresso_decline_time"];
@@ -510,24 +547,11 @@ export class ProfileServiceService {
     sDecline.pump = PumpMode.pressure;
     sDecline.sensor = "coffee";
     sDecline.flow = 0;
+    p.steps.push(sDecline);
 
 
 
 
-    p.steps = [sPreTemp, sPre, sRiseHold, sDecline];
-    if (params["espresso_hold_time"]) {
-      if (+params["espresso_hold_time"] > 3) {
-        sRiseWithoutLimit.name = "forced rise without limits";
-        sRiseWithoutLimit.pump = PumpMode.pressure;
-        sRiseWithoutLimit.temperature = +params["espresso_temperature_2"];
-        sRiseWithoutLimit.transition = TransitionMode.fast;
-        sRiseWithoutLimit.sensor = "coffee";
-        sRiseWithoutLimit.pressure = +params["espresso_pressure"];;
-        sRiseWithoutLimit.flow = 0;
-        sRiseWithoutLimit.seconds = 3;
-        p.steps = [sPreTemp, sPre, sRiseWithoutLimit, sRiseHold, sDecline];
-      }
-    }
 
     // desired shot weight
     p.target_weight = +params["final_desired_shot_weight"];
