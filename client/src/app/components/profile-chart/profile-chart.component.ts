@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { HighchartsChartModule } from 'highcharts-angular';
-import { Profile, Step } from '../../models/profile';
+import { Profile, Step, ProfileType } from '../../models/profile';
 
 import * as Highcharts from 'highcharts';
 import { MatCardModule } from '@angular/material/card';
@@ -129,16 +129,19 @@ export class ProfileChartComponent {
       seriesP.data = [];
       seriesP.name = "Pressure [bar]";
       seriesP.data?.push([0, 0]);
+      seriesP.color = 'green';
 
       const seriesF = this.chartOptions.series[1] as Highcharts.SeriesLineOptions;
       seriesF.data = [];
       seriesF.name = "Flow [ml/s]";
       seriesF.data?.push([0, 0]);
+      seriesF.color = 'blue';
 
       const seriesT = this.chartOptions.series[2] as Highcharts.SeriesLineOptions;
       seriesT.data = [];
       seriesT.name = "Temperature [°C]";
       seriesT.data?.push([0, 0]);
+      seriesT.color = 'red';
 
       const bands: Highcharts.XAxisPlotBandsOptions[] = (this.chartOptions.xAxis as Highcharts.XAxisOptions).plotBands = [];
       let t = 0;
@@ -165,7 +168,8 @@ export class ProfileChartComponent {
         lastT = t;
         i++;
       });
-
+      if(this.profile.type === ProfileType.pressure) {seriesF.visible = false;}
+      if(this.profile.type === ProfileType.flow) {seriesP.visible = false;}
       console.log("Series:", this.profile, seriesP.data);
     }
   }
