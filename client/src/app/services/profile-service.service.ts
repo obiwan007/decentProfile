@@ -367,56 +367,92 @@ export class ProfileServiceService {
     const temp = +params["espresso_temperature"];
 
     const deg = temp < 110 ? "C" : "F";
-    p.steps = [new Step(), new Step(), new Step(), new Step()];
+    p.steps = [];
+    let temp_bump_time_seconds = 0;
+    let first_frame_len = 0;
+    let second_frame_len = 0;
     if (params["espresso_temperature_steps_enabled"] === "1") {
-      p.steps[0].temperature = params["espresso_temperature_0"];
-      p.steps[1].temperature = params["espresso_temperature_1"];
-      p.steps[2].temperature = params["espresso_temperature_2"];
-      p.steps[3].temperature = params["espresso_temperature_3"];
-      console.log(`temp steps: start ${p.steps[0].temperature}${deg}, preinfuse ${p.steps[1].temperature}${deg}, hold ${p.steps[2].temperature}${deg}, decline ${p.steps[3].temperature}${deg}`)
+      temp_bump_time_seconds = +2;
+      first_frame_len = temp_bump_time_seconds;
+      second_frame_len = Math.max(0, +params["preinfusion_time"] - temp_bump_time_seconds);
     } else {
       console.log(`temp ${temp}${deg}`)
+      second_frame_len = +params["preinfusion_time"]
+      params["espresso_temperature_0"] = temp;
+      params["espresso_temperature_1"] = temp;
+      params["espresso_temperature_2"] = temp;
+      params["espresso_temperature_3"] = temp;
     }
 
     p.steps.forEach(s => s.sensor = "coffee");
-    p.steps[0].pressure = 0;
-    p.steps[0].flow = 0;
+
+    // Pre Boost
+    if (first_frame_len > 0) {
+      const preBoost = new Step();
+      preBoost.pressure = 1;
+      preBoost.sensor = "coffee"
+      preBoost.flow = +params["preinfusion_flow_rate"];;
+      preBoost.name = "preinfusion boost";
+      preBoost.temperature = +params["espresso_temperature_0"];
+      preBoost.exit = new Exit();
+      preBoost.exit.condition = "over";
+      preBoost.exit.type = "pressure";
+      preBoost.exit.value = +params["preinfusion_stop_pressure"];
+      preBoost.seconds = first_frame_len;
+      p.steps.push(preBoost);
+    }
 
     // preinfusion
-    p.steps[1].seconds = +params["preinfusion_time"];
-    p.steps[1].flow = +params["preinfusion_flow_rate"];
-    p.steps[1].pressure = +params["preinfusion_stop_pressure"];
-    p.steps[1].transition = TransitionMode.fast;
-
-    if (p.steps[1].seconds > 0)
-      console.log(`preinfusion: ${p.steps[1].flow} ml/s for ${p.steps[1].seconds} seconds or until pressure hits ${p.steps[1].pressure} bar)`);
-    else
-      console.log('preinfusion: none');
-    if (p.steps[1].seconds > 0)
-      console.log(`preinfusion: ${p.steps[1].flow} ml/s for ${p.steps[1].seconds} seconds or until pressure hits ${p.steps[1].pressure} bar)`);
-    else
-      console.log('preinfusion: none');
-    if (params["preinfusion_guarantee"] == '1')
-      console.log("note: preinfusion rise box checked");
+    if (second_frame_len > 0) {
+      const pre = new Step();
+      pre.seconds = +second_frame_len;
+      pre.temperature = +params["espresso_temperature_1"];
+      pre.flow = +params["preinfusion_flow_rate"];
+      pre.pressure = 1;
+      pre.name = "preinfusion";
+      pre.transition = TransitionMode.fast;
+      pre.pump = PumpMode.flow;
+      pre.sensor = "coffee";
+      p.steps.push(pre);
+    }
 
     // rise and hold    
-    p.steps[2].seconds = +params["espresso_hold_time"];
-    p.steps[2].pressure = +params["maximum_pressure"];
-    p.steps[2].transition = TransitionMode.fast;;
-    p.steps[1].flow = +params["flow_profile_hold"];
-    console.log(`rise and hold: ${p.steps[2].flow} ml/s for ${p.steps[2].seconds} seconds`);
-    console.log(`limit pressure to ${p.steps[2].pressure} bar)`)
+    if (+params["espresso_hold_time"] > 0) {
+      const hold = new Step();
+      hold.name = "hold";
+      hold.seconds = +params["espresso_hold_time"];
+      hold.transition = TransitionMode.fast;;
+      hold.flow = +params["flow_profile_hold"];
+      hold.temperature = +params["espresso_temperature_2"];
+      hold.pump = PumpMode.flow;
+      hold.sensor = "coffee";
+      hold.pressure = 0;
+      hold.volume = 0;
+      hold.weight = 0;
+      hold.limiter = new Limiter();
+      hold.limiter.value = +params["maximum_pressure"];
+      hold.limiter.range = +params["maximum_pressure_range_default"];
+      p.steps.push(hold);
+    }
 
     // decline
-    p.steps[3].seconds = + params["espresso_decline_time"];
-    if (p.steps[3].seconds > 0) {
-      p.steps[3].flow = +params["flow_profile_decline"];
-      console.log(`decline: ${p.steps[2].flow} ml/s over ${p.steps[3].seconds} seconds`);
+    if (+params["espresso_hold_time"] > 0) {
+      const dec = new Step();
+      dec.seconds = +params["espresso_decline_time"];
+      dec.name = "decline";
+      dec.temperature = +params["espresso_temperature_3"];
+      dec.sensor = "coffee";
+      dec.pump = PumpMode.flow;
+      dec.transition = TransitionMode.smooth;
+      dec.flow = +params["flow_profile_decline"];
+      dec.pressure = 0;
+      dec.volume = 0;
+      dec.weight = 0;
+      dec.limiter = new Limiter();
+      dec.limiter.value = +params["maximum_pressure"];
+      dec.limiter.range = +params["maximum_pressure_range_default"];
+      p.steps.push(dec);
     }
-    else {
-      console.log('decline: none');
-    }
-
     // desired shot weight
     p.target_weight = +params["final_desired_shot_weight"];
     if (p.target_weight > 0)
