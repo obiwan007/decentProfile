@@ -16,4 +16,7 @@ jobs:
       - run: git config --global user.name 'obiwan007007'
       - run: git config --global user.email 'markus.miertschink@hotmail.com'
       - run: cd client && mkdir .git && npm version patch -m "[RELEASE] %s"
-      - run: git push
+#      - run: git push
+      - uses: EndBug/add-and-commit@v7
+        with:
+            default_author: github_actions
