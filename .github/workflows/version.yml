@@ -15,5 +15,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: git config --global user.name 'obiwan007007'
       - run: git config --global user.email 'markus.miertschink@hotmail.com'
-      - run: npm version patch -m "[RELEASE] %s"
+      - run: cd client && npm version patch -m "[RELEASE] %s"
       - run: git push
