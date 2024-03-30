@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MainNavigationComponent } from './components/main-navigation/main-navigation.component';
 import { SupabaseService } from './services/supabase.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent {
    *
    */
   constructor(private readonly supabase: SupabaseService) {
-
+    console.log("App Version:", environment.VERSION);
 
   }
   ngOnInit() {

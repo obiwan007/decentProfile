@@ -4,14 +4,19 @@ import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 
 import * as Sentry from "@sentry/angular-ivy";
-
+import { environment } from './environments/environment';
 Sentry.init({
+  release: `decentProfiler@${environment.VERSION}`,
   dsn: "https://20195ea82ba3836229595326c9e9bdcd@o4504683534090240.ingest.us.sentry.io/4506993379311616",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration({
       maskAllText: false,
       blockAllMedia: false,
+    }),
+    Sentry.feedbackIntegration({
+      // Additional SDK configuration goes in here, for example:
+      colorScheme: "system",
     }),
   ],
   // Performance Monitoring

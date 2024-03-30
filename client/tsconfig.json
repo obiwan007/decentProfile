@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "resolveJsonModule": true,
     "outDir": "client/dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
