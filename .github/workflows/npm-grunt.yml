@@ -1,8 +1,6 @@
-name: NodeJS with Grunt
+name: NodeJS Default Build
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
