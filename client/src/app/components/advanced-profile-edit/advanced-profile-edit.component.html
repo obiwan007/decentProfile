@@ -176,13 +176,34 @@
                     </div>
                 </div>
                 <div>
-                    <h2>4. Move on if</h2>
-                    <ul>
-                        <li>To do: pressure is over</li>
-                        <li> To do: pressure is under</li>
-                        <li>To do: flow is over</li>
-                        <li>To do: flow is under</li>
-                    </ul>
+                    <h2>4. Move on if <mat-slide-toggle class="" ngDefaultControl [(ngModel)]="moveOnChecked">
+                        </mat-slide-toggle></h2>
+                    <div *ngIf="moveOnChecked&&step.exit">
+                        <div class="label">Limit Condition</div>
+                        <mat-select ngDefaultControl [(ngModel)]="step.exit.condition">
+                            <mat-option value="over">over</mat-option>
+                            <mat-option value="under">under</mat-option>
+                        </mat-select>
+                        <div class="label">Limit Type</div>
+                        <mat-select ngDefaultControl [(ngModel)]="step.exit.type">
+                            <mat-option [value]="pumpMode.flow">{{pumpMode.flow}}</mat-option>
+                            <mat-option [value]="pumpMode.pressure">{{pumpMode.pressure}}</mat-option>
+                        </mat-select>
+                        <div class="slider" *ngIf="step.exit.type==pumpMode.flow">
+                            <div class="label">Flow (<input class="inline-input" (ngModelChange)="stepChanged(step)"
+                                    [(ngModel)]="step.exit.value"> ml/s)</div>
+                            <mat-slider ngDefaultControl min="0" max="10" step="0.1" discrete>
+                                <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.exit.value">
+                            </mat-slider>
+                        </div>
+                        <div class="slider" *ngIf="step.exit.type==pumpMode.pressure">
+                            <div class="label">Pressure (<input class="inline-input" (ngModelChange)="stepChanged(step)"
+                                    [(ngModel)]="step.exit.value"> bar)</div>
+                            <mat-slider ngDefaultControl min="0" max="12" step="0.1" discrete>
+                                <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.exit.value">
+                            </mat-slider>
+                        </div>
+                    </div>
                 </div>
                 </mat-card-content>
             </mat-card>

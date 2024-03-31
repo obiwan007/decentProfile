@@ -18,6 +18,7 @@ import { RenderStepComponent } from '../render-step/render-step.component';
 import { RenderStepsComponent } from '../render-steps/render-steps.component';
 import { Profile, ProfileType, PumpMode, SensorType, Step, TransitionMode } from '../../models/profile';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-advanced-profile-edit',
@@ -35,12 +36,22 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
     MatToolbarModule,
     MatIconModule,
     MatSelectModule,
+    MatSlideToggle,
   ],
 
   templateUrl: './advanced-profile-edit.component.html',
   styleUrl: './advanced-profile-edit.component.css'
 })
-export class AdvancedProfileEditComponent extends BasicProfileEditComponent  {
+export class AdvancedProfileEditComponent extends BasicProfileEditComponent {
   pumpMode = PumpMode;
   transitionMode = TransitionMode;
+  moveOnChecked = false;
+   
+   override onSelectedStep(step: Step): void {
+    this.step = step;
+    if (this.step && this.step.exit){
+      this.moveOnChecked = true;
+    }
+   }
+
 }
