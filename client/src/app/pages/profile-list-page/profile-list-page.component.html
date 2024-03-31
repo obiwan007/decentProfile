@@ -1,7 +1,7 @@
 <div class="flex flex-row p-2">
     <div [class]="selectedProfile? 'w-2/6' : 'w-full'">
 
-        <app-profiles-list #profileList [filter]="filter" (onClick)="onClick($event)"></app-profiles-list>
+        <app-profiles-list #profileList (onClick)="onClick($event)"></app-profiles-list>
     </div>
     @if(selectedProfile){
     <div class="w-4/6">

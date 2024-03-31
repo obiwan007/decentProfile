@@ -19,6 +19,7 @@ export class FilterData {
   authorFilter: string[] = [];
   defaultFilter: boolean = false;
   publicFilter: boolean = false;
+  search: string = '';
 }
 
 /**
@@ -45,6 +46,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   lastOrder: [profilesOrderBy] | undefined;
   cursorHist: string[] = [''];
   private _filter: FilterData = new FilterData();
+  lastFilter: profilesFilter = {};
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
@@ -86,7 +88,6 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   }
 
   mapId(data: any[]) {
-    console.log("Map", data, data.map(d => d.node));
     return data.map(d => d.node);
   }
 
@@ -172,15 +173,9 @@ export class ProfilesListDataSource extends DataSource<Profile> {
       and: []
     };
 
-    //if (this._filter.defaultFilter)
-    // filter.and!.push(
-    //   {
-    //     or: [
-    //       { isDefault: { eq: this._filter.defaultFilter }, },
-    //       { isPublic: { eq: this._filter.publicFilter }, },
-    //     ]
-    //   },
-    // );
+    if (this._filter.search.length > 0) {
+      filter.and!.push({ title: { ilike: '%' + this._filter.search + '%' } });
+    }
 
     filter.and!.push(
       { isDefault: { eq: this._filter.defaultFilter }, },
@@ -230,7 +225,12 @@ export class ProfilesListDataSource extends DataSource<Profile> {
     //   ]
     // }
 
-
+    if (JSON.stringify(filter) !== JSON.stringify(this.lastFilter)) {
+      this.lastFilter = filter;
+      this.lastCursor = undefined;
+      cursor = undefined;
+      // this.paginator!.pageIndex = 0;
+    }
 
 
     const vars: ProfilesListQueryVariables = {
