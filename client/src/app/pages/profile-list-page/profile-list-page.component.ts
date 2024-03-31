@@ -80,16 +80,16 @@ export class ProfileListPageComponent {
     //   }
     // );
   }
-  filterForType($event: MatSelectChange) {
-    console.log("event", $event)
-    this.filter = structuredClone(this.filter);
-    this.filter.typesFilter = [...$event.value];
-  }
-  filterForBeverage($event: MatSelectChange) {
-    console.log("event", $event)
-    this.filter = structuredClone(this.filter);
-    this.filter.beverageFilter = [...$event.value];
-  }
+  // filterForType($event: MatSelectChange) {
+  //   console.log("event", $event)
+  //   this.filter = structuredClone(this.filter);
+  //   this.filter.typesFilter = [...$event.value];
+  // }
+  // filterForBeverage($event: MatSelectChange) {
+  //   console.log("event", $event)
+  //   this.filter = structuredClone(this.filter);
+  //   this.filter.beverageFilter = [...$event.value];
+  // }
   onEdit() {
 
     this.navigateToProfile(this.selectedProfile?.id!);

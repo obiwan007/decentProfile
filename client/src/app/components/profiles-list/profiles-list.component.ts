@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
@@ -29,6 +30,7 @@ import { UploadFileComponent } from '../upload-file/upload-file.component';
     MatFormFieldModule, MatSelectModule,
     MatIconModule,
     FormsModule,
+    MatInputModule,
 
     MatListModule,
     MatLineModule,
@@ -55,9 +57,10 @@ export class ProfilesListComponent implements AfterViewInit {
 
   private _filter: FilterData = new FilterData();
   selectedProfile?: Profile;
-  selected: any;
+  filteredEntries: any;
+  search: string = '';
 
-  @Input()
+  // @Input()
   public set filter(value: FilterData) {
     this._filter = value;
 
@@ -87,11 +90,16 @@ export class ProfilesListComponent implements AfterViewInit {
     this.dataSource = new ProfilesListDataSource(this._profileSrv);
 
     const f = localStorage.getItem("filter");
+    const s = localStorage.getItem("search");
+    if (s) {
+      this._filter.search = s;
+      this.search = s;
+    }
     if (f) {
-      this.selected = JSON.parse(f);
-      this.filterForBeverage({ source: this as any, value: this.selected });
+      this.filteredEntries = JSON.parse(f);
+      this.filterForBeverage({ source: this as any, value: this.filteredEntries });
     } else {
-      this.selected = [{
+      this.filteredEntries = [{
         value: 'default', groupValue: 'default',
       },
       {
@@ -135,6 +143,15 @@ export class ProfilesListComponent implements AfterViewInit {
     this.selectedProfile = row;
   }
 
+  searchChanged($event: any) {
+    console.log("Search", $event);
+    this.search = $event;
+    this.filter.search = $event;
+    localStorage.setItem("search", $event);
+    this.dataSource.setFilter(this._filter);
+  }
+
+
   openUpload() {
     const dialogRef = this.dialog.open(UploadFileComponent);
 
@@ -152,7 +169,7 @@ export class ProfilesListComponent implements AfterViewInit {
   }
 
   filterForBeverage($event: MatSelectChange) {
-    console.log("Filter: ", this.selected)
+    console.log("Filter: ", this.filteredEntries)
 
     this.filter.typesFilter = [...$event.value
       .filter((f: any) => f.groupValue === 'type')
@@ -168,10 +185,9 @@ export class ProfilesListComponent implements AfterViewInit {
     this.filter.publicFilter = $event.value.find((v: any) => v.value === "public") ? true : false;
     //this.filter.beverageFilter = [...$event.value];
 
-    console.log(this.filter.publicFilter)
     this.dataSource.setFilter(this._filter);
 
-    localStorage.setItem("filter", JSON.stringify(this.selected));
+    localStorage.setItem("filter", JSON.stringify(this.filteredEntries));
   }
 
 }
