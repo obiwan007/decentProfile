@@ -9,3 +9,40 @@ mat-slider {
 .slider {
     padding-right: 15px;
 }
+
+.inline-input {
+    min-width: 25px;
+    max-width: 30px;
+    text-align: right;
+}
+
+/* Remove Arrows on Input */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+::ng-deep .multiline-tooltip {
+    white-space: pre-line !important;
+}
+
+.title {
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+mat-slider {
+    width: 100%;
+    margin-left: 0px;
+}
+
+hr {
+    margin: 15px 0 15px 0;
+}

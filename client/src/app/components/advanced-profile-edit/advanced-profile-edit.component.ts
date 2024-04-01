@@ -18,7 +18,10 @@ import { RenderStepComponent } from '../render-step/render-step.component';
 import { RenderStepsComponent } from '../render-steps/render-steps.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { Exit } from '../../models/profile';
+import { Exit, Limiter } from '../../models/profile';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-advanced-profile-edit',
@@ -28,7 +31,7 @@ import { Exit } from '../../models/profile';
     RenderStepComponent,
     ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
     AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, CommonModule, FormsModule,
-    ReactiveFormsModule, MatInputModule,
+    ReactiveFormsModule,
     EditableComponent,
     ViewModeDirective,
     EditModeDirective,
@@ -36,13 +39,21 @@ import { Exit } from '../../models/profile';
     MatToolbarModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
-    MatIconModule,],
+    MatIconModule,
+    MatInputModule,
+    MatOptionModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
   templateUrl: './advanced-profile-edit.component.html',
   styleUrl: './advanced-profile-edit.component.css'
 })
 export class AdvancedProfileEditComponent extends BasicProfileEditComponent {
-  labelForCondition() {
-    return `${this.step?.exit?.type === 'pressure' ? 'Pressure' : 'Flow'} ${this.step?.exit?.condition === 'over' ? 'over' : 'below'} ${this.step?.exit?.value} ${this.step?.exit?.type === 'pressure' ? 'bar' : 'ml/s'}  `
+  label1ForCondition() {
+    return `${this.step?.exit?.type === 'pressure' ? 'Pressure' : 'Flow'} ${this.step?.exit?.condition === 'over' ? 'over' : 'below'}`
+  }
+  label2ForCondition() {
+    return `${this.step?.exit?.type === 'pressure' ? 'bar' : 'ml/s'}`
   }
   enableExit($event: any) {
     console.log("Event:",
@@ -56,6 +67,20 @@ export class AdvancedProfileEditComponent extends BasicProfileEditComponent {
       this.step!.exit = undefined;
     }
     this.stepChanged(this.step!);
+  }
+  enableLimit($event: any) {
+    console.log("Event:",
+      $event);
+    if ($event) {
+      this.step!.limiter = new Limiter();
+    } else {
+      this.step!.limiter = undefined;
+    }
+    this.stepChanged(this.step!);
+  }
+
+  targetVolumeCountStart($event: any) {
+    console.log("Ev:", $event);
   }
 
 }

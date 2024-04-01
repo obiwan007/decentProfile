@@ -31,13 +31,13 @@ export class Profile {
     @Type(() => Step)
     steps!: Step[]
     @Type(() => Number)
-    tank_temperature!: string
+    tank_temperature: number = 0;
     @Type(() => Number)
     target_weight: number = 0;
     @Type(() => Number)
     target_volume: number = 0;
     @Type(() => Number)
-    target_volume_count_start!: string
+    target_volume_count_start: number = 0;
     legacy_profile_type!: string
     type!: ProfileType
     lang!: string
@@ -60,16 +60,16 @@ export class Step {
     __typename!: string;
     @Exclude({ toPlainOnly: true })
     id!: number;
-    name!: string
+    name: string = "new step"
     @Type(() => Number)
     temperature!: number;
     sensor!: string;
-    pump!: PumpMode;
-    transition!: TransitionMode;
+    pump: PumpMode = PumpMode.flow;
+    transition: TransitionMode = TransitionMode.fast;
     @Type(() => Number)
-    pressure!: number;
+    pressure: number = 0;
     @Type(() => Number)
-    flow!: number
+    flow: number = 0;
     @Type(() => Number)
     seconds: number = 0
     @Type(() => Number)
@@ -89,15 +89,15 @@ export class Step {
 }
 
 export class Exit {
-    type!: string
-    condition!: string
+    type: string = "pressure";
+    condition: string = "above"
     @Type(() => Number)
-    value!: number
+    value: number = 0;
 }
 
 export class Limiter {
     @Type(() => Number)
-    value!: number
+    value: number = 0;
     @Type(() => Number)
-    range!: number
+    range: number = 0;
 }
