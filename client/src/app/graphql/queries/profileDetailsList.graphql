@@ -19,6 +19,8 @@ query ProfileDetails($id: BigInt) {
         target_weight
         isPublic
         isDefault
+        target_volume_count_start
+        tank_temperature
         stepsCollection(orderBy: [{index: AscNullsLast}] ) {
           edges {
             node {

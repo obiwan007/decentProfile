@@ -21,6 +21,8 @@ query ProfilesList($first: Int, $cursor: Cursor, $order: [profilesOrderBy!], $fi
         target_weight
         isPublic
         isDefault
+        target_volume_count_start
+        tank_temperature
         stepsCollection(orderBy: [{index: AscNullsLast}] ) {
           edges {
             node {
