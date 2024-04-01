@@ -21,9 +21,18 @@
                 @for(step of profile.steps; track profile.id){
                 <mat-list-option [selected]="step===currentStep" (click)="onSelected(step)"
                                  [value]="step">
-                    {{step.name}}</mat-list-option>
+                    {{step.name}}
+                    <button (click)="removeStep(step)" style="float:right" title="Remove Step" class="example-icon"
+                            aria-label="Remove Step">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-list-option>
                 }
             </mat-selection-list>
+            <button (click)="addStep()" title="Add Step" class="example-icon"
+                    aria-label="Add Step">
+                <mat-icon>add</mat-icon>
+            </button>
             }
         </mat-card-content>
     </mat-card>

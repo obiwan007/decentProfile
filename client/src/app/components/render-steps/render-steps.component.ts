@@ -5,11 +5,12 @@ import { MatCardModule } from '@angular/material/card';
 import { RenderStepComponent } from '../render-step/render-step.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-render-steps',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, RenderStepComponent, MatListModule],
+  imports: [MatCardModule, MatButtonModule, RenderStepComponent, MatListModule, MatIconModule],
   templateUrl: './render-steps.component.html',
   styleUrl: './render-steps.component.css'
 })
@@ -34,5 +35,18 @@ export class RenderStepsComponent {
   ngOnInit() {
     this.currentStep = this.profile?.steps[0];
     this.selected.emit(this.currentStep);
+  }
+  addStep() {
+    this.profile?.steps.push(new Step());
+  }
+
+  removeStep(step: Step) {
+    this.profile?.steps.find((foundStep, index) => {
+      if (foundStep.id === step.id) {
+        this.profile?.steps.splice(index, 1);
+        return true;
+      }
+      return null;
+    });
   }
 }

@@ -745,6 +745,8 @@ export class ProfileServiceService {
         notes: p.notes,
         target_volume: p.target_volume,
         target_weight: p.target_weight,
+        target_volume_count_start: p.target_volume_count_start,
+        tank_temperature: p.tank_temperature,
         title: p.title,
         type: p.type,
       };
@@ -799,6 +801,8 @@ export class ProfileServiceService {
         notes: p.notes,
         target_volume: p.target_volume,
         target_weight: p.target_weight,
+        target_volume_count_start: p.target_volume_count_start,
+        tank_temperature: p.tank_temperature,
         title: p.title,
         type: p.type,
       };
