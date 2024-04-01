@@ -38,12 +38,14 @@ export class RenderStepsComponent {
   }
   addStep() {
     this.profile?.steps.push(new Step());
+    this.profile?.steps.forEach((s, i) => s.index = i);
   }
 
   removeStep(step: Step) {
     this.profile?.steps.find((foundStep, index) => {
       if (foundStep.id === step.id) {
         this.profile?.steps.splice(index, 1);
+        this.profile?.steps.forEach((s, i) => s.index = i);
         return true;
       }
       return null;
