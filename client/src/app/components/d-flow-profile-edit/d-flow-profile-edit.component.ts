@@ -20,6 +20,7 @@ import { ViewModeDirective } from '../editable/view-mode.directive';
 import { ProfileDetailsComponent } from '../profile-details/profile-details.component';
 import { RenderStepComponent } from '../render-step/render-step.component';
 import { RenderStepsComponent } from '../render-steps/render-steps.component';
+import { ButtonSliderComponent } from '../button-slider/button-slider.component';
 
 
 @Component({
@@ -39,6 +40,7 @@ import { RenderStepsComponent } from '../render-steps/render-steps.component';
     MatToolbarModule,
     MatIconModule,
     MatTooltipModule,
+    ButtonSliderComponent
   ],
   templateUrl: './d-flow-profile-edit.component.html',
   styleUrl: './d-flow-profile-edit.component.scss'

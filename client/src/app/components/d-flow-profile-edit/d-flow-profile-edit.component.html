@@ -1,21 +1,21 @@
 <mat-toolbar>
     <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
-            aria-label="Example icon-button with share icon">
+        aria-label="Example icon-button with share icon">
         <mat-icon>save</mat-icon>
     </button>
     <button mat-icon-button title="Copy profile" class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon">
+        aria-label="Example icon-button with heart icon">
         <mat-icon>file_copy</mat-icon>
     </button>
     <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon">
+        aria-label="Example icon-button with heart icon">
         <mat-icon>delete</mat-icon>
     </button>
     <button mat-icon-button title="Share profile" class="example-icon" aria-label="Example icon-button with share icon">
         <mat-icon>share</mat-icon>
     </button>
     <button (click)="resetToDefaults()" mat-icon-button title="Reset to default" class="example-icon"
-            aria-label="Example icon-button with share icon">
+        aria-label="Example icon-button with share icon">
         <mat-icon>restart_alt</mat-icon>
     </button>
     <mat-icon [matTooltip]="tooltips['info_d_flow']" matTooltipClass="multiline-tooltip">info</mat-icon>
@@ -32,17 +32,12 @@
                 <mat-card-header>
                     <mat-card-title>
                         Dose <mat-icon [matTooltip]="tooltips['info_dose']"
-                                  matTooltipClass="multiline-tooltip">info</mat-icon>
+                            matTooltipClass="multiline-tooltip">info</mat-icon>
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="slider">
-                        <div class="label">Dose (<input type="number" class="inline-input" [(ngModel)]="dose"
-                                   (ngModelChange)="updateExtractionRatio()"> g)</div>
-                        <mat-slider ngDefaultControl min="1" max="30" step="0.1" discrete>
-                            <input matSliderThumb [(ngModel)]="dose" (ngModelChange)="updateExtractionRatio()">
-                        </mat-slider>
-                    </div>
+                    <app-button-slider [(model)]="dose" unit="g" title="Dose" [min]=0 [max]=30 [increment]=0.1
+                        (modelChange)="updateExtractionRatio()"></app-button-slider>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -53,33 +48,17 @@
                 <mat-card-header>
                     <mat-card-title>
                         Stop <mat-icon [matTooltip]="tooltips['info_pour_stop']"
-                                  matTooltipClass="multiline-tooltip">info</mat-icon>
+                            matTooltipClass="multiline-tooltip">info</mat-icon>
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="slider">
-                        <div class="label">Stop at Weight ( <input type="number" class="inline-input"
-                                   [(ngModel)]="profile.target_weight"
-                                   (ngModelChange)="updateExtractionRatio();profile.target_volume=0"> g)</div>
-                        <mat-slider ngDefaultControl min="0" max="600" step="1" discrete>
-                            <input matSliderThumb [(ngModel)]="profile.target_weight"
-                                   (ngModelChange)="updateExtractionRatio();profile.target_volume=0">
-                        </mat-slider>
-                    </div>
-
-                    <div class="slider">
-                        <div class="label">Stop at Volume (<input type="number" class="inline-input"
-                                   [(ngModel)]="profile.target_volume"
-                                   (ngModelChange)="updateExtractionRatio();profile.target_weight=0"> ml)</div>
-                        <mat-slider ngDefaultControl min="0" max="600" step="1" discrete>
-                            <input matSliderThumb [(ngModel)]="profile.target_volume"
-                                   (ngModelChange)="updateExtractionRatio();profile.target_weight=0">
-                        </mat-slider>
-
-                    </div>
-                    <div>
+                    <app-button-slider [(model)]="profile.target_weight" unit="g" title="Stop at Weight" [min]=0
+                        [max]=600 [increment]=1
+                        (modelChange)="updateExtractionRatio();profile.target_volume=0"></app-button-slider>
+                        <app-button-slider [(model)]="profile.target_volume" unit="ml" title="Stop at Volume" [min]=0
+                        [max]=600 [increment]=1
+                        (modelChange)="updateExtractionRatio();profile.target_weight=0"></app-button-slider>
                         <div class="label"> Extraction Ratio 1 : {{extractionRatio | number: '1.1-1'}} </div>
-                    </div>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -95,7 +74,7 @@
                                 <div class="">
                                     <mat-form-field class="flex">
                                         <input type="text" matInput [(ngModel)]="profile.steps[1].name" focusable
-                                               editableOnEnter>
+                                            editableOnEnter>
                                     </mat-form-field>
                                 </div>
                             </ng-template>
@@ -107,72 +86,26 @@
                         <app-render-step [step]="profile.steps[1]"></app-render-step>
                     </div>
                     <hr>
-                    <div class="slider">
-                        <div class="label">Temperature ( <input type="number" class="inline-input"
-                                   (ngModelChange)="stepChanged(profile.steps[1])"
-                                   [(ngModel)]="profile.steps[1].temperature"> °C)<mat-icon
-                                      [matTooltip]="tooltips['info_infuse_temp']"
-                                      matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                        <mat-slider ngDefaultControl min="50" max="100" step="1" discrete>
-                            <input (ngModelChange)="stepChanged(profile.steps[1])" matSliderThumb
-                                   [(ngModel)]="profile.steps[1].temperature">
-                        </mat-slider>
-                    </div>
+                    <app-button-slider [(model)]="profile.steps[1].temperature" unit="°C" title="Temperature" [min]=50
+                        [max]=100 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
                     <hr>
-
                     <div>
-                        <div class="slider">
-                            <div class="label">Pressure (<input type="number" class="inline-input"
-                                       (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].pressure"> bar)<mat-icon
-                                          [matTooltip]="tooltips['info_infuse_pressure']"
-                                          matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                            <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
-                                <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].pressure">
-                            </mat-slider>
-                        </div>
+                        <app-button-slider [(model)]="profile.steps[1].pressure" unit="bar" title="Pressure" [min]=0
+                            [max]=16 [increment]=0.1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
                         <hr>
                         <div class="title">Infuse until either<mat-icon [matTooltip]="tooltips['info_infuse_stop']"
-                                      matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                        <div class="slider">
-                            <div class="label">Time (<input type="number" class="inline-input"
-                                       (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].seconds"> s)</div>
-                            <mat-slider ngDefaultControl min="1" max="1000" step="1" discrete>
-                                <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].seconds">
-                            </mat-slider>
-                        </div>
-                        <div class="slider">
-                            <div class="label">Volume (<input type="number" class="inline-input"
-                                       (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].volume"> ml)</div>
-                            <mat-slider ngDefaultControl min="1" max="500" step="1" discrete>
-                                <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].volume">
-                            </mat-slider>
-                        </div>
-                        <div class="slider">
-                            <div class="label">Weight (<input type="number" class="inline-input"
-                                       (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].weight"> g)</div>
-                            <mat-slider ngDefaultControl min="1" max="500" step="0.2" discrete>
-                                <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[1])"
-                                       [(ngModel)]="profile.steps[1].weight">
-                            </mat-slider>
-                        </div>
+                                matTooltipClass="multiline-tooltip">info</mat-icon></div>
+                                <app-button-slider [(model)]="profile.steps[1].seconds" unit="s" title="Time" [min]=0
+                        [max]=1000 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+                        <app-button-slider [(model)]="profile.steps[1].volume" unit="ml" title="Volume" [min]=1
+                        [max]=500 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+                        <app-button-slider [(model)]="profile.steps[1].weight" unit="ml" title="Weight" [min]=1
+                        [max]=500 [increment]=0.2 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
                     </div>
-
-
-
-
                 </mat-card-content>
             </mat-card>
         </div>
     </div>
-
-
     <div class="flex flex-col w-4/6">
         <div class="m-2">
             <mat-card *ngIf="profile">
@@ -184,7 +117,7 @@
                                 <div class="">
                                     <mat-form-field class="flex">
                                         <input type="text" matInput [(ngModel)]="profile.steps[2].name" focusable
-                                               editableOnEnter>
+                                            editableOnEnter>
                                     </mat-form-field>
                                 </div>
                             </ng-template>
@@ -196,38 +129,18 @@
                         <app-render-step [step]="profile.steps[2]"></app-render-step>
                     </div>
                     <hr>
-                    <div class="slider">
-                        <div class="label">Temperature (<input type="number" class="inline-input"
-                                   (ngModelChange)="stepChanged(profile.steps[2])"
-                                   [(ngModel)]="profile.steps[2].temperature"> °C)<mat-icon
-                                      [matTooltip]="tooltips['info_pour_temp']"
-                                      matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                        <mat-slider ngDefaultControl min="50" max="100" step="1" discrete>
-                            <input (ngModelChange)="stepChanged(profile.steps[2])" matSliderThumb
-                                   [(ngModel)]="profile.steps[2].temperature">
-                        </mat-slider>
-                    </div>
+                    <app-button-slider [(model)]="profile.steps[2].temperature" unit="°C" title="Temperature" [min]=50
+                        [max]=100 [increment]=1 (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
                     <hr>
                     <div class="title">Pour Limits<mat-icon [matTooltip]="tooltips['info_pour_limits']"
-                                  matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                    <div class="slider">
-                        <div class="label">Flow ( <input type="number" class="inline-input"
-                                   (ngModelChange)="stepChanged(profile.steps[2])" [(ngModel)]="profile.steps[2].flow">
-                            ml/s)</div>
-                        <mat-slider ngDefaultControl min="0" max="20" step="0.5" discrete>
-                            <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[2])"
-                                   [(ngModel)]="profile.steps[2].flow">
-                        </mat-slider>
-                        <div class="label">Pressure Limit (<input type="number" class="inline-input"
-                                   (ngModelChange)="stepChanged(profile.steps[2])"
-                                   [(ngModel)]="profile.steps[2].limiter.value"
-                                   *ngIf="profile.steps[2].limiter && profile.steps[2].limiter.value"> bar)</div>
-                        <mat-slider ngDefaultControl min="0" max="12" step="0.1" discrete>
-                            <input matSliderThumb (ngModelChange)="stepChanged(profile.steps[2])"
-                                   [(ngModel)]="profile.steps[2].limiter.value"
-                                   *ngIf="profile.steps[2].limiter && profile.steps[2].limiter.value">
-                        </mat-slider>
-                    </div>
+                            matTooltipClass="multiline-tooltip">info</mat-icon></div>
+                    <app-button-slider [(model)]="profile.steps[2].flow" unit="bar" title="Flow" [min]=0 [max]=10
+                        [increment]=0.1 (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
+                    <app-button-slider *ngIf="profile.steps[2].limiter" [(model)]="profile.steps[2].limiter.value"
+                        unit="bar" title="Pressure Limit" [min]=0 [max]=16 [increment]=0.1
+                        (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
+
+
 
                 </mat-card-content>
             </mat-card>
