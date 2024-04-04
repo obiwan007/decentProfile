@@ -68,17 +68,7 @@
             <mat-card *ngIf="profile">
                 <mat-card-header>
                     <mat-card-title>
-                        <app-editable>
-                            <ng-template viewMode>{{profile.steps[1].name}}</ng-template>
-                            <ng-template editMode>
-                                <div class="">
-                                    <mat-form-field class="flex">
-                                        <input type="text" matInput [(ngModel)]="profile.steps[1].name" focusable
-                                            editableOnEnter>
-                                    </mat-form-field>
-                                </div>
-                            </ng-template>
-                        </app-editable>
+                        {{profile.steps[1].name}}
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
@@ -111,17 +101,7 @@
             <mat-card *ngIf="profile">
                 <mat-card-header>
                     <mat-card-title>
-                        <app-editable>
-                            <ng-template viewMode>{{profile.steps[2].name}}</ng-template>
-                            <ng-template editMode>
-                                <div class="">
-                                    <mat-form-field class="flex">
-                                        <input type="text" matInput [(ngModel)]="profile.steps[2].name" focusable
-                                            editableOnEnter>
-                                    </mat-form-field>
-                                </div>
-                            </ng-template>
-                        </app-editable>
+                        {{profile.steps[2].name}}
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
