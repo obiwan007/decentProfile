@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,20 +22,25 @@ export class ButtonSliderComponent extends MatSliderModule {
   title: String | undefined;
   @Input()
   unit: String | undefined;
-  @Input()
-  ngModel: number | undefined;
-  @Input()
-  ngModelChange:( void) | undefined;
+  @Input('model')
+  model: number | undefined;
+  @Output()
+  modelChange: EventEmitter<number> = new EventEmitter<number>();
 
   increaseSlider() {
-    if (this.ngModel && this.increment) {
-      this.ngModel += this.increment;
+    if (this.model && this.increment) {
+      this.model = parseFloat((this.model + this.increment).toFixed(10));
+      this.modelChange.emit(this.model);
     }
   }
 
   decreaseSlider() {
-    if (this.ngModel && this.increment) {
-      this.ngModel -= this.increment;
+    if (this.model && this.increment) {
+      this.model = parseFloat((this.model - this.increment).toFixed(10));
+      this.modelChange.emit(this.model);
     }
+  }
+  modelChanging() {
+    this.modelChange.emit(this.model);
   }
 }

@@ -1,5 +1,5 @@
 <div class="label">{{title}}
-    <input matInput type="number" class="inline-input" [step]="increment" [(ngModel)]="ngModel" (ngModelChange)="ngModelChange">
+    <input matInput type="number" class="inline-input" [step]="increment" [(ngModel)]="model" (change)="modelChanging()">
     <span matTextSuffix>{{unit}}</span>
 </div>
 <div class="slider">
@@ -7,7 +7,7 @@
         <mat-icon>remove</mat-icon>
     </button>
     <mat-slider ngDefaultControl [min]="min" [max]="max" [step]="increment" discrete>
-        <input matSliderThumb [(ngModel)]="ngModel" (ngModelChange)="ngModelChange">
+        <input matSliderThumb [(ngModel)]="model" (change)="modelChanging()" >
     </mat-slider><button title="Plus" (click)="increaseSlider()" class="example-icon" aria-label="Plus">
         <mat-icon>add</mat-icon>
     </button>
