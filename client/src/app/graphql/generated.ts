@@ -126,24 +126,37 @@ export type IntFilter = {
 /** The root type for creating and mutating data */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Deletes zero or more records from the `favorites` collection */
+  deleteFromfavoritesCollection: favoritesDeleteResponse;
   /** Deletes zero or more records from the `profiles` collection */
   deleteFromprofilesCollection: profilesDeleteResponse;
   /** Deletes zero or more records from the `steps` collection */
   deleteFromstepsCollection: stepsDeleteResponse;
   /** Deletes zero or more records from the `userprofiles` collection */
   deleteFromuserprofilesCollection: userprofilesDeleteResponse;
+  /** Adds one or more `favorites` records to the collection */
+  insertIntofavoritesCollection?: Maybe<favoritesInsertResponse>;
   /** Adds one or more `profiles` records to the collection */
   insertIntoprofilesCollection?: Maybe<profilesInsertResponse>;
   /** Adds one or more `steps` records to the collection */
   insertIntostepsCollection?: Maybe<stepsInsertResponse>;
   /** Adds one or more `userprofiles` records to the collection */
   insertIntouserprofilesCollection?: Maybe<userprofilesInsertResponse>;
+  /** Updates zero or more records in the `favorites` collection */
+  updatefavoritesCollection: favoritesUpdateResponse;
   /** Updates zero or more records in the `profiles` collection */
   updateprofilesCollection: profilesUpdateResponse;
   /** Updates zero or more records in the `steps` collection */
   updatestepsCollection: stepsUpdateResponse;
   /** Updates zero or more records in the `userprofiles` collection */
   updateuserprofilesCollection: userprofilesUpdateResponse;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationdeleteFromfavoritesCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<favoritesFilter>;
 };
 
 
@@ -169,6 +182,12 @@ export type MutationdeleteFromuserprofilesCollectionArgs = {
 
 
 /** The root type for creating and mutating data */
+export type MutationinsertIntofavoritesCollectionArgs = {
+  objects: Array<favoritesInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
 export type MutationinsertIntoprofilesCollectionArgs = {
   objects: Array<profilesInsertInput>;
 };
@@ -183,6 +202,14 @@ export type MutationinsertIntostepsCollectionArgs = {
 /** The root type for creating and mutating data */
 export type MutationinsertIntouserprofilesCollectionArgs = {
   objects: Array<userprofilesInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationupdatefavoritesCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<favoritesFilter>;
+  set: favoritesUpdateInput;
 };
 
 
@@ -243,6 +270,8 @@ export type PageInfo = {
 /** The root type for querying data */
 export type Query = {
   __typename?: 'Query';
+  /** A pagable collection of type `favorites` */
+  favoritesCollection?: Maybe<favoritesConnection>;
   /** Retrieve a record by its `ID` */
   node?: Maybe<Node>;
   /** A pagable collection of type `profiles` */
@@ -251,6 +280,18 @@ export type Query = {
   stepsCollection?: Maybe<stepsConnection>;
   /** A pagable collection of type `userprofiles` */
   userprofilesCollection?: Maybe<userprofilesConnection>;
+};
+
+
+/** The root type for querying data */
+export type QueryfavoritesCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<favoritesFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<favoritesOrderBy>>;
 };
 
 
@@ -330,6 +371,105 @@ export type UUIDFilter = {
   in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   is?: InputMaybe<FilterIs>;
   neq?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type favorites = Node & {
+  __typename?: 'favorites';
+  created_at: Scalars['Datetime']['output'];
+  group_id?: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
+  isGroup?: Maybe<Scalars['Boolean']['output']>;
+  isSeperator?: Maybe<Scalars['Boolean']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+  /** Globally Unique Record Identifier */
+  nodeId: Scalars['ID']['output'];
+  profile_id?: Maybe<Scalars['BigInt']['output']>;
+  user_id?: Maybe<Scalars['UUID']['output']>;
+};
+
+export type favoritesConnection = {
+  __typename?: 'favoritesConnection';
+  edges: Array<favoritesEdge>;
+  pageInfo: PageInfo;
+};
+
+export type favoritesDeleteResponse = {
+  __typename?: 'favoritesDeleteResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<favorites>;
+};
+
+export type favoritesEdge = {
+  __typename?: 'favoritesEdge';
+  cursor: Scalars['String']['output'];
+  node: favorites;
+};
+
+export type favoritesFilter = {
+  /** Returns true only if all its inner filters are true, otherwise returns false */
+  and?: InputMaybe<Array<favoritesFilter>>;
+  created_at?: InputMaybe<DatetimeFilter>;
+  group_id?: InputMaybe<BigIntFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  isGroup?: InputMaybe<BooleanFilter>;
+  isSeperator?: InputMaybe<BooleanFilter>;
+  label?: InputMaybe<StringFilter>;
+  nodeId?: InputMaybe<IDFilter>;
+  /** Negates a filter */
+  not?: InputMaybe<favoritesFilter>;
+  /** Returns true if at least one of its inner filters is true, otherwise returns false */
+  or?: InputMaybe<Array<favoritesFilter>>;
+  profile_id?: InputMaybe<BigIntFilter>;
+  user_id?: InputMaybe<UUIDFilter>;
+};
+
+export type favoritesInsertInput = {
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  group_id?: InputMaybe<Scalars['BigInt']['input']>;
+  isGroup?: InputMaybe<Scalars['Boolean']['input']>;
+  isSeperator?: InputMaybe<Scalars['Boolean']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+  profile_id?: InputMaybe<Scalars['BigInt']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type favoritesInsertResponse = {
+  __typename?: 'favoritesInsertResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<favorites>;
+};
+
+export type favoritesOrderBy = {
+  created_at?: InputMaybe<OrderByDirection>;
+  group_id?: InputMaybe<OrderByDirection>;
+  id?: InputMaybe<OrderByDirection>;
+  isGroup?: InputMaybe<OrderByDirection>;
+  isSeperator?: InputMaybe<OrderByDirection>;
+  label?: InputMaybe<OrderByDirection>;
+  profile_id?: InputMaybe<OrderByDirection>;
+  user_id?: InputMaybe<OrderByDirection>;
+};
+
+export type favoritesUpdateInput = {
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  group_id?: InputMaybe<Scalars['BigInt']['input']>;
+  isGroup?: InputMaybe<Scalars['Boolean']['input']>;
+  isSeperator?: InputMaybe<Scalars['Boolean']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+  profile_id?: InputMaybe<Scalars['BigInt']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type favoritesUpdateResponse = {
+  __typename?: 'favoritesUpdateResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<favorites>;
 };
 
 export type profiles = Node & {
@@ -729,6 +869,13 @@ export type userprofilesUpdateResponse = {
   records: Array<userprofiles>;
 };
 
+export type DeleteFavMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+}>;
+
+
+export type DeleteFavMutation = { __typename: 'Mutation', deleteFromfavoritesCollection: { __typename: 'favoritesDeleteResponse', affectedCount: number, records: Array<{ __typename: 'favorites', id: string }> } };
+
 export type DeleteProfileMutationVariables = Exact<{
   id: Scalars['BigInt']['input'];
 }>;
@@ -743,6 +890,13 @@ export type DeleteStepsForProfileMutationVariables = Exact<{
 
 export type DeleteStepsForProfileMutation = { __typename: 'Mutation', deleteFromstepsCollection: { __typename: 'stepsDeleteResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } };
 
+export type InsertFavoritesMutationVariables = Exact<{
+  set: Array<favoritesInsertInput> | favoritesInsertInput;
+}>;
+
+
+export type InsertFavoritesMutation = { __typename: 'Mutation', insertIntofavoritesCollection?: { __typename: 'favoritesInsertResponse', affectedCount: number, records: Array<{ __typename: 'favorites', id: string }> } | null };
+
 export type InsertProfilesMutationVariables = Exact<{
   ep: Array<profilesInsertInput> | profilesInsertInput;
 }>;
@@ -756,6 +910,14 @@ export type InsertStepsMutationVariables = Exact<{
 
 
 export type InsertStepsMutation = { __typename: 'Mutation', insertIntostepsCollection?: { __typename: 'stepsInsertResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } | null };
+
+export type UpdateFavoritesMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+  set: favoritesUpdateInput;
+}>;
+
+
+export type UpdateFavoritesMutation = { __typename: 'Mutation', updatefavoritesCollection: { __typename: 'favoritesUpdateResponse', affectedCount: number, records: Array<{ __typename: 'favorites', id: string }> } };
 
 export type UpdateProfilesMutationVariables = Exact<{
   id: Scalars['BigInt']['input'];
@@ -790,6 +952,35 @@ export type ProfilesListQueryVariables = Exact<{
 
 export type ProfilesListQuery = { __typename: 'Query', profilesCollection?: { __typename: 'profilesConnection', totalCount: number, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'profilesEdge', cursor: string, node: { __typename: 'profiles', id: string, created_at: string, title?: string | null, author?: string | null, notes?: string | null, type?: string | null, beverage_type?: string | null, target_volume?: number | null, target_weight?: number | null, isPublic?: boolean | null, isDefault?: boolean | null, target_volume_count_start?: number | null, tank_temperature?: number | null, stepsCollection?: { __typename: 'stepsConnection', edges: Array<{ __typename: 'stepsEdge', node: { __typename: 'steps', id: string, temperature?: number | null, sensor?: string | null, pump?: string | null, transition?: string | null, flow?: number | null, pressure?: number | null, seconds?: number | null, volume?: number | null, weight?: number | null, exit_type?: string | null, exit_condition?: string | null, exit_value?: number | null, limiter_value?: number | null, limiter_range?: string | null, profile_id?: string | null, name?: string | null, index?: number | null, isPublic?: boolean | null } }> } | null } }> } | null };
 
+export type FavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FavoritesQuery = { __typename: 'Query', favoritesCollection?: { __typename: 'favoritesConnection', pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'favoritesEdge', cursor: string, node: { __typename: 'favorites', id: string, created_at: string, label?: string | null, isGroup?: boolean | null, isSeperator?: boolean | null, group_id?: string | null, profile_id?: string | null } }> } | null };
+
+export const DeleteFavDocument = gql`
+    mutation DeleteFav($id: BigInt!) {
+  __typename
+  deleteFromfavoritesCollection(atMost: 10, filter: {id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteFavGQL extends Apollo.Mutation<DeleteFavMutation, DeleteFavMutationVariables> {
+    override document = DeleteFavDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteProfileDocument = gql`
     mutation DeleteProfile($id: BigInt!) {
   __typename
@@ -838,6 +1029,30 @@ export const DeleteStepsForProfileDocument = gql`
       super(apollo);
     }
   }
+export const InsertFavoritesDocument = gql`
+    mutation InsertFavorites($set: [favoritesInsertInput!]!) {
+  __typename
+  insertIntofavoritesCollection(objects: $set) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertFavoritesGQL extends Apollo.Mutation<InsertFavoritesMutation, InsertFavoritesMutationVariables> {
+    override document = InsertFavoritesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const InsertProfilesDocument = gql`
     mutation InsertProfiles($ep: [profilesInsertInput!]!) {
   __typename
@@ -881,6 +1096,30 @@ export const InsertStepsDocument = gql`
   })
   export class InsertStepsGQL extends Apollo.Mutation<InsertStepsMutation, InsertStepsMutationVariables> {
     override document = InsertStepsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateFavoritesDocument = gql`
+    mutation UpdateFavorites($id: BigInt!, $set: favoritesUpdateInput!) {
+  __typename
+  updatefavoritesCollection(set: $set, filter: {id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateFavoritesGQL extends Apollo.Mutation<UpdateFavoritesMutation, UpdateFavoritesMutationVariables> {
+    override document = UpdateFavoritesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -1082,6 +1321,46 @@ export const ProfilesListDocument = gql`
   })
   export class ProfilesListGQL extends Apollo.Query<ProfilesListQuery, ProfilesListQueryVariables> {
     override document = ProfilesListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const FavoritesDocument = gql`
+    query Favorites {
+  __typename
+  favoritesCollection {
+    __typename
+    pageInfo {
+      __typename
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      __typename
+      cursor
+      node {
+        id
+        created_at
+        label
+        isGroup
+        isSeperator
+        group_id
+        profile_id
+        __typename
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FavoritesGQL extends Apollo.Query<FavoritesQuery, FavoritesQueryVariables> {
+    override document = FavoritesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

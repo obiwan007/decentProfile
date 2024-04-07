@@ -30,6 +30,11 @@
                     <mat-icon>save_alt</mat-icon>
                 </button>
 
+                <button (click)="setFavorite()" mat-icon-button title="Add as Favorite" class="example-icon"
+                        aria-label="Example icon-button with share icon">
+                    <mat-icon [color]="isFavorite ? 'warn' : 'default'">favorite-icon</mat-icon>
+                </button>
+
             </mat-toolbar>
             <div class="m-2" style="height:350px">
                 <app-profile-chart [profile]="selectedProfile"></app-profile-chart>

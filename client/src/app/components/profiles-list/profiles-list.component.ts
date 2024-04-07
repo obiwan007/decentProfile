@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { MatInputModule } from '@angular/material/input';
+import { FavoritesComponent } from '../favorites/favorites.component';
 
 
 @Component({
@@ -41,6 +42,7 @@ import { MatInputModule } from '@angular/material/input';
     MatDialogModule,
     JsonPipe,
     AsyncPipe,
+    FavoritesComponent,
   ]
 })
 export class ProfilesListComponent implements AfterViewInit {
