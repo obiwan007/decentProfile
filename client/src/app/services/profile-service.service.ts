@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { Exit, Limiter, Profile, ProfileType, PumpMode, Step, TransitionMode } from '../models/profile';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { instanceToPlain, plainToClassFromExist, serialize } from 'class-transformer';
-import { Observable, of as observableOf, merge, BehaviorSubject, map } from 'rxjs';
+import {Injectable, inject} from '@angular/core';
+import {Exit, Limiter, Profile, ProfileType, PumpMode, Step, TransitionMode} from '../models/profile';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {instanceToPlain, plainToClassFromExist, serialize} from 'class-transformer';
+import {Observable, of as observableOf, merge, BehaviorSubject, map} from 'rxjs';
 import 'reflect-metadata';
 import {
   DeleteProfileGQL,
@@ -12,8 +12,8 @@ import {
   InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateProfilesGQL, UpdateStepsGQL, profilesInsertInput, profilesUpdateInput,
   stepsInsertInput, stepsUpdateInput
 } from '../graphql/generated';
-import { ResultData } from '../models/dataWithPageinfo';
-import { cloneDeep } from '@apollo/client/utilities';
+import {ResultData} from '../models/dataWithPageinfo';
+import {cloneDeep} from '@apollo/client/utilities';
 
 @Injectable({
   providedIn: 'root',
@@ -146,11 +146,76 @@ export class ProfileServiceService {
     this.getProfileFromTCL(this.tclSample);
 
   }
+
+  exportTCL(p: Profile) {
+    const t: string[] = [];
+
+
+    t.push(`profile_title {${p.title}}`);
+    t.push(`author {${p.author}}`);
+    t.push(`profile_notes {${p.notes}}`);
+    t.push(`beverage_type {${p.type}}`);
+    t.push(`profile_notes {${p.notes}}`);
+
+    t.push(`tank_desired_water_temperature {${p.tank_temperature}}`);
+    t.push(`final_desired_shot_volume ${p.target_volume}`);
+    t.push(`final_desired_shot_weight ${p.target_weight}`);
+
+    switch (p.type) {
+      case ProfileType.advanced:
+        t.push('settings_profile_type settings_2c');
+        break;
+      case ProfileType.flow:
+        t.push("advanced_shot {}");
+        t.push('settings_profile_type settings_2b');
+        break;
+      case ProfileType.pressure:
+        t.push("advanced_shot {}");
+        t.push('settings_profile_type settings_2a');
+
+        this.exportPressureTCL(p, t);
+
+        break;
+    }
+  }
+  exportPressureTCL(p: Profile, t: string[]) {
+    p.steps.forEach(s => {
+
+      if (s.name === "preinfusion") {
+        t.push(`preinfusion_flow_rate ${s.flow}`);
+        t.push(`espresso_temperature_0 ${s.temperature}`);
+        t.push(`preinfusion_stop_pressure ${s.exit?.value}`);
+        t.push(`preinfusion_time ${s.seconds}`);
+      }
+      else if (s.name === "forced rise without limits") {
+        t.push(`espresso_temperature_1 ${s.temperature}`);
+        t.push(`espresso_hold_time ${s.seconds + 3}`);
+        t.push(`espresso_pressure ${s.pressure}`);
+      }
+      else if (s.name === "rise and hold") {
+        t.push(`espresso_temperature_2 ${s.temperature}`);
+        t.push(`espresso_hold_time ${s.seconds}`);
+        t.push(`espresso_pressure ${s.pressure}`);
+
+        if (s.limiter) t.push(`maximum_flow ${s.limiter.value}`)
+      }
+      else if (s.name === "decline") {
+        t.push(`espresso_decline_time ${s.seconds}`);
+        t.push(`pressure_end ${s.pressure}`);
+        t.push(`espresso_temperature_3 ${s.temperature}`);
+      }
+
+
+    });
+
+  }
+
+
   getProfileFromTCL(tcl: string) {
     let p = new Profile();
     const lines = tcl.split('\n');
 
-    const params: { [key: string]: any } = {};
+    const params: {[key: string]: any} = {};
 
     lines.forEach(l => {
       l = l.trim();
@@ -210,7 +275,7 @@ export class ProfileServiceService {
     console.log("TCL Imported:", p);
     return p;
   }
-  advancedProfile(params: { [key: string]: any; }, p: Profile) {
+  advancedProfile(params: {[key: string]: any;}, p: Profile) {
     const adv_shot: string = params["advanced_shot"].substring(1, params["advanced_shot"].length - 1);
     console.log("Adv:", adv_shot);
     // console.log("Adv:", adv_shot.split(/[\{\}]+/).filter((f: any) => console.log("Shot:", f)));
@@ -221,7 +286,7 @@ export class ProfileServiceService {
     steps.forEach(sLine => {
       const step = new Step();
       p.steps.push(step);
-      const step_dict: { [key: string]: any } = {};
+      const step_dict: {[key: string]: any} = {};
       const s = sLine.split(' ');
 
       for (let i = 0; i < s.length; i += 2) {
@@ -363,7 +428,7 @@ export class ProfileServiceService {
     return lines;
   }
 
-  flowProfile(params: { [key: string]: any; }, p: Profile) {
+  flowProfile(params: {[key: string]: any;}, p: Profile) {
     const temp = +params["espresso_temperature"];
 
     const deg = temp < 110 ? "C" : "F";
@@ -469,7 +534,7 @@ export class ProfileServiceService {
 
     return p;
   }
-  pressureProfile(params: { [key: string]: any; }, p: Profile) {
+  pressureProfile(params: {[key: string]: any;}, p: Profile) {
     const temp = +params["espresso_temperature"];
 
     const deg = temp < 110 ? "C" : "F";
@@ -609,7 +674,7 @@ export class ProfileServiceService {
   mapFromGraphQl(p: ProfilesListQuery): ResultData<Profile[]> {
 
     const nodes = p.profilesCollection?.edges.map(e => {
-      const node: any = { ...e.node };
+      const node: any = {...e.node};
       node.steps = e.node.stepsCollection?.edges.map(e => e.node);
 
       return node;
@@ -656,7 +721,7 @@ export class ProfileServiceService {
   mapFromGraphQlProfile(p: ProfileDetailsQuery): ResultData<Profile> {
 
     const nodes = p.profilesCollection?.edges.map(e => {
-      const node: any = { ...e.node };
+      const node: any = {...e.node};
       node.steps = e.node.stepsCollection?.edges.map(e => e.node);
 
       return node;
@@ -673,7 +738,7 @@ export class ProfileServiceService {
 
     return new Promise<Profile>(ret => {
       const p = new Profile();
-      this._http.get(`assets/profiles/${id}`, { responseType: 'text' })
+      this._http.get(`assets/profiles/${id}`, {responseType: 'text'})
         .subscribe(data => {
           const raw = JSON.parse(data);
 
@@ -750,7 +815,7 @@ export class ProfileServiceService {
         title: p.title,
         type: p.type,
       };
-      this._insertProfile.mutate({ ep: [v] }).subscribe(res => {
+      this._insertProfile.mutate({ep: [v]}).subscribe(res => {
         const id = res.data?.insertIntoprofilesCollection?.records[0].id;
         console.log("ID:", id);
         p.id = id!;
@@ -766,7 +831,7 @@ export class ProfileServiceService {
 
       };
 
-      this._deleteSteps.mutate({ ...v }).subscribe(res => {
+      this._deleteSteps.mutate({...v}).subscribe(res => {
         const id = res.data?.deleteFromstepsCollection?.records.map(m => m.id);
         console.log("ID:", id);
         resolver(id);
@@ -806,7 +871,7 @@ export class ProfileServiceService {
         title: p.title,
         type: p.type,
       };
-      this._updateProfile.mutate({ id: p.id, set: v }).subscribe(async res => {
+      this._updateProfile.mutate({id: p.id, set: v}).subscribe(async res => {
         const id = res.data?.updateprofilesCollection?.records[0].id;
         console.log("ID:", id);
         p.id = id!;
@@ -849,7 +914,7 @@ export class ProfileServiceService {
         isPublic: p.isPublic,
       };
 
-      this._updateSteps.mutate({ id: p.id, set: v }).subscribe(res => {
+      this._updateSteps.mutate({id: p.id, set: v}).subscribe(res => {
         const id = res.data?.updatestepsCollection?.records[0].id;
         console.log("ID:", id);
         p.id = id!;
@@ -881,7 +946,7 @@ export class ProfileServiceService {
         isPublic: p.isPublic,
       };
 
-      this._insertSteps.mutate({ ep: v }).subscribe(res => {
+      this._insertSteps.mutate({ep: v}).subscribe(res => {
         const id = res.data?.insertIntostepsCollection?.records[0].id;
         console.log("Steps: ID:", id);
         resolver(true);
@@ -912,7 +977,7 @@ export class ProfileServiceService {
         isPublic: p.isPublic,
       }));
 
-      this._insertSteps.mutate({ ep: v }).subscribe(res => {
+      this._insertSteps.mutate({ep: v}).subscribe(res => {
         const id = res.data?.insertIntostepsCollection?.records[0].id;
         console.log("Steps: ID:", id);
         resolver(true);
@@ -942,7 +1007,7 @@ export class ProfileServiceService {
 
   writeContents(content: any, fileName: string, contentType: string) {
     var a = document.createElement('a');
-    var file = new Blob([content], { type: contentType });
+    var file = new Blob([content], {type: contentType});
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
