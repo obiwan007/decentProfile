@@ -1,0 +1,8 @@
+mutation UpdateFavorites($id: BigInt!, $set: favoritesUpdateInput!) {
+  updatefavoritesCollection(set: $set, filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  }
+}

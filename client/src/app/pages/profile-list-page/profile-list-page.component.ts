@@ -16,6 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { FilterData } from '../../components/profiles-list/profiles-list-datasource';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { FavoritesService } from '../../services/favorites.service';
+import { Subscription, filter, map } from 'rxjs';
+import { Favorite } from '../../models/favorite';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'app-profile-list-page',
@@ -31,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ProfileListPageComponent {
 
+
   @ViewChild('profileList')
   profileList: ProfilesListComponent | undefined;
 
@@ -41,10 +46,17 @@ export class ProfileListPageComponent {
   types: string[] = ["pressure", "flow", "advanced"];
 
   beverages: string[] = ["espresso", "filter", "pour-over", "tea_portafilter", "cleaning"];
+
+  subs: Subscription[] = [];
+  favorites: Favorite[] = [];
+  isFavorite: boolean = false;
+  _favorites: Favorite[] = [];
+  favorite: Favorite | undefined;
   /**
    *
    */
   constructor(
+    private _favoritesSrv: FavoritesService,
     private _profileSrv: ProfileServiceService,
     private router: Router,
     private activatedRoute: ActivatedRoute,) {
@@ -55,10 +67,52 @@ export class ProfileListPageComponent {
         this.selectedProfile = p.data;
       });
     }
+
+    this.subs.push(
+      _favoritesSrv.favorites()
+        .pipe(
+        // map((data) => data.filter(x => x.profile_id == id))
+      ).subscribe(f => {
+        this._favorites = f;
+        this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile!.id);
+        this.isFavorite = !!this.favorite;
+
+      }));
   }
+
+
+
+
+  ngOnDestroy() { this.subs.forEach(s => s.unsubscribe()); }
+
+  /**
+ * Toggles the current profile's favorite status.
+ * If the selected profile is already marked as a favorite, it removes it from the favorites.
+ * Otherwise, it adds the selected profile to the favorites.
+ * This method relies on the current state of `this.selectedProfile` and `this.isFavorite`.
+ * It uses `_favoritesSrv` to interact with the favorites storage, either inserting or deleting a favorite.
+ * 
+ * Note: This method does not return any value and will exit early if `this.selectedProfile` is not set.
+ */
+  setFavorite() {
+    if (!this.selectedProfile) return; // Exit if no profile is selected
+    if (this.isFavorite) {
+      // If the profile is already a favorite, delete it from favorites
+      this._favoritesSrv.deleteFavorite(this._favorites[0]?.id);
+    } else {
+      // If the profile is not a favorite, add it to favorites
+      const p: Favorite = new Favorite();
+      p.profile_id = this.selectedProfile.id; // Set the profile ID
+      p.label = this.selectedProfile.title; // Set the profile title as label
+      this._favoritesSrv.insertFavorite(p); // Insert the new favorite
+    }
+  }
+
   onClick(row: Profile) {
     console.log("Row selected", row)
     this.selectedProfile = row;
+    this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile!.id);
+    this.isFavorite = this.favorite ? true : false;
     const queryParams: Params = { id: row.id };
 
     const urlTree = this.router.createUrlTree([], {
@@ -70,26 +124,8 @@ export class ProfileListPageComponent {
       queryParams
     });
 
-    // this.router.navigateByUrl(urlTree);
-    // this.router.navigate(
-    //   ['.'],
-    //   {
-    //     relativeTo: this.activatedRoute,
-    //     queryParams,
-    //     queryParamsHandling: 'merge', // remove to replace all query params by provided
-    //   }
-    // );
   }
-  // filterForType($event: MatSelectChange) {
-  //   console.log("event", $event)
-  //   this.filter = structuredClone(this.filter);
-  //   this.filter.typesFilter = [...$event.value];
-  // }
-  // filterForBeverage($event: MatSelectChange) {
-  //   console.log("event", $event)
-  //   this.filter = structuredClone(this.filter);
-  //   this.filter.beverageFilter = [...$event.value];
-  // }
+
   onEdit() {
 
     this.navigateToProfile(this.selectedProfile?.id!);

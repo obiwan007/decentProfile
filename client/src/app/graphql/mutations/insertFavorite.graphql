@@ -1,0 +1,8 @@
+mutation InsertFavorites($set: [favoritesInsertInput!]!) {
+  insertIntofavoritesCollection(objects: $set) {
+    affectedCount
+    records {
+      id      
+    }    
+  }
+}

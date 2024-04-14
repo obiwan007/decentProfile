@@ -1,0 +1,8 @@
+mutation DeleteFav($id: BigInt!) {
+  deleteFromfavoritesCollection(atMost: 10, filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  }
+}

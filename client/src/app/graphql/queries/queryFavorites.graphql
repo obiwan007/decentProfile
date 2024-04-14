@@ -1,0 +1,23 @@
+query Favorites {
+  favoritesCollection{
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        id
+        created_at
+        label
+        isGroup
+        isSeperator
+        group_id
+        profile_id
+        __typename
+      }
+    }
+  }
+}
