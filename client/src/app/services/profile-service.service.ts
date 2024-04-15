@@ -147,27 +147,28 @@ export class ProfileServiceService {
 
   }
 
-  exportTCL(p: Profile) {
+  exportTCL(p: Profile): string[] {
     const t: string[] = [];
 
 
     t.push(`profile_title {${p.title}}`);
     t.push(`author {${p.author}}`);
     t.push(`profile_notes {${p.notes}}`);
-    t.push(`beverage_type {${p.type}}`);
-    t.push(`profile_notes {${p.notes}}`);
+    t.push(`beverage_type ${p.type}`);
 
-    t.push(`tank_desired_water_temperature {${p.tank_temperature}}`);
+    t.push(`tank_desired_water_temperature ${p.tank_temperature}`);
     t.push(`final_desired_shot_volume ${p.target_volume}`);
     t.push(`final_desired_shot_weight ${p.target_weight}`);
 
     switch (p.type) {
       case ProfileType.advanced:
         t.push('settings_profile_type settings_2c');
+        this.exportAdvancedTCL(p, t);
         break;
       case ProfileType.flow:
         t.push("advanced_shot {}");
         t.push('settings_profile_type settings_2b');
+        this.exportFlowTCL(p, t);
         break;
       case ProfileType.pressure:
         t.push("advanced_shot {}");
@@ -177,6 +178,58 @@ export class ProfileServiceService {
 
         break;
     }
+    return t;
+  }
+
+  exportAdvancedTCL(p: Profile, t: string[]) {
+    let step = "";
+    p.steps.forEach((s, i) => {
+      step += "{ ";
+      step += `name {${s.name}} `;
+      step += `temperature ${s.temperature} `;
+      step += `sensor ${s.sensor} `;
+      step += `pressure ${s.pressure} `;
+      step += `pump ${s.pump} `;
+      step += `flow ${s.flow} `;
+      step += `seconds ${s.seconds} `;
+      if (s.weight > 0)
+        step += `weight ${s.weight} `;
+      if (s.volume > 0)
+        step += `volume ${s.volume} `;
+
+      if (s.limiter) {
+        step += `maximum_pressure ${s.limiter.value} `;
+        step += `maximum_pressure_range_default ${s.limiter.range} `;
+      }
+
+      if (s.exit) {
+        step += `exit_if 1 `;
+        if (s.exit.type === "pressure") {
+          if (s.exit.condition === "over") {
+            step += `exit_type pressure_over `;
+            step += `exit_pressure_over ${s.exit.value} `;
+          } else {
+            step += `exit_type pressure_under `;
+            step += `exit_pressure_under ${s.exit.value} `;
+          }
+        }
+        else if (s.exit.type === "flow") {
+          if (s.exit.condition === "over") {
+            step += `exit_type flow_over `;
+            step += `exit_flow_over ${s.exit.value} `;
+          } else {
+            step += `exit_type flow_under `;
+            step += `exit_flow_under ${s.exit.value} `;
+          }
+        }
+        step += `transition ${s.transition} } `;
+      }
+
+    });
+    t.push(`advanced {${step}}`);
+    t.push(`final_desired_shot_weight_advanced ${p.target_weight}`);
+    t.push(`final_desired_shot_volume_advanced ${p.target_volume}`);
+
   }
   exportPressureTCL(p: Profile, t: string[]) {
     p.steps.forEach(s => {
@@ -209,7 +262,45 @@ export class ProfileServiceService {
     });
 
   }
+  exportFlowTCL(p: Profile, t: string[]) {
+    p.steps.forEach(s => {
 
+      if (s.name === "preinfusion boost") {
+        t.push(`preinfusion_flow_rate ${s.flow}`);
+        t.push(`espresso_temperature_0 ${s.temperature}`);
+        t.push(`preinfusion_stop_pressure ${s.exit?.value}`);
+        t.push(`preinfusion_time ${s.seconds}`);
+      }
+      else if (s.name === "preinfusion") {
+        t.push(`espresso_temperature_1 ${s.temperature}`);
+        t.push(`preinfusion_flow_rate ${s.flow}`);
+        t.push(`espresso_hold_time ${s.seconds + 3}`);
+        t.push(`espresso_pressure ${s.pressure}`);
+      }
+      else if (s.name === "hold") {
+        t.push(`espresso_temperature_2 ${s.temperature}`);
+        t.push(`espresso_hold_time ${s.seconds}`);
+        t.push(`flow_profile_hold ${s.flow}`);
+
+        if (s.limiter) {
+          t.push(`maximum_pressure ${s.limiter.value}`)
+          t.push(`maximum_pressure_range_default ${s.limiter.range}`)
+        }
+      }
+      else if (s.name === "decline") {
+        t.push(`espresso_decline_time ${s.seconds}`);
+        t.push(`flow_profile_decline ${s.flow}`);
+        t.push(`espresso_temperature_3 ${s.temperature}`);
+        if (s.limiter) {
+          t.push(`maximum_pressure ${s.limiter.value}`)
+          t.push(`maximum_pressure_range_default ${s.limiter.range}`)
+        }
+      }
+
+
+    });
+
+  }
 
   getProfileFromTCL(tcl: string) {
     let p = new Profile();
@@ -995,6 +1086,16 @@ export class ProfileServiceService {
     this.writeContents(s, selectedProfile?.title + '.json', 'application/json');
     // const s = serialize(selectedProfile);    
 
+  }
+
+  async saveProfileTCL(selectedProfile: Profile | undefined) {
+
+    if (selectedProfile) {
+      const lines = this.exportTCL(selectedProfile);
+      const s = lines.join('\n');
+      console.log("TCL", s);
+      this.writeContents(s, selectedProfile?.title + '.tcl', 'application/text');
+    }
   }
 
   async loadProfile(selectedProfile: Profile | undefined) {
