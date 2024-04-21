@@ -65,6 +65,7 @@ export class ProfileListPageComponent {
     if (id) {
       this._profileSrv.getProfileById(id).subscribe(p => {
         this.selectedProfile = p.data;
+        this._selectedFavorite();
       });
     }
 
@@ -74,14 +75,18 @@ export class ProfileListPageComponent {
         // map((data) => data.filter(x => x.profile_id == id))
       ).subscribe(f => {
         this._favorites = f;
-        this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile!.id);
-        this.isFavorite = !!this.favorite;
+        this._selectedFavorite();
 
       }));
   }
 
 
 
+
+  private _selectedFavorite() {
+    this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile?.id);
+    this.isFavorite = !!this.favorite;
+  }
 
   ngOnDestroy() {this.subs.forEach(s => s.unsubscribe());}
 
