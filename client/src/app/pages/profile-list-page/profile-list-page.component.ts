@@ -1,25 +1,25 @@
-import { Component, ViewChild } from '@angular/core';
-import { ProfilesListComponent } from '../../components/profiles-list/profiles-list.component';
-import { Profile } from '../../models/profile';
-import { ProfileDetailsComponent } from '../../components/profile-details/profile-details.component';
+import {Component, ViewChild} from '@angular/core';
+import {ProfilesListComponent} from '../../components/profiles-list/profiles-list.component';
+import {Profile} from '../../models/profile';
+import {ProfileDetailsComponent} from '../../components/profile-details/profile-details.component';
 
-import { JsonPipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ProfileServiceService } from '../../services/profile-service.service';
-import { RenderStepsComponent } from '../../components/render-steps/render-steps.component';
-import { ProfileChartComponent } from '../../components/profile-chart/profile-chart.component';
-import { MatFormFieldModule, MatHint } from '@angular/material/form-field';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { FilterData } from '../../components/profiles-list/profiles-list-datasource';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { FavoritesService } from '../../services/favorites.service';
-import { Subscription, filter, map } from 'rxjs';
-import { Favorite } from '../../models/favorite';
-import { where } from 'firebase/firestore';
+import {JsonPipe} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ProfileServiceService} from '../../services/profile-service.service';
+import {RenderStepsComponent} from '../../components/render-steps/render-steps.component';
+import {ProfileChartComponent} from '../../components/profile-chart/profile-chart.component';
+import {MatFormFieldModule, MatHint} from '@angular/material/form-field';
+import {MatSelect, MatSelectChange, MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {FilterData} from '../../components/profiles-list/profiles-list-datasource';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {FavoritesService} from '../../services/favorites.service';
+import {Subscription, filter, map} from 'rxjs';
+import {Favorite} from '../../models/favorite';
+import {where} from 'firebase/firestore';
 
 @Component({
   selector: 'app-profile-list-page',
@@ -61,10 +61,11 @@ export class ProfileListPageComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,) {
     console.log("params", activatedRoute.snapshot.queryParams)
-    const { id } = activatedRoute.snapshot.queryParams;
+    const {id} = activatedRoute.snapshot.queryParams;
     if (id) {
       this._profileSrv.getProfileById(id).subscribe(p => {
         this.selectedProfile = p.data;
+        this._selectedFavorite();
       });
     }
 
@@ -74,8 +75,7 @@ export class ProfileListPageComponent {
         // map((data) => data.filter(x => x.profile_id == id))
       ).subscribe(f => {
         this._favorites = f;
-        this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile!.id);
-        this.isFavorite = !!this.favorite;
+        this._selectedFavorite();
 
       }));
   }
@@ -83,7 +83,12 @@ export class ProfileListPageComponent {
 
 
 
-  ngOnDestroy() { this.subs.forEach(s => s.unsubscribe()); }
+  private _selectedFavorite() {
+    this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile?.id);
+    this.isFavorite = !!this.favorite;
+  }
+
+  ngOnDestroy() {this.subs.forEach(s => s.unsubscribe());}
 
   /**
  * Toggles the current profile's favorite status.
@@ -113,7 +118,7 @@ export class ProfileListPageComponent {
     this.selectedProfile = row;
     this.favorite = this._favorites.find(fav => fav.profile_id === this.selectedProfile!.id);
     this.isFavorite = this.favorite ? true : false;
-    const queryParams: Params = { id: row.id };
+    const queryParams: Params = {id: row.id};
 
     const urlTree = this.router.createUrlTree([], {
       queryParams: queryParams,
@@ -141,7 +146,7 @@ export class ProfileListPageComponent {
     }
   }
   private navigateToProfile(id: string) {
-    const queryParams: Params = { id };
+    const queryParams: Params = {id};
 
     const urlTree = this.router.createUrlTree(["profiles/edit"], {
       queryParams: queryParams,
@@ -154,6 +159,10 @@ export class ProfileListPageComponent {
 
   onSave() {
     this._profileSrv.saveProfile(this.selectedProfile);
+  }
+
+  onSaveTCL() {
+    this._profileSrv.saveProfileTCL(this.selectedProfile);
   }
 
   async onCopy() {
