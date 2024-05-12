@@ -1,6 +1,6 @@
-<div class="mat-elevation-z8">
+<div class="">
   <mat-list class="wrapper full-width-table">
-    <div>
+    <div [hidden]="noFilteringPanel">
       <mat-toolbar>
         <mat-form-field class="example-form-field">
           <mat-label>Search</mat-label>
@@ -73,10 +73,8 @@
         <mat-icon *ngIf="row.isDefault" title="Default profile">star</mat-icon>
         <mat-icon *ngIf="row.isPublic" title="Public profile">accessibility</mat-icon>
       </div>
-      <div matLine>{{row.type}} {{row.beverage_type}} by {{row.author}}
-
+      <div matLine> {{row.type}} {{row.beverage_type}} by {{row.author}}
       </div>
-
 
     </mat-list-item>
   </mat-list>

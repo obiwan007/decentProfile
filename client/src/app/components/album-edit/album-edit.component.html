@@ -1,0 +1,87 @@
+@if(album){
+
+<!-- <div class="flex flex-row">
+    <mat-toolbar>
+        <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
+                aria-label="Example icon-button with share icon">
+            <mat-icon>save</mat-icon>
+        </button>
+    </mat-toolbar>
+</div> -->
+<div class="p-2">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Edit Album</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="flex flex-row p-2">
+                <div class="flex flex-col w-4/6 pr-2">
+                    <mat-card-content>
+                        <mat-form-field class="w-full">
+                            <mat-label>Title</mat-label>
+                            <input type="text" matInput [(ngModel)]="album.title" focusable editableOnEnter>
+                        </mat-form-field>
+                        <mat-form-field class="w-full">
+                            <mat-label>Notes/Description</mat-label>
+                            <input type="text" matInput [(ngModel)]="album.notes" editableOnEnter>
+                        </mat-form-field>
+
+                        <div class="w-full">
+                            <mat-checkbox [(ngModel)]="album.shared"
+                                          [color]="'primary'">
+                                Make album public
+                            </mat-checkbox>
+                            {{album.shared}}
+                        </div>
+                    </mat-card-content>
+                    <div>
+                        <mat-toolbar>
+                            <button mat-icon-button title="Add profile" class="example-icon favorite-icon"
+                                    aria-label="Example icon-button with heart icon">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <button [disabled]="!selectedProfile" mat-icon-button title="Delete profile"
+                                    class="example-icon favorite-icon"
+                                    aria-label="Example icon-button with heart icon">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+
+
+                        </mat-toolbar>
+
+
+                        <app-profiles-list (onClick)="selectProfile($event)" [profiles]="album.profiles"
+                                           [noFilteringPanel]="true"></app-profiles-list>
+                        <!-- {{album|json}} -->
+                        <!-- <ul>
+                            <li *ngFor="let p of album.profiles">
+                                {{p.title}}
+                            </li>
+                        </ul> -->
+                    </div>
+
+                </div>
+                <div class="flex flex-col w-2/6 p-1 ">
+                    <img class="image" [src]="album.image">
+                    <button mat-icon-button title="Share profile" class="example-icon"
+                            aria-label="Example icon-button with share icon">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button (click)="save()" mat-button title="Save profile" class="example-icon"
+                    aria-label="Example icon-button with share icon">
+                <mat-icon>save</mat-icon>Save
+            </button>
+            <button (click)="cancel()" mat-button title="Save profile" class="example-icon"
+                    aria-label="Example icon-button with share icon">
+                Cancel
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+</div>
+}

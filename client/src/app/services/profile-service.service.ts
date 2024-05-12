@@ -5,15 +5,21 @@ import {instanceToPlain, plainToClassFromExist, serialize} from 'class-transform
 import {Observable, of as observableOf, merge, BehaviorSubject, map} from 'rxjs';
 import 'reflect-metadata';
 import {
+  AlbumByIdGQL,
+  AlbumsQuery,
+  DeleteAlbumsGQL,
+  DeleteAlbumsMutationVariables,
   DeleteProfileGQL,
   DeleteProfileMutationVariables,
   DeleteStepsForProfileGQL,
   DeleteStepsForProfileMutationVariables,
-  InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateProfilesGQL, UpdateStepsGQL, profilesInsertInput, profilesUpdateInput,
+  InsertAlbumGQL,
+  InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateAlbumGQL, UpdateProfilesGQL, UpdateStepsGQL, albumsInsertInput, albumsUpdateInput, profilesInsertInput, profilesUpdateInput,
   stepsInsertInput, stepsUpdateInput
 } from '../graphql/generated';
 import {ResultData} from '../models/dataWithPageinfo';
 import {cloneDeep} from '@apollo/client/utilities';
+import {Album} from '../models/album';
 
 @Injectable({
   providedIn: 'root',
@@ -140,6 +146,10 @@ export class ProfileServiceService {
     private _updateSteps: UpdateStepsGQL,
     private _deleteSteps: DeleteStepsForProfileGQL,
     private _deleteProfile: DeleteProfileGQL,
+    private _insertAlbums: InsertAlbumGQL,
+    private _updateAlbums: UpdateAlbumGQL,
+    private _deleteAlbums: DeleteAlbumsGQL,
+    private _albumById: AlbumByIdGQL,
     private _http: HttpClient) {
 
 
@@ -780,6 +790,33 @@ export class ProfileServiceService {
 
   }
 
+  mapAlbumFromGraphQl(p: AlbumsQuery): ResultData<Album[]> {
+
+    const nodes = p.albumsCollection?.edges.map(e => {
+      const node: any = {...e.node};
+      node.profiles = e.node.album_entryCollection?.edges.map(e => {
+        const p = new Profile();
+
+        Object.assign(p, e.node.profiles);
+        p.id = e.node.profile_id!;
+        // p.title = e.node.profiles?.title!;
+        // p.notes = e.node.profiles?.notes!;
+        return p;
+      });
+
+      return node;
+    });
+    console.log("Node:", nodes)
+    const ret = new ResultData<Album[]>(nodes?.map(n => plainToClassFromExist(new Album(), n)) ?? [],
+      p.albumsCollection?.pageInfo!,
+      1!);
+    console.log("Mapped", ret.data);
+
+    return ret;
+
+
+  }
+
   mapFromGraphQlSingle(p: Profile, n: any) {
     const n2 = structuredClone(n);
     delete n2.stepsCollection;
@@ -891,6 +928,63 @@ export class ProfileServiceService {
     pNew.title += " copy";
     return this.insertProfile(pNew);
   }
+
+  insertAlbum(p: Album): Promise<string> {
+    return new Promise<string>(resolver => {
+      const v: albumsInsertInput = {
+        user_name: "Decent",
+        shared: false,
+        notes: p.notes,
+        image: p.image,
+        title: p.title,
+      };
+      this._insertAlbums.mutate({set: [v]}).subscribe(res => {
+        const id = res.data?.insertIntoalbumsCollection?.records[0].id;
+        console.log("ID:", id);
+        p.id = id!;
+        resolver(p.id);
+      });
+    });
+  }
+
+  updateAlbum(p: Album): Promise<string> {
+    return new Promise<string>(resolver => {
+      const v: albumsUpdateInput = {
+        user_name: "Decent",
+        shared: p.shared,
+        notes: p.notes,
+        image: p.image,
+        title: p.title,
+      };
+      this._updateAlbums.mutate({id: p.id, set: v}).subscribe(res => {
+        const id = res.data?.updatealbumsCollection?.records[0].id;
+        console.log("ID:", id);
+        p.id = id!;
+        resolver(p.id);
+      });
+    });
+  }
+
+  deleteAlbum(id: string): Promise<string | undefined> {
+    return new Promise<string | undefined>(async resolver => {
+      const v: DeleteAlbumsMutationVariables = {
+        id: id,
+      };
+      this._deleteAlbums.mutate(v).subscribe(res => {
+        const id = res.data?.deleteFromalbumsCollection?.records[0].id;
+        console.log("Deleted Albums ID:", id);
+        resolver(id);
+      });
+    });
+  }
+  getAlbumById(id: string): Observable<ResultData<Album[]>> {
+    const vars: ProfileDetailsQueryVariables = {
+      id: id,
+    }
+    return this._albumById.fetch(vars)
+      .pipe(map(result => this.mapAlbumFromGraphQl(result.data)));
+  }
+
 
   insertProfile(p: Profile): Promise<string> {
     return new Promise<string>(resolver => {

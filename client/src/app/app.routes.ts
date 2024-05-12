@@ -8,6 +8,8 @@ import { AuthComponent } from './pages/auth/auth.component';
 import { AccountComponent } from './pages/account/account.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { authGuard } from './authguard';
+import {MyAlbumsPageComponent} from './pages/my-albums/my-albums.component';
+import {AlbumsEditPageComponent} from './pages/albums-edit-page/albums-edit-page.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +18,14 @@ export const routes: Routes = [
     },
     {
         path: 'profiles', component: ProfileListPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'myalbums', component: MyAlbumsPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'myalbums/edit', component: AlbumsEditPageComponent,
         canActivate: [authGuard],
     },
     { path: 'landing', component: LandingComponent },

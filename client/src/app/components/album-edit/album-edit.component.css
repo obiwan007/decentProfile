@@ -1,0 +1,16 @@
+.label {
+    font-weight: bold;
+}
+
+mat-slider {
+    width: 100%;
+}
+
+.slider {
+    padding-right: 15px;
+}
+
+.image {
+    max-height: 120px;
+    object-fit: cover;
+}
