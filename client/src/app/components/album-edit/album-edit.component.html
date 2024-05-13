@@ -36,11 +36,11 @@
                     </mat-card-content>
                     <div>
                         <mat-toolbar>
-                            <button mat-icon-button title="Add profile" class="example-icon favorite-icon"
+                            <button (click)="addProfile()" mat-icon-button title="Add profile" class="example-icon favorite-icon"
                                     aria-label="Example icon-button with heart icon">
                                 <mat-icon>add</mat-icon>
                             </button>
-                            <button [disabled]="!selectedProfile" mat-icon-button title="Delete profile"
+                            <button (click)="removeProfile()" [disabled]="!selectedProfile" mat-icon-button title="Delete profile"
                                     class="example-icon favorite-icon"
                                     aria-label="Example icon-button with heart icon">
                                 <mat-icon>delete</mat-icon>

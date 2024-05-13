@@ -21,6 +21,8 @@ import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ProfilesListComponent} from '../profiles-list/profiles-list.component';
 import {Profile} from '../../models/profile';
+import {MatDialog} from '@angular/material/dialog';
+import {ProfilesListDialogComponent} from '../profiles-list-dialog/profiles-list-dialog.component';
 
 @Component({
   selector: 'app-album-edit',
@@ -55,9 +57,14 @@ export class AlbumEditComponent {
   _profileService = inject(ProfileServiceService);
 
   _location = inject(Location);
+  _dialog = inject(MatDialog);
+
   selectedProfile: Profile | undefined;
 
+  profilesChanged = false;
 
+  deletedProfiles: Profile[] = [];
+  addedProfiles: Profile[] = [];
 
   async save() {
     if (this.album?.id) {
@@ -66,6 +73,14 @@ export class AlbumEditComponent {
     else {
       await this._profileService.insertAlbum(this.album!);
     }
+
+    if (this.profilesChanged) {
+      await this._profileService.deleteAlbumEntriesForAlbumId(this.album?.id!);
+      for (const profile of this.album!.profiles) {
+        await this._profileService.insertAlbumEntry(this.album!, profile);
+      }
+    }
+
     console.log("Saved");
     this._location.back();
   }
@@ -76,6 +91,30 @@ export class AlbumEditComponent {
 
   selectProfile($event: Profile) {
     this.selectedProfile = $event;
+  }
+
+  removeProfile() {
+    if (this.selectedProfile) {
+      const index = this.album?.profiles.indexOf(this.selectedProfile);
+      if (index !== undefined && index > -1) {
+        this.album?.profiles.splice(index!, 1);
+        this.profilesChanged = true;
+      }
+    }
+  }
+
+  addProfile() {
+    const dialogRef = this._dialog.open(ProfilesListDialogComponent, {
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (result) {
+        this.album?.profiles.push(result);
+        this.profilesChanged = true;
+      }
+    });
   }
 
 }

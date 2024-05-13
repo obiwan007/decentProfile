@@ -1175,6 +1175,13 @@ export type userprofilesUpdateResponse = {
   records: Array<userprofiles>;
 };
 
+export type DeleteEntriesForAlbumMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+}>;
+
+
+export type DeleteEntriesForAlbumMutation = { __typename: 'Mutation', deleteFromalbum_entryCollection: { __typename: 'album_entryDeleteResponse', affectedCount: number, records: Array<{ __typename: 'album_entry', id: string }> } };
+
 export type DeleteAlbumsMutationVariables = Exact<{
   id: Scalars['BigInt']['input'];
 }>;
@@ -1209,6 +1216,13 @@ export type InsertAlbumMutationVariables = Exact<{
 
 
 export type InsertAlbumMutation = { __typename: 'Mutation', insertIntoalbumsCollection?: { __typename: 'albumsInsertResponse', affectedCount: number, records: Array<{ __typename: 'albums', id: string }> } | null };
+
+export type InsertAlbumEntriesMutationVariables = Exact<{
+  ep: Array<album_entryInsertInput> | album_entryInsertInput;
+}>;
+
+
+export type InsertAlbumEntriesMutation = { __typename: 'Mutation', insertIntoalbum_entryCollection?: { __typename: 'album_entryInsertResponse', affectedCount: number, records: Array<{ __typename: 'album_entry', id: string }> } | null };
 
 export type InsertFavoritesMutationVariables = Exact<{
   set: Array<favoritesInsertInput> | favoritesInsertInput;
@@ -1297,6 +1311,30 @@ export type FavoritesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FavoritesQuery = { __typename: 'Query', favoritesCollection?: { __typename: 'favoritesConnection', pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'favoritesEdge', cursor: string, node: { __typename: 'favorites', id: string, created_at: string, label?: string | null, isGroup?: boolean | null, isSeperator?: boolean | null, group_id?: string | null, profile_id?: string | null } }> } | null };
 
+export const DeleteEntriesForAlbumDocument = gql`
+    mutation DeleteEntriesForAlbum($id: BigInt!) {
+  __typename
+  deleteFromalbum_entryCollection(atMost: 20, filter: {album_id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteEntriesForAlbumGQL extends Apollo.Mutation<DeleteEntriesForAlbumMutation, DeleteEntriesForAlbumMutationVariables> {
+    override document = DeleteEntriesForAlbumDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteAlbumsDocument = gql`
     mutation DeleteAlbums($id: BigInt!) {
   __typename
@@ -1412,6 +1450,30 @@ export const InsertAlbumDocument = gql`
   })
   export class InsertAlbumGQL extends Apollo.Mutation<InsertAlbumMutation, InsertAlbumMutationVariables> {
     override document = InsertAlbumDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const InsertAlbumEntriesDocument = gql`
+    mutation InsertAlbumEntries($ep: [album_entryInsertInput!]!) {
+  __typename
+  insertIntoalbum_entryCollection(objects: $ep) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertAlbumEntriesGQL extends Apollo.Mutation<InsertAlbumEntriesMutation, InsertAlbumEntriesMutationVariables> {
+    override document = InsertAlbumEntriesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

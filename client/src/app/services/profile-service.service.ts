@@ -9,12 +9,15 @@ import {
   AlbumsQuery,
   DeleteAlbumsGQL,
   DeleteAlbumsMutationVariables,
+  DeleteEntriesForAlbumGQL,
+  DeleteEntriesForAlbumMutationVariables,
   DeleteProfileGQL,
   DeleteProfileMutationVariables,
   DeleteStepsForProfileGQL,
   DeleteStepsForProfileMutationVariables,
+  InsertAlbumEntriesGQL,
   InsertAlbumGQL,
-  InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateAlbumGQL, UpdateProfilesGQL, UpdateStepsGQL, albumsInsertInput, albumsUpdateInput, profilesInsertInput, profilesUpdateInput,
+  InsertProfilesGQL, InsertStepsGQL, ProfileDetailsDocument, ProfileDetailsGQL, ProfileDetailsQuery, ProfileDetailsQueryVariables, ProfilesListQuery, UpdateAlbumGQL, UpdateProfilesGQL, UpdateStepsGQL, album_entryInsertInput, albumsInsertInput, albumsUpdateInput, profilesInsertInput, profilesUpdateInput,
   stepsInsertInput, stepsUpdateInput
 } from '../graphql/generated';
 import {ResultData} from '../models/dataWithPageinfo';
@@ -145,6 +148,8 @@ export class ProfileServiceService {
     private _insertSteps: InsertStepsGQL,
     private _updateSteps: UpdateStepsGQL,
     private _deleteSteps: DeleteStepsForProfileGQL,
+    private _deleteAlbumEntries: DeleteEntriesForAlbumGQL,
+    private _insertAlbumEntries: InsertAlbumEntriesGQL,
     private _deleteProfile: DeleteProfileGQL,
     private _insertAlbums: InsertAlbumGQL,
     private _updateAlbums: UpdateAlbumGQL,
@@ -1023,6 +1028,36 @@ export class ProfileServiceService {
       });
     });
 
+  }
+
+  deleteAlbumEntriesForAlbumId(id: string): Promise<string[] | undefined> {
+    return new Promise<string[] | undefined>(resolver => {
+      const v: DeleteEntriesForAlbumMutationVariables = {
+        id: id,
+
+      };
+
+      this._deleteAlbumEntries.mutate({...v}).subscribe(res => {
+        const id = res.data?.deleteFromalbum_entryCollection?.records.map(m => m.id);
+        console.log("ID:", id);
+        resolver(id);
+      });
+    });
+
+  }
+  insertAlbumEntry(album: Album, profile: Profile): Promise<boolean> {
+    return new Promise<boolean>(resolver => {
+      const v: album_entryInsertInput = {
+        profile_id: profile.id,
+        album_id: album.id,
+      };
+
+      this._insertAlbumEntries.mutate({ep: v}).subscribe(res => {
+        const id = res.data?.insertIntoalbum_entryCollection?.records[0].id;
+        console.log("AlbumEntry: ID:", id);
+        resolver(true);
+      });
+    });
   }
 
   deleteProfile(id: string): Promise<string | undefined> {
