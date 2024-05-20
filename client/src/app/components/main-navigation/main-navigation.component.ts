@@ -7,8 +7,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {filter, map, shareReplay} from 'rxjs/operators';
+import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from '../../services/user.service';
 import { Auth } from '@angular/fire/auth';
@@ -43,7 +43,10 @@ export class MainNavigationComponent {
 
   supabaseSrv = inject(SupabaseService);
   router = inject(Router);
+  activated = inject(ActivatedRoute);
+
   user$: Observable<any>;
+  currentUrl: string = '';
   /**
    *
    */
@@ -51,6 +54,12 @@ export class MainNavigationComponent {
     this.user$ = this.supabaseSrv.session$;
 
     console.log("Loading Navigation");
+    this.router.events.pipe(
+      filter(ev => (ev instanceof NavigationEnd))
+    ).subscribe((ev) => {
+      console.log((ev as NavigationEnd).url);
+      this.currentUrl = (ev as NavigationEnd).url;
+    });
   }
   login() {
     this.router.navigateByUrl('/login');
