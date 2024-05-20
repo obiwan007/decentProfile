@@ -29,6 +29,7 @@ export class FilterData {
  */
 export class ProfilesListDataSource extends DataSource<Profile> {
 
+
   data: Profile[] = [];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
@@ -47,6 +48,7 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   cursorHist: string[] = [''];
   private _filter: FilterData = new FilterData();
   lastFilter: profilesFilter = {};
+  fixedProfiles: Profile[] | undefined;
 
   constructor(private _profileSrv: ProfileServiceService) {
     super();
@@ -100,7 +102,10 @@ export class ProfilesListDataSource extends DataSource<Profile> {
     this.loadingSubject.complete();
   }
 
-
+  setFixedProfiles(profiles: Profile[]) {
+    this.fixedProfiles = profiles;
+    console.log("Profiles", profiles);
+  }
 
   /**
    * Paginate the data (client-side). If you're using server-side pagination,
@@ -125,6 +130,10 @@ export class ProfilesListDataSource extends DataSource<Profile> {
   }
 
   loadProfiles(f = '', sortDirection = 'asc', pageIndex = 0, pageSize = this._profileSrv.allProfiles.length) {
+    if (this.fixedProfiles) {
+      this.profilesSubject.next(this.fixedProfiles);
+      return;
+    }
     console.log(this.paginator, this.sort);
     this.loadingSubject.next(true);
     let cursor = this.lastCursor;

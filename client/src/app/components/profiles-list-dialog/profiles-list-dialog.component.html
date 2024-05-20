@@ -1,0 +1,10 @@
+<mat-dialog-content>
+  <div class="">
+    <app-profiles-list (onClick)="selectedProfile=$event"></app-profiles-list>
+  </div>
+  {{selectedProfile|json}}
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">No Thanks</button>
+  <button mat-button [disabled]="!selectedProfile" [mat-dialog-close]="selectedProfile" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

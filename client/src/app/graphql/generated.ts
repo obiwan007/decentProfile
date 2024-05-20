@@ -126,6 +126,10 @@ export type IntFilter = {
 /** The root type for creating and mutating data */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Deletes zero or more records from the `album_entry` collection */
+  deleteFromalbum_entryCollection: album_entryDeleteResponse;
+  /** Deletes zero or more records from the `albums` collection */
+  deleteFromalbumsCollection: albumsDeleteResponse;
   /** Deletes zero or more records from the `favorites` collection */
   deleteFromfavoritesCollection: favoritesDeleteResponse;
   /** Deletes zero or more records from the `profiles` collection */
@@ -134,6 +138,10 @@ export type Mutation = {
   deleteFromstepsCollection: stepsDeleteResponse;
   /** Deletes zero or more records from the `userprofiles` collection */
   deleteFromuserprofilesCollection: userprofilesDeleteResponse;
+  /** Adds one or more `album_entry` records to the collection */
+  insertIntoalbum_entryCollection?: Maybe<album_entryInsertResponse>;
+  /** Adds one or more `albums` records to the collection */
+  insertIntoalbumsCollection?: Maybe<albumsInsertResponse>;
   /** Adds one or more `favorites` records to the collection */
   insertIntofavoritesCollection?: Maybe<favoritesInsertResponse>;
   /** Adds one or more `profiles` records to the collection */
@@ -142,6 +150,10 @@ export type Mutation = {
   insertIntostepsCollection?: Maybe<stepsInsertResponse>;
   /** Adds one or more `userprofiles` records to the collection */
   insertIntouserprofilesCollection?: Maybe<userprofilesInsertResponse>;
+  /** Updates zero or more records in the `album_entry` collection */
+  updatealbum_entryCollection: album_entryUpdateResponse;
+  /** Updates zero or more records in the `albums` collection */
+  updatealbumsCollection: albumsUpdateResponse;
   /** Updates zero or more records in the `favorites` collection */
   updatefavoritesCollection: favoritesUpdateResponse;
   /** Updates zero or more records in the `profiles` collection */
@@ -150,6 +162,20 @@ export type Mutation = {
   updatestepsCollection: stepsUpdateResponse;
   /** Updates zero or more records in the `userprofiles` collection */
   updateuserprofilesCollection: userprofilesUpdateResponse;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationdeleteFromalbum_entryCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<album_entryFilter>;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationdeleteFromalbumsCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<albumsFilter>;
 };
 
 
@@ -182,6 +208,18 @@ export type MutationdeleteFromuserprofilesCollectionArgs = {
 
 
 /** The root type for creating and mutating data */
+export type MutationinsertIntoalbum_entryCollectionArgs = {
+  objects: Array<album_entryInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationinsertIntoalbumsCollectionArgs = {
+  objects: Array<albumsInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
 export type MutationinsertIntofavoritesCollectionArgs = {
   objects: Array<favoritesInsertInput>;
 };
@@ -202,6 +240,22 @@ export type MutationinsertIntostepsCollectionArgs = {
 /** The root type for creating and mutating data */
 export type MutationinsertIntouserprofilesCollectionArgs = {
   objects: Array<userprofilesInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
+export type Mutationupdatealbum_entryCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<album_entryFilter>;
+  set: album_entryUpdateInput;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationupdatealbumsCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<albumsFilter>;
+  set: albumsUpdateInput;
 };
 
 
@@ -270,6 +324,10 @@ export type PageInfo = {
 /** The root type for querying data */
 export type Query = {
   __typename?: 'Query';
+  /** A pagable collection of type `album_entry` */
+  album_entryCollection?: Maybe<album_entryConnection>;
+  /** A pagable collection of type `albums` */
+  albumsCollection?: Maybe<albumsConnection>;
   /** A pagable collection of type `favorites` */
   favoritesCollection?: Maybe<favoritesConnection>;
   /** Retrieve a record by its `ID` */
@@ -280,6 +338,30 @@ export type Query = {
   stepsCollection?: Maybe<stepsConnection>;
   /** A pagable collection of type `userprofiles` */
   userprofilesCollection?: Maybe<userprofilesConnection>;
+};
+
+
+/** The root type for querying data */
+export type Queryalbum_entryCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<album_entryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<album_entryOrderBy>>;
+};
+
+
+/** The root type for querying data */
+export type QueryalbumsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<albumsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<albumsOrderBy>>;
 };
 
 
@@ -371,6 +453,206 @@ export type UUIDFilter = {
   in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   is?: InputMaybe<FilterIs>;
   neq?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type album_entry = Node & {
+  __typename?: 'album_entry';
+  album_id?: Maybe<Scalars['BigInt']['output']>;
+  albums?: Maybe<albums>;
+  created_at: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  /** Globally Unique Record Identifier */
+  nodeId: Scalars['ID']['output'];
+  profile_id?: Maybe<Scalars['BigInt']['output']>;
+  profiles?: Maybe<profiles>;
+  user_id?: Maybe<Scalars['UUID']['output']>;
+};
+
+export type album_entryConnection = {
+  __typename?: 'album_entryConnection';
+  edges: Array<album_entryEdge>;
+  pageInfo: PageInfo;
+};
+
+export type album_entryDeleteResponse = {
+  __typename?: 'album_entryDeleteResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<album_entry>;
+};
+
+export type album_entryEdge = {
+  __typename?: 'album_entryEdge';
+  cursor: Scalars['String']['output'];
+  node: album_entry;
+};
+
+export type album_entryFilter = {
+  album_id?: InputMaybe<BigIntFilter>;
+  /** Returns true only if all its inner filters are true, otherwise returns false */
+  and?: InputMaybe<Array<album_entryFilter>>;
+  created_at?: InputMaybe<DatetimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  nodeId?: InputMaybe<IDFilter>;
+  /** Negates a filter */
+  not?: InputMaybe<album_entryFilter>;
+  /** Returns true if at least one of its inner filters is true, otherwise returns false */
+  or?: InputMaybe<Array<album_entryFilter>>;
+  profile_id?: InputMaybe<BigIntFilter>;
+  user_id?: InputMaybe<UUIDFilter>;
+};
+
+export type album_entryInsertInput = {
+  album_id?: InputMaybe<Scalars['BigInt']['input']>;
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  profile_id?: InputMaybe<Scalars['BigInt']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type album_entryInsertResponse = {
+  __typename?: 'album_entryInsertResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<album_entry>;
+};
+
+export type album_entryOrderBy = {
+  album_id?: InputMaybe<OrderByDirection>;
+  created_at?: InputMaybe<OrderByDirection>;
+  id?: InputMaybe<OrderByDirection>;
+  profile_id?: InputMaybe<OrderByDirection>;
+  user_id?: InputMaybe<OrderByDirection>;
+};
+
+export type album_entryUpdateInput = {
+  album_id?: InputMaybe<Scalars['BigInt']['input']>;
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  profile_id?: InputMaybe<Scalars['BigInt']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type album_entryUpdateResponse = {
+  __typename?: 'album_entryUpdateResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<album_entry>;
+};
+
+export type albums = Node & {
+  __typename?: 'albums';
+  album_entryCollection?: Maybe<album_entryConnection>;
+  created_at: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  /** Globally Unique Record Identifier */
+  nodeId: Scalars['ID']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  shared?: Maybe<Scalars['Boolean']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  user_id?: Maybe<Scalars['UUID']['output']>;
+  user_name?: Maybe<Scalars['String']['output']>;
+  userprofiles?: Maybe<userprofiles>;
+};
+
+
+export type albumsalbum_entryCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<album_entryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<album_entryOrderBy>>;
+};
+
+export type albumsConnection = {
+  __typename?: 'albumsConnection';
+  edges: Array<albumsEdge>;
+  pageInfo: PageInfo;
+  /** The total number of records matching the `filter` criteria */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type albumsDeleteResponse = {
+  __typename?: 'albumsDeleteResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<albums>;
+};
+
+export type albumsEdge = {
+  __typename?: 'albumsEdge';
+  cursor: Scalars['String']['output'];
+  node: albums;
+};
+
+export type albumsFilter = {
+  /** Returns true only if all its inner filters are true, otherwise returns false */
+  and?: InputMaybe<Array<albumsFilter>>;
+  created_at?: InputMaybe<DatetimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  image?: InputMaybe<StringFilter>;
+  nodeId?: InputMaybe<IDFilter>;
+  /** Negates a filter */
+  not?: InputMaybe<albumsFilter>;
+  notes?: InputMaybe<StringFilter>;
+  /** Returns true if at least one of its inner filters is true, otherwise returns false */
+  or?: InputMaybe<Array<albumsFilter>>;
+  shared?: InputMaybe<BooleanFilter>;
+  title?: InputMaybe<StringFilter>;
+  user_id?: InputMaybe<UUIDFilter>;
+  user_name?: InputMaybe<StringFilter>;
+};
+
+export type albumsInsertInput = {
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  shared?: InputMaybe<Scalars['Boolean']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
+  user_name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type albumsInsertResponse = {
+  __typename?: 'albumsInsertResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<albums>;
+};
+
+export type albumsOrderBy = {
+  created_at?: InputMaybe<OrderByDirection>;
+  id?: InputMaybe<OrderByDirection>;
+  image?: InputMaybe<OrderByDirection>;
+  notes?: InputMaybe<OrderByDirection>;
+  shared?: InputMaybe<OrderByDirection>;
+  title?: InputMaybe<OrderByDirection>;
+  user_id?: InputMaybe<OrderByDirection>;
+  user_name?: InputMaybe<OrderByDirection>;
+};
+
+export type albumsUpdateInput = {
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  shared?: InputMaybe<Scalars['Boolean']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['UUID']['input']>;
+  user_name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type albumsUpdateResponse = {
+  __typename?: 'albumsUpdateResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<albums>;
 };
 
 export type favorites = Node & {
@@ -474,6 +756,7 @@ export type favoritesUpdateResponse = {
 
 export type profiles = Node & {
   __typename?: 'profiles';
+  album_entryCollection?: Maybe<album_entryConnection>;
   author?: Maybe<Scalars['String']['output']>;
   beverage_type?: Maybe<Scalars['String']['output']>;
   created_at: Scalars['Datetime']['output'];
@@ -492,6 +775,17 @@ export type profiles = Node & {
   title?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   user_id?: Maybe<Scalars['UUID']['output']>;
+};
+
+
+export type profilesalbum_entryCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<album_entryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<album_entryOrderBy>>;
 };
 
 
@@ -780,6 +1074,7 @@ export type stepsUpdateResponse = {
 
 export type userprofiles = Node & {
   __typename?: 'userprofiles';
+  albumsCollection?: Maybe<albumsConnection>;
   avatar_url?: Maybe<Scalars['String']['output']>;
   full_name?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
@@ -788,6 +1083,17 @@ export type userprofiles = Node & {
   updated_at?: Maybe<Scalars['Datetime']['output']>;
   username?: Maybe<Scalars['String']['output']>;
   website?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type userprofilesalbumsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<albumsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<albumsOrderBy>>;
 };
 
 export type userprofilesConnection = {
@@ -869,6 +1175,20 @@ export type userprofilesUpdateResponse = {
   records: Array<userprofiles>;
 };
 
+export type DeleteEntriesForAlbumMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+}>;
+
+
+export type DeleteEntriesForAlbumMutation = { __typename: 'Mutation', deleteFromalbum_entryCollection: { __typename: 'album_entryDeleteResponse', affectedCount: number, records: Array<{ __typename: 'album_entry', id: string }> } };
+
+export type DeleteAlbumsMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+}>;
+
+
+export type DeleteAlbumsMutation = { __typename: 'Mutation', deleteFromalbumsCollection: { __typename: 'albumsDeleteResponse', affectedCount: number, records: Array<{ __typename: 'albums', id: string }> } };
+
 export type DeleteFavMutationVariables = Exact<{
   id: Scalars['BigInt']['input'];
 }>;
@@ -890,6 +1210,20 @@ export type DeleteStepsForProfileMutationVariables = Exact<{
 
 export type DeleteStepsForProfileMutation = { __typename: 'Mutation', deleteFromstepsCollection: { __typename: 'stepsDeleteResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } };
 
+export type InsertAlbumMutationVariables = Exact<{
+  set: Array<albumsInsertInput> | albumsInsertInput;
+}>;
+
+
+export type InsertAlbumMutation = { __typename: 'Mutation', insertIntoalbumsCollection?: { __typename: 'albumsInsertResponse', affectedCount: number, records: Array<{ __typename: 'albums', id: string }> } | null };
+
+export type InsertAlbumEntriesMutationVariables = Exact<{
+  ep: Array<album_entryInsertInput> | album_entryInsertInput;
+}>;
+
+
+export type InsertAlbumEntriesMutation = { __typename: 'Mutation', insertIntoalbum_entryCollection?: { __typename: 'album_entryInsertResponse', affectedCount: number, records: Array<{ __typename: 'album_entry', id: string }> } | null };
+
 export type InsertFavoritesMutationVariables = Exact<{
   set: Array<favoritesInsertInput> | favoritesInsertInput;
 }>;
@@ -910,6 +1244,14 @@ export type InsertStepsMutationVariables = Exact<{
 
 
 export type InsertStepsMutation = { __typename: 'Mutation', insertIntostepsCollection?: { __typename: 'stepsInsertResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } | null };
+
+export type UpdateAlbumMutationVariables = Exact<{
+  id: Scalars['BigInt']['input'];
+  set: albumsUpdateInput;
+}>;
+
+
+export type UpdateAlbumMutation = { __typename: 'Mutation', updatealbumsCollection: { __typename: 'albumsUpdateResponse', affectedCount: number, records: Array<{ __typename: 'albums', id: string }> } };
 
 export type UpdateFavoritesMutationVariables = Exact<{
   id: Scalars['BigInt']['input'];
@@ -935,6 +1277,18 @@ export type UpdateStepsMutationVariables = Exact<{
 
 export type UpdateStepsMutation = { __typename: 'Mutation', updatestepsCollection: { __typename: 'stepsUpdateResponse', affectedCount: number, records: Array<{ __typename: 'steps', id: string }> } };
 
+export type AlbumByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+}>;
+
+
+export type AlbumByIdQuery = { __typename: 'Query', albumsCollection?: { __typename: 'albumsConnection', totalCount: number, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'albumsEdge', cursor: string, node: { __typename: 'albums', id: string, created_at: string, title?: string | null, notes?: string | null, shared?: boolean | null, image?: string | null, userprofiles?: { __typename: 'userprofiles', username?: string | null } | null, album_entryCollection?: { __typename: 'album_entryConnection', edges: Array<{ __typename: 'album_entryEdge', node: { __typename: 'album_entry', profile_id?: string | null, profiles?: { __typename: 'profiles', title?: string | null, notes?: string | null, author?: string | null, type?: string | null, beverage_type?: string | null } | null } }> } | null } }> } | null };
+
+export type AlbumsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AlbumsQuery = { __typename: 'Query', albumsCollection?: { __typename: 'albumsConnection', totalCount: number, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'albumsEdge', cursor: string, node: { __typename: 'albums', id: string, created_at: string, title?: string | null, notes?: string | null, shared?: boolean | null, image?: string | null, userprofiles?: { __typename: 'userprofiles', username?: string | null } | null, album_entryCollection?: { __typename: 'album_entryConnection', edges: Array<{ __typename: 'album_entryEdge', node: { __typename: 'album_entry', profile_id?: string | null, profiles?: { __typename: 'profiles', title?: string | null, notes?: string | null } | null } }> } | null } }> } | null };
+
 export type ProfileDetailsQueryVariables = Exact<{
   id?: InputMaybe<Scalars['BigInt']['input']>;
 }>;
@@ -957,6 +1311,54 @@ export type FavoritesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FavoritesQuery = { __typename: 'Query', favoritesCollection?: { __typename: 'favoritesConnection', pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename: 'favoritesEdge', cursor: string, node: { __typename: 'favorites', id: string, created_at: string, label?: string | null, isGroup?: boolean | null, isSeperator?: boolean | null, group_id?: string | null, profile_id?: string | null } }> } | null };
 
+export const DeleteEntriesForAlbumDocument = gql`
+    mutation DeleteEntriesForAlbum($id: BigInt!) {
+  __typename
+  deleteFromalbum_entryCollection(atMost: 20, filter: {album_id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteEntriesForAlbumGQL extends Apollo.Mutation<DeleteEntriesForAlbumMutation, DeleteEntriesForAlbumMutationVariables> {
+    override document = DeleteEntriesForAlbumDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteAlbumsDocument = gql`
+    mutation DeleteAlbums($id: BigInt!) {
+  __typename
+  deleteFromalbumsCollection(atMost: 20, filter: {id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteAlbumsGQL extends Apollo.Mutation<DeleteAlbumsMutation, DeleteAlbumsMutationVariables> {
+    override document = DeleteAlbumsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteFavDocument = gql`
     mutation DeleteFav($id: BigInt!) {
   __typename
@@ -1024,6 +1426,54 @@ export const DeleteStepsForProfileDocument = gql`
   })
   export class DeleteStepsForProfileGQL extends Apollo.Mutation<DeleteStepsForProfileMutation, DeleteStepsForProfileMutationVariables> {
     override document = DeleteStepsForProfileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const InsertAlbumDocument = gql`
+    mutation InsertAlbum($set: [albumsInsertInput!]!) {
+  __typename
+  insertIntoalbumsCollection(objects: $set) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertAlbumGQL extends Apollo.Mutation<InsertAlbumMutation, InsertAlbumMutationVariables> {
+    override document = InsertAlbumDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const InsertAlbumEntriesDocument = gql`
+    mutation InsertAlbumEntries($ep: [album_entryInsertInput!]!) {
+  __typename
+  insertIntoalbum_entryCollection(objects: $ep) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InsertAlbumEntriesGQL extends Apollo.Mutation<InsertAlbumEntriesMutation, InsertAlbumEntriesMutationVariables> {
+    override document = InsertAlbumEntriesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -1101,6 +1551,30 @@ export const InsertStepsDocument = gql`
       super(apollo);
     }
   }
+export const UpdateAlbumDocument = gql`
+    mutation UpdateAlbum($id: BigInt!, $set: albumsUpdateInput!) {
+  __typename
+  updatealbumsCollection(set: $set, filter: {id: {eq: $id}}) {
+    __typename
+    affectedCount
+    records {
+      __typename
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateAlbumGQL extends Apollo.Mutation<UpdateAlbumMutation, UpdateAlbumMutationVariables> {
+    override document = UpdateAlbumDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UpdateFavoritesDocument = gql`
     mutation UpdateFavorites($id: BigInt!, $set: favoritesUpdateInput!) {
   __typename
@@ -1168,6 +1642,127 @@ export const UpdateStepsDocument = gql`
   })
   export class UpdateStepsGQL extends Apollo.Mutation<UpdateStepsMutation, UpdateStepsMutationVariables> {
     override document = UpdateStepsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AlbumByIdDocument = gql`
+    query AlbumById($id: BigInt) {
+  __typename
+  albumsCollection(filter: {id: {eq: $id}}) {
+    __typename
+    pageInfo {
+      __typename
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      __typename
+      cursor
+      node {
+        id
+        created_at
+        title
+        notes
+        shared
+        image
+        userprofiles {
+          __typename
+          username
+        }
+        album_entryCollection {
+          __typename
+          edges {
+            __typename
+            node {
+              __typename
+              profile_id
+              profiles {
+                __typename
+                title
+                notes
+                author
+                type
+                beverage_type
+              }
+            }
+          }
+        }
+        __typename
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AlbumByIdGQL extends Apollo.Query<AlbumByIdQuery, AlbumByIdQueryVariables> {
+    override document = AlbumByIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AlbumsDocument = gql`
+    query Albums {
+  __typename
+  albumsCollection {
+    __typename
+    pageInfo {
+      __typename
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      __typename
+      cursor
+      node {
+        id
+        created_at
+        title
+        notes
+        shared
+        image
+        userprofiles {
+          __typename
+          username
+        }
+        album_entryCollection {
+          __typename
+          edges {
+            __typename
+            node {
+              __typename
+              profile_id
+              profiles {
+                __typename
+                title
+                notes
+              }
+            }
+          }
+        }
+        __typename
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AlbumsGQL extends Apollo.Query<AlbumsQuery, AlbumsQueryVariables> {
+    override document = AlbumsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

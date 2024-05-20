@@ -1,0 +1,8 @@
+mutation InsertAlbum($set: [albumsInsertInput!]!) {
+  insertIntoalbumsCollection(objects: $set) {
+    affectedCount
+    records {
+      id
+    }
+  }
+}

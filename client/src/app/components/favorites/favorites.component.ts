@@ -1,4 +1,4 @@
-import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
@@ -21,11 +21,11 @@ import { RenderStepComponent } from '../render-step/render-step.component';
     FormsModule,
     MatIconModule,
     MatLabel,
-    MatButtonModule, MatIconModule,
-    CommonModule,
+    MatButtonModule,
+    MatIconModule,
     AsyncPipe,
-    JsonPipe,
-  ],
+    JsonPipe
+],
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.scss'
 })

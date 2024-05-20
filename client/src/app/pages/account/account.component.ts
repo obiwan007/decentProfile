@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { AuthSession } from '@supabase/supabase-js'
 import { UserProfile, SupabaseService } from '../../services/supabase.service'
-import { CommonModule } from '@angular/common'
+
 import { Observable, Subscription } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field'
@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input'
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatButtonModule, MatInputModule, MatLabel],
+  imports: [ReactiveFormsModule, MatButtonModule, MatInputModule, MatLabel],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss'
 })

@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
+
+@import 'roboto.css';
+@import 'material-icons.css';
+
+$light-theme: matx.define-theme();
+$dark-theme: matx.define-theme((color: (theme-type: dark)));
+
+
+// .light-theme {
+//     @include mat.all-component-themes($m3-light-theme);
+// }
+
+html,
+body {
+    height: 100%;
+}
+
+html {
+    // Apply the base theme at the root, so it will be inherited by the whole app.
+    @include mat.all-component-themes($light-theme);
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+mat-sidenav {
+    // Override the colors to create a dark sidenav.
+    @include mat.all-component-colors($light-theme);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -1,42 +1,42 @@
-<div class="mat-elevation-z8">
+<div class="">
   <mat-list class="wrapper full-width-table">
-    <div>
+    <div [hidden]="noFilteringPanel">
       <mat-toolbar>
         <mat-form-field class="example-form-field">
           <mat-label>Search</mat-label>
           <input matInput type="text" (ngModelChange)="searchChanged($event)" [(ngModel)]="search">
           @if (search) {
-          <button (click)="searchChanged('')" matSuffix mat-icon-button aria-label="Clear">
-            <mat-icon>close</mat-icon>
-          </button>
+            <button (click)="searchChanged('')" matSuffix mat-icon-button aria-label="Clear">
+              <mat-icon>close</mat-icon>
+            </button>
           }
         </mat-form-field>
         &nbsp;
         <mat-form-field class="mr-1" style="width:128px;">
           <mat-label>Filter</mat-label>
           <mat-select
-                      [compareWith]="compareObjects"
-                      [(ngModel)]="filteredEntries" panelWidth="180px" matInput multiple
-                      (selectionChange)="filterForBeverage($event)">
+            [compareWith]="compareObjects"
+            [(ngModel)]="filteredEntries" panelWidth="180px" matInput multiple
+            (selectionChange)="filterForBeverage($event)">
 
             <mat-optgroup label="Type">
               @for (food of types; track food) {
-              <mat-option [value]="{value: food, groupValue: 'type'}">{{food}}</mat-option>
+                <mat-option [value]="{value: food, groupValue: 'type'}">{{food}}</mat-option>
               }
             </mat-optgroup>
 
             <mat-optgroup label="Beverage">
               @for (food of beverages; track food) {
 
-              <mat-option
-                          [value]="{value: food, groupValue: 'beverage'}">{{food}}</mat-option>
+                <mat-option
+                [value]="{value: food, groupValue: 'beverage'}">{{food}}</mat-option>
 
               }
             </mat-optgroup>
 
             <mat-optgroup label="authors">
               @for (food of authors; track food) {
-              <mat-option [value]="{value: food, groupValue: 'author'}">{{food}}</mat-option>
+                <mat-option [value]="{value: food, groupValue: 'author'}">{{food}}</mat-option>
               }
             </mat-optgroup>
 
@@ -51,7 +51,7 @@
         <app-favorites></app-favorites>
         <span class="flex-1"></span>
         <button (click)="openUpload()" mat-icon-button title="Upload json/tcl profile" class="example-icon"
-                aria-label="Example icon-button with share icon">
+          aria-label="Example icon-button with share icon">
           <mat-icon>upload</mat-icon>
 
         </button>
@@ -60,31 +60,33 @@
 
 
     </div>
-    <mat-list-item (click)="onRowClicked(row)" [ngClass]="{'highlight': selectedProfile?.id == row.id}"
-                   *ngFor="let row of dataSource.connect()| async">
-
-      <mat-icon matListItemIcon>
-        {{row.beverage_type=='espresso' ? 'coffee' :
-        row.beverage_type=='pourover'? 'coffee_maker' :
-        row.beverage_type=='filter'? 'filter_list_alt' :
-        row.beverage_type=='cleaning'?'cleaning_services' : 'star' }}
-      </mat-icon>
-      <div matLine>{{row.title}}
-        <mat-icon *ngIf="row.isDefault" title="Default profile">star</mat-icon>
-        <mat-icon *ngIf="row.isPublic" title="Public profile">accessibility</mat-icon>
-      </div>
-      <div matLine>{{row.type}} {{row.beverage_type}} by {{row.author}}
-
-      </div>
-
-
-    </mat-list-item>
+    @for (row of dataSource.connect()| async; track row) {
+      <mat-list-item (click)="onRowClicked(row)" [ngClass]="{'highlight': selectedProfile?.id == row.id}"
+        >
+        <mat-icon matListItemIcon>
+          {{row.beverage_type=='espresso' ? 'coffee' :
+          row.beverage_type=='pourover'? 'coffee_maker' :
+          row.beverage_type=='filter'? 'filter_list_alt' :
+          row.beverage_type=='cleaning'?'cleaning_services' : 'star' }}
+        </mat-icon>
+        <div matLine>{{row.title}}
+          @if (row.isDefault) {
+            <mat-icon title="Default profile">star</mat-icon>
+          }
+          @if (row.isPublic) {
+            <mat-icon title="Public profile">accessibility</mat-icon>
+          }
+        </div>
+        <div matLine> {{row.type}} {{row.beverage_type}} by {{row.author}}
+        </div>
+      </mat-list-item>
+    }
   </mat-list>
 
 
   <mat-paginator #paginator
-                 [pageSize]="pageSize"
-                 [length]="dataSource.maxlength"
-                 aria-label="Select page">
+    [pageSize]="pageSize"
+    [length]="dataSource.maxlength"
+    aria-label="Select page">
   </mat-paginator>
 </div>

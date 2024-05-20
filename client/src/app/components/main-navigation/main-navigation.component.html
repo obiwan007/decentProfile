@@ -6,7 +6,19 @@
                [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="profiles">My Profiles</a>
+      <mat-list-item [routerLink]="['/profiles']" [activated]="currentUrl==='/profiles'">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <a matListItemTitle>Profiles</a>
+      </mat-list-item>
+      <div mat-subheader>My Library</div>
+      <mat-list-item [routerLink]="['/myalbums']" [activated]="currentUrl==='/myalbums'">
+        <mat-icon matListItemIcon>note</mat-icon>
+        <a matListItemTitle [routerLink]="['/myalbums']">Albums</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>note</mat-icon>
+        <a matListItemTitle>Playlists</a>
+      </mat-list-item>
       <a mat-list-item href="#">Settings</a>
     </mat-nav-list>
   </mat-sidenav>

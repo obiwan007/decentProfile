@@ -1,134 +1,141 @@
 <mat-toolbar>
-    <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
-        aria-label="Example icon-button with share icon">
-        <mat-icon>save</mat-icon>
-    </button>
-    <button mat-icon-button title="Copy profile" class="example-icon favorite-icon"
-        aria-label="Example icon-button with heart icon">
-        <mat-icon>file_copy</mat-icon>
-    </button>
-    <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
-        aria-label="Example icon-button with heart icon">
-        <mat-icon>delete</mat-icon>
-    </button>
-    <button mat-icon-button title="Share profile" class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-    </button>
-    <button (click)="resetToDefaults()" mat-icon-button title="Reset to default" class="example-icon"
-        aria-label="Example icon-button with share icon">
-        <mat-icon>restart_alt</mat-icon>
-    </button>
-    <mat-icon [matTooltip]="tooltips['info_d_flow']" matTooltipClass="multiline-tooltip">info</mat-icon>
+  <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
+    aria-label="Example icon-button with share icon">
+    <mat-icon>save</mat-icon>
+  </button>
+  <button mat-icon-button title="Copy profile" class="example-icon favorite-icon"
+    aria-label="Example icon-button with heart icon">
+    <mat-icon>file_copy</mat-icon>
+  </button>
+  <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
+    aria-label="Example icon-button with heart icon">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-icon-button title="Share profile" class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>share</mat-icon>
+  </button>
+  <button (click)="resetToDefaults()" mat-icon-button title="Reset to default" class="example-icon"
+    aria-label="Example icon-button with share icon">
+    <mat-icon>restart_alt</mat-icon>
+  </button>
+  <mat-icon [matTooltip]="tooltips['info_d_flow']" matTooltipClass="multiline-tooltip">info</mat-icon>
 
 </mat-toolbar>
 <div class="flex flex-row" style="padding:15px">
-    <div class="flex flex-col w-2/6">
-        <div class="p-2">
-            <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
-        </div>
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-
-                <mat-card-header>
-                    <mat-card-title>
-                        Dose <mat-icon [matTooltip]="tooltips['info_dose']"
-                            matTooltipClass="multiline-tooltip">info</mat-icon>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <app-button-slider [(model)]="dose" unit="g" title="Dose" [min]=0 [max]=30 [increment]=0.1
-                        (modelChange)="updateExtractionRatio()"></app-button-slider>
-                </mat-card-content>
-            </mat-card>
-        </div>
-
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-
-                <mat-card-header>
-                    <mat-card-title>
-                        Stop <mat-icon [matTooltip]="tooltips['info_pour_stop']"
-                            matTooltipClass="multiline-tooltip">info</mat-icon>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <app-button-slider [(model)]="profile.target_weight" unit="g" title="Stop at Weight" [min]=0
-                        [max]=600 [increment]=1
-                        (modelChange)="updateExtractionRatio();profile.target_volume=0"></app-button-slider>
-                        <app-button-slider [(model)]="profile.target_volume" unit="ml" title="Stop at Volume" [min]=0
-                        [max]=600 [increment]=1
-                        (modelChange)="updateExtractionRatio();profile.target_weight=0"></app-button-slider>
-                        <div class="label"> Extraction Ratio 1 : {{extractionRatio | number: '1.1-1'}} </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-    <div class="flex flex-col w-4/6">
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-                <mat-card-header>
-                    <mat-card-title>
-                        {{profile.steps[1].name}}
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div>
-                        <app-render-step [step]="profile.steps[1]"></app-render-step>
-                    </div>
-                    <hr>
-                    <app-button-slider [(model)]="profile.steps[1].temperature" unit="°C" title="Temperature" [min]=50
-                        [max]=100 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
-                    <hr>
-                    <div>
-                        <app-button-slider [(model)]="profile.steps[1].pressure" unit="bar" title="Pressure" [min]=0
-                            [max]=16 [increment]=0.1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
-                        <hr>
-                        <div class="title">Infuse until either<mat-icon [matTooltip]="tooltips['info_infuse_stop']"
-                                matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                                <app-button-slider [(model)]="profile.steps[1].seconds" unit="s" title="Time" [min]=0
-                        [max]=1000 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
-                        <app-button-slider [(model)]="profile.steps[1].volume" unit="ml" title="Volume" [min]=1
-                        [max]=500 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
-                        <app-button-slider [(model)]="profile.steps[1].weight" unit="ml" title="Weight" [min]=1
-                        [max]=500 [increment]=0.2 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-    <div class="flex flex-col w-4/6">
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-                <mat-card-header>
-                    <mat-card-title>
-                        {{profile.steps[2].name}}
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div>
-                        <app-render-step [step]="profile.steps[2]"></app-render-step>
-                    </div>
-                    <hr>
-                    <app-button-slider [(model)]="profile.steps[2].temperature" unit="°C" title="Temperature" [min]=50
-                        [max]=100 [increment]=1 (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
-                    <hr>
-                    <div class="title">Pour Limits<mat-icon [matTooltip]="tooltips['info_pour_limits']"
-                            matTooltipClass="multiline-tooltip">info</mat-icon></div>
-                    <app-button-slider [(model)]="profile.steps[2].flow" unit="bar" title="Flow" [min]=0 [max]=10
-                        [increment]=0.1 (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
-                    <app-button-slider *ngIf="profile.steps[2].limiter" [(model)]="profile.steps[2].limiter.value"
-                        unit="bar" title="Pressure Limit" [min]=0 [max]=16 [increment]=0.1
-                        (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
-
-
-
-                </mat-card-content>
-            </mat-card>
-        </div>
+  <div class="flex flex-col w-2/6">
+    <div class="p-2">
+      <app-profile-details [showButtons]="false" [profile]="profile"></app-profile-details>
     </div>
     <div class="m-2">
-        <mat-card *ngIf="profile">
-            <app-profile-chart #chart [profile]="profile"></app-profile-chart>
-        </mat-card>
-    </div>
+      @if (profile) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              Dose <mat-icon [matTooltip]="tooltips['info_dose']"
+            matTooltipClass="multiline-tooltip">info</mat-icon>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <app-button-slider [(model)]="dose" unit="g" title="Dose" [min]=0 [max]=30 [increment]=0.1
+          (modelChange)="updateExtractionRatio()"></app-button-slider>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <div class="m-2">
+    @if (profile) {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Stop <mat-icon [matTooltip]="tooltips['info_pour_stop']"
+          matTooltipClass="multiline-tooltip">info</mat-icon>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-button-slider [(model)]="profile.target_weight" unit="g" title="Stop at Weight" [min]=0
+          [max]=600 [increment]=1
+        (modelChange)="updateExtractionRatio();profile.target_volume=0"></app-button-slider>
+        <app-button-slider [(model)]="profile.target_volume" unit="ml" title="Stop at Volume" [min]=0
+          [max]=600 [increment]=1
+        (modelChange)="updateExtractionRatio();profile.target_weight=0"></app-button-slider>
+        <div class="label"> Extraction Ratio 1 : {{extractionRatio | number: '1.1-1'}} </div>
+      </mat-card-content>
+    </mat-card>
+  }
 </div>
+</div>
+<div class="flex flex-col w-4/6">
+  <div class="m-2">
+    @if (profile) {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            {{profile.steps[1].name}}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div>
+            <app-render-step [step]="profile.steps[1]"></app-render-step>
+          </div>
+          <hr>
+            <app-button-slider [(model)]="profile.steps[1].temperature" unit="°C" title="Temperature" [min]=50
+            [max]=100 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+            <hr>
+              <div>
+                <app-button-slider [(model)]="profile.steps[1].pressure" unit="bar" title="Pressure" [min]=0
+                [max]=16 [increment]=0.1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+                <hr>
+                  <div class="title">Infuse until either<mat-icon [matTooltip]="tooltips['info_infuse_stop']"
+                  matTooltipClass="multiline-tooltip">info</mat-icon></div>
+                  <app-button-slider [(model)]="profile.steps[1].seconds" unit="s" title="Time" [min]=0
+                  [max]=1000 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+                  <app-button-slider [(model)]="profile.steps[1].volume" unit="ml" title="Volume" [min]=1
+                  [max]=500 [increment]=1 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+                  <app-button-slider [(model)]="profile.steps[1].weight" unit="ml" title="Weight" [min]=1
+                  [max]=500 [increment]=0.2 (modelChange)="stepChanged(profile.steps[1])"></app-button-slider>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      </div>
+      <div class="flex flex-col w-4/6">
+        <div class="m-2">
+          @if (profile) {
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  {{profile.steps[2].name}}
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div>
+                  <app-render-step [step]="profile.steps[2]"></app-render-step>
+                </div>
+                <hr>
+                  <app-button-slider [(model)]="profile.steps[2].temperature" unit="°C" title="Temperature" [min]=50
+                  [max]=100 [increment]=1 (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
+                  <hr>
+                    <div class="title">Pour Limits<mat-icon [matTooltip]="tooltips['info_pour_limits']"
+                    matTooltipClass="multiline-tooltip">info</mat-icon></div>
+                    <app-button-slider [(model)]="profile.steps[2].flow" unit="bar" title="Flow" [min]=0 [max]=10
+                    [increment]=0.1 (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
+                    @if (profile.steps[2].limiter) {
+                      <app-button-slider [(model)]="profile.steps[2].limiter.value"
+                        unit="bar" title="Pressure Limit" [min]=0 [max]=16 [increment]=0.1
+                      (modelChange)="stepChanged(profile.steps[2])"></app-button-slider>
+                    }
+                  </mat-card-content>
+                </mat-card>
+              }
+            </div>
+          </div>
+          <div class="m-2">
+            @if (profile) {
+              <mat-card>
+                <app-profile-chart #chart [profile]="profile"></app-profile-chart>
+              </mat-card>
+            }
+          </div>
+        </div>

@@ -1,0 +1,38 @@
+query AlbumById($id: BigInt) {
+  albumsCollection(filter: {id: {eq: $id}}){ 
+    pageInfo{
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount   
+    edges {
+      cursor
+      node {
+        id
+        created_at
+        title
+        notes        
+        shared
+        image
+        userprofiles {
+          username
+        }
+        album_entryCollection{
+          edges{node{
+            profile_id
+            profiles{
+            	title
+              notes
+              author
+              type
+              beverage_type              
+            }
+          }}
+        }        
+        __typename
+      }
+    }
+  }
+}

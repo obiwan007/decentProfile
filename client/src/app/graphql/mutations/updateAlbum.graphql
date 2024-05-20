@@ -1,0 +1,8 @@
+mutation UpdateAlbum($id: BigInt!, $set: albumsUpdateInput!) {
+  updatealbumsCollection(set: $set, filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  }
+}

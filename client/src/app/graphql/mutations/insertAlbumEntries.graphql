@@ -1,0 +1,8 @@
+mutation InsertAlbumEntries($ep: [album_entryInsertInput!]!) {
+  insertIntoalbum_entryCollection(objects: $ep) {
+    affectedCount
+    records {
+      id     
+    }
+  }
+}

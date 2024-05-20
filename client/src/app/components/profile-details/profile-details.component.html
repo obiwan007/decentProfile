@@ -1,62 +1,65 @@
 @if(profile){
 
-<mat-card>
+  <mat-card>
     <mat-card-header>
-        <mat-card-title>
-            <app-editable>
-                <ng-template viewMode>{{profile.title}}</ng-template>
-                <ng-template editMode>
-                    <div class="w-full">
-                        <mat-form-field class="w-full">
-                            <input type="text" matInput [(ngModel)]="profile.title" focusable editableOnEnter>
-                        </mat-form-field>
-                    </div>
-                </ng-template>
-            </app-editable>
-        </mat-card-title>
+      <mat-card-title>
+        <app-editable>
+          <ng-template viewMode>{{profile.title}}</ng-template>
+          <ng-template editMode>
+            <div class="w-full">
+              <mat-form-field class="w-full">
+                <input type="text" matInput [(ngModel)]="profile.title" focusable editableOnEnter>
+              </mat-form-field>
+            </div>
+          </ng-template>
+        </app-editable>
+      </mat-card-title>
 
     </mat-card-header>
     <mat-card-content>
-        <div class="title">Type</div>
-        <div>{{profile.type}}</div>
-        <div class="title">Author</div>
-        <div>{{profile.author}}</div>
-        <div class="title">Beverage</div>
-        <div>{{profile.beverage_type}}</div>
-        <div class="title">Default</div>
-        <div>{{profile.isDefault? "Yes" : "No"}}</div>
-        <div class="title">Public</div>
-        <div><mat-slide-toggle *ngIf="!profile.isDefault && edit==true"
-                              [(ngModel)]="profile.isPublic">{{profile.isPublic? "Yes" :
-                "No"}}</mat-slide-toggle>
-        </div>
-        <div *ngIf="profile.isDefault || edit==false">{{profile.isPublic? "Yes" : "No"}}
+      <div class="title">Type</div>
+      <div>{{profile.type}}</div>
+      <div class="title">Author</div>
+      <div>{{profile.author}}</div>
+      <div class="title">Beverage</div>
+      <div>{{profile.beverage_type}}</div>
+      <div class="title">Default</div>
+      <div>{{profile.isDefault? "Yes" : "No"}}</div>
+      <div class="title">Public</div>
+      <div>@if (!profile.isDefault && edit==true) {
+        <mat-slide-toggle
+          [(ngModel)]="profile.isPublic">{{profile.isPublic? "Yes" :
+        "No"}}</mat-slide-toggle>
+      }
+    </div>
+    @if (profile.isDefault || edit==false) {
+      <div>{{profile.isPublic? "Yes" : "No"}}
+      </div>
+    }
+    <div class="title">Notes</div>
 
-        </div>
-        <div class="title">Notes</div>
+    <app-editable>
+      <ng-template viewMode>
+        {{profile.notes}}
+      </ng-template>
+      <ng-template editMode>
 
-        <app-editable>
-            <ng-template viewMode>
-                {{profile.notes}}
-            </ng-template>
-            <ng-template editMode>
+        <mat-form-field class="flex w-full">
+          <mat-label>Notes</mat-label>
+          <textarea type="text" matInput [(ngModel)]="profile.notes"
+            focusable
+          editableOnEnter></textarea>
+        </mat-form-field>
 
-                <mat-form-field class="flex w-full">
-                    <mat-label>Notes</mat-label>
-                    <textarea type="text" matInput [(ngModel)]="profile.notes"
-                              focusable
-                              editableOnEnter></textarea>
-                </mat-form-field>
+      </ng-template>
+    </app-editable>
 
-            </ng-template>
-        </app-editable>
-
-    </mat-card-content>
-    <!-- <mat-card-actions *ngIf="showButtons">
-        <button (click)="onEdit()" mat-raised-button>Edit</button>
-        <button mat-raised-button>Copy</button>
-        <button mat-raised-button>Delete</button>
-    </mat-card-actions> -->
+  </mat-card-content>
+  <!-- <mat-card-actions *ngIf="showButtons">
+  <button (click)="onEdit()" mat-raised-button>Edit</button>
+  <button mat-raised-button>Copy</button>
+  <button mat-raised-button>Delete</button>
+</mat-card-actions> -->
 </mat-card>
 
 }

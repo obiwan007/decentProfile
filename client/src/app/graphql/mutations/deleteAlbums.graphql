@@ -1,0 +1,10 @@
+mutation DeleteAlbums($id: BigInt!) {
+
+  deleteFromalbumsCollection(atMost: 20, filter: {id: {eq: $id}}) {
+    affectedCount
+    records {
+      id      
+    }    
+  } 
+  
+}

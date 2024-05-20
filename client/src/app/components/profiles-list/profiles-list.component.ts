@@ -57,6 +57,13 @@ export class ProfilesListComponent implements AfterViewInit {
   @Output()
   onClick: EventEmitter<Profile> = new EventEmitter();
 
+
+  @Input()
+  noFilteringPanel = false;
+
+  @Input()
+  profiles: Profile[] | undefined;
+
   private _filter: FilterData = new FilterData();
   selectedProfile?: Profile;
   filteredEntries: any;
@@ -91,6 +98,15 @@ export class ProfilesListComponent implements AfterViewInit {
     console.log("Loading Profile");
     this.dataSource = new ProfilesListDataSource(this._profileSrv);
 
+
+
+    // this.dataSource.insertDefaultProfiles();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.profiles) {
+      this.dataSource.setFixedProfiles(this.profiles);
+    }
     const f = localStorage.getItem("filter");
     const s = localStorage.getItem("search");
     if (s) {
@@ -109,10 +125,8 @@ export class ProfilesListComponent implements AfterViewInit {
       }
       ];
     }
-    // this.dataSource.insertDefaultProfiles();
-  }
 
-  ngAfterViewInit(): void {
+
     setTimeout(() => {
       this.sort?.sort({ id: "title", start: "asc", disableClear: false });//active = "title";  
     }, 0);
@@ -121,6 +135,9 @@ export class ProfilesListComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     if (this.table)
       this.table.dataSource = this.dataSource;
+
+
+
     this.dataSource.loadProfiles();
     this.loadLessonsPage();
     this.paginator.page
@@ -137,7 +154,7 @@ export class ProfilesListComponent implements AfterViewInit {
 
   }
   compareObjects(o1: any, o2: any) {
-    if (o2.value === o1.value) return true;
+    if (o2?.value === o1?.value) return true;
     return false;
   }
   onRowClicked(row: Profile) {

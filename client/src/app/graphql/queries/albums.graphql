@@ -1,0 +1,35 @@
+query Albums {
+  albumsCollection{
+    pageInfo{
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        id
+        created_at
+        title
+        notes
+        shared
+        image
+        userprofiles {
+          username
+        }
+        album_entryCollection{
+          edges{node{
+            profile_id
+            profiles{
+            	title
+              notes
+            }
+          }}
+        }        
+        __typename
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.full-width-table {
+  width: 100%;
+
+}
+
+.example-card {
+  width: 250px;
+  height: 250px;
+  margin: 10px;
+}
+
+.image {
+  max-height: 120px;
+  object-fit: cover;
+}
+
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: white;
+}
