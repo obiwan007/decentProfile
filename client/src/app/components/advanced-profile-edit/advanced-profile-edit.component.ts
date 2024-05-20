@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BasicProfileEditComponent } from '../basic-profile-edit/basic-profile-edit.component';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -26,25 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'app-advanced-profile-edit',
   standalone: true,
-  imports: [ProfileChartComponent,
-    MatCardModule,
-    RenderStepComponent,
-    ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
-    AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, CommonModule, FormsModule,
-    ReactiveFormsModule,
-    EditableComponent,
-    ViewModeDirective,
-    EditModeDirective,
-    FocusableDirective,
-    MatToolbarModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    MatIconModule,
-    MatInputModule,
-    MatOptionModule,
-    MatFormFieldModule,
-    MatSelectModule,
-  ],
+  imports: [ProfileChartComponent, MatCardModule, RenderStepComponent, ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent, AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, FormsModule, ReactiveFormsModule, EditableComponent, ViewModeDirective, EditModeDirective, FocusableDirective, MatToolbarModule, MatButtonToggleModule, MatSlideToggleModule, MatIconModule, MatInputModule, MatOptionModule, MatFormFieldModule, MatSelectModule],
   templateUrl: './advanced-profile-edit.component.html',
   styleUrl: './advanced-profile-edit.component.css'
 })

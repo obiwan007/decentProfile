@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Profile } from '../../models/profile';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { JsonPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -16,17 +16,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [JsonPipe, MatCardModule, CommonModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    FormsModule,
-    MatButtonModule,
-    MatInputModule,
-    ViewModeDirective,
-    EditModeDirective,
-    FocusableDirective,
-    MatSlideToggleModule,
-    EditableComponent],
+  imports: [JsonPipe, MatCardModule, ReactiveFormsModule, MatIconModule, FormsModule, MatButtonModule, MatInputModule, ViewModeDirective, EditModeDirective, FocusableDirective, MatSlideToggleModule, EditableComponent],
   templateUrl: './profile-details.component.html',
   styleUrl: './profile-details.component.css'
 })

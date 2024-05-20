@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -7,7 +7,7 @@ import { take } from 'rxjs';
 @Component({
   selector: 'app-page-not-found',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './page-not-found.component.html',
   styleUrl: './page-not-found.component.scss'
 })

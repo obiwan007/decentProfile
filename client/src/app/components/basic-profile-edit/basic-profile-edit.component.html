@@ -1,114 +1,121 @@
 <mat-toolbar>
-    <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
-            aria-label="Example icon-button with share icon">
-        <mat-icon>save</mat-icon>
-    </button>
-    <button mat-icon-button title="Copy profile" class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon">
-        <mat-icon>file_copy</mat-icon>
-    </button>
-    <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon">
-        <mat-icon>delete</mat-icon>
-    </button>
-    <button mat-icon-button title="Share profile" class="example-icon"
-            aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-    </button>
+  <button (click)="save()" mat-icon-button title="Save profile" class="example-icon"
+    aria-label="Example icon-button with share icon">
+    <mat-icon>save</mat-icon>
+  </button>
+  <button mat-icon-button title="Copy profile" class="example-icon favorite-icon"
+    aria-label="Example icon-button with heart icon">
+    <mat-icon>file_copy</mat-icon>
+  </button>
+  <button mat-icon-button title="Delete profile" class="example-icon favorite-icon"
+    aria-label="Example icon-button with heart icon">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-icon-button title="Share profile" class="example-icon"
+    aria-label="Example icon-button with share icon">
+    <mat-icon>share</mat-icon>
+  </button>
 
 
 </mat-toolbar>
 <div class="flex flex-row" style="padding:15px">
-    <div class="flex flex-col w-2/6">
-        <div class="p-2">
-            <app-profile-details [edit]="true" [showButtons]="false" [profile]="profile"></app-profile-details>
-        </div>
-        <div class="m-2">
-            <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"
-                              [profile]="profile"></app-render-steps>
-        </div>
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-                <mat-card-header>
-                    <mat-card-title>
-                        Stop
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="slider">
-                        <div class="label">Stop at Weight ({{profile.target_weight}} g)</div>
-                        <mat-slider ngDefaultControl min="20" max="600" step="1"
-                                    discrete>
-                            <input matSliderThumb [(ngModel)]="profile.target_weight">
-                        </mat-slider>
-                    </div>
-
-                    <div class="slider">
-                        <div class="label">Stop at Volume ({{profile.target_volume}} ml)</div>
-                        <mat-slider ngDefaultControl min="20" max="600" step="1"
-                                    discrete>
-                            <input matSliderThumb [(ngModel)]="profile.target_volume">
-                        </mat-slider>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
+  <div class="flex flex-col w-2/6">
+    <div class="p-2">
+      <app-profile-details [edit]="true" [showButtons]="false" [profile]="profile"></app-profile-details>
     </div>
-    <div class="flex flex-col w-4/6" *ngIf="step">
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-                <mat-card-header>
-                    <mat-card-title>
-                        <app-editable>
-                            <ng-template viewMode>{{step.name}}</ng-template>
-                            <ng-template editMode>
-                                <div class="">
-                                    <mat-form-field class="flex">
-                                        <input type="text" matInput [(ngModel)]="step.name" focusable
-                                               editableOnEnter>
-                                    </mat-form-field>
-                                </div>
-                            </ng-template>
-                        </app-editable>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div style="height:100px">
-                        <app-render-step [step]="step"></app-render-step>
-                    </div>
-                    <br>
-                    <div class="slider">
-                        <div class="label">Time ({{step.seconds}} s)</div>
-                        <mat-slider ngDefaultControl min="0" max="1000" step="1" discrete>
-                            <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.seconds">
-                        </mat-slider>
-                    </div>
-                    <div class="slider">
-                        <div class="label">Pressure ({{step.pressure}} bar)</div>
-                        <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
-                            <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.pressure">
-                        </mat-slider>
-                    </div>
-                    <div class="slider">
-                        <div class="label">Flow ({{step.flow}} ml/s)</div>
-                        <mat-slider ngDefaultControl min="0" max="20" step="0.5" discrete>
-                            <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.flow">
-                        </mat-slider>
-                    </div>
-                    <div class="slider">
-                        <div class="label">Temperature ({{step.temperature}} °C)</div>
-                        <mat-slider ngDefaultControl min="50" max="100" step="1"
-                                    discrete>
-                            <input (ngModelChange)="stepChanged(step)" matSliderThumb [(ngModel)]="step.temperature">
-                        </mat-slider>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div class="m-2">
-            <mat-card *ngIf="profile">
-                <app-profile-chart #chart [profile]="profile" [step]="step"></app-profile-chart>
-            </mat-card>
-        </div>
+    <div class="m-2">
+      <app-render-steps (selected)="onSelectedStep($event)" [selectable]="true"
+      [profile]="profile"></app-render-steps>
     </div>
-</div>
+    <div class="m-2">
+      @if (profile) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              Stop
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="slider">
+              <div class="label">Stop at Weight ({{profile.target_weight}} g)</div>
+              <mat-slider ngDefaultControl min="20" max="600" step="1"
+                discrete>
+                <input matSliderThumb [(ngModel)]="profile.target_weight">
+              </mat-slider>
+            </div>
+            <div class="slider">
+              <div class="label">Stop at Volume ({{profile.target_volume}} ml)</div>
+              <mat-slider ngDefaultControl min="20" max="600" step="1"
+                discrete>
+                <input matSliderThumb [(ngModel)]="profile.target_volume">
+              </mat-slider>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </div>
+  @if (step) {
+    <div class="flex flex-col w-4/6">
+      <div class="m-2">
+        @if (profile) {
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <app-editable>
+                  <ng-template viewMode>{{step.name}}</ng-template>
+                  <ng-template editMode>
+                    <div class="">
+                      <mat-form-field class="flex">
+                        <input type="text" matInput [(ngModel)]="step.name" focusable
+                          editableOnEnter>
+                      </mat-form-field>
+                    </div>
+                  </ng-template>
+                </app-editable>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div style="height:100px">
+                <app-render-step [step]="step"></app-render-step>
+              </div>
+              <br>
+                <div class="slider">
+                  <div class="label">Time ({{step.seconds}} s)</div>
+                  <mat-slider ngDefaultControl min="0" max="1000" step="1" discrete>
+                    <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.seconds">
+                  </mat-slider>
+                </div>
+                <div class="slider">
+                  <div class="label">Pressure ({{step.pressure}} bar)</div>
+                  <mat-slider ngDefaultControl min="0" max="16" step="1" discrete>
+                    <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.pressure">
+                  </mat-slider>
+                </div>
+                <div class="slider">
+                  <div class="label">Flow ({{step.flow}} ml/s)</div>
+                  <mat-slider ngDefaultControl min="0" max="20" step="0.5" discrete>
+                    <input matSliderThumb (ngModelChange)="stepChanged(step)" [(ngModel)]="step.flow">
+                  </mat-slider>
+                </div>
+                <div class="slider">
+                  <div class="label">Temperature ({{step.temperature}} °C)</div>
+                  <mat-slider ngDefaultControl min="50" max="100" step="1"
+                    discrete>
+                    <input (ngModelChange)="stepChanged(step)" matSliderThumb [(ngModel)]="step.temperature">
+                  </mat-slider>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+        <div class="m-2">
+          @if (profile) {
+            <mat-card>
+              <app-profile-chart #chart [profile]="profile" [step]="step"></app-profile-chart>
+            </mat-card>
+          }
+        </div>
+      </div>
+    }
+  </div>

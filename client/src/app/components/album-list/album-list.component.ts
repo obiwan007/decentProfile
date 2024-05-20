@@ -9,7 +9,7 @@ import {tap} from 'rxjs/operators';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
-import {AsyncPipe, CommonModule, JsonPipe} from '@angular/common';
+import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
 import {MatListItem, MatListItemIcon, MatListModule} from '@angular/material/list';
 import {MatLineModule} from '@angular/material/core';
 import {FormsModule} from '@angular/forms';

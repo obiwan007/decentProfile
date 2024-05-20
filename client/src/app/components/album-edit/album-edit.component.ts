@@ -3,7 +3,7 @@ import {RenderStepComponent} from '../render-step/render-step.component';
 
 import {RenderStepsComponent} from '../render-steps/render-steps.component';
 import {MatSliderModule} from '@angular/material/slider';
-import {CommonModule} from '@angular/common';
+
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
@@ -30,9 +30,13 @@ import {ProfilesListDialogComponent} from '../profiles-list-dialog/profiles-list
   imports: [
     MatCardModule,
     RenderStepComponent,
-    RenderStepComponent, RenderStepsComponent,
-    MatButtonModule, MatSliderModule, CommonModule, FormsModule,
-    ReactiveFormsModule, MatInputModule,
+    RenderStepComponent,
+    RenderStepsComponent,
+    MatButtonModule,
+    MatSliderModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
     EditableComponent,
     ViewModeDirective,
     EditModeDirective,
@@ -40,9 +44,8 @@ import {ProfilesListDialogComponent} from '../profiles-list-dialog/profiles-list
     MatToolbarModule,
     MatIconModule,
     MatCheckboxModule,
-    ProfilesListComponent,
-
-  ],
+    ProfilesListComponent
+],
   templateUrl: './album-edit.component.html',
   styleUrl: './album-edit.component.css'
 })

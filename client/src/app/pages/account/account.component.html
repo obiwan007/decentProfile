@@ -1,36 +1,32 @@
 <div class="p-3">
-    Hallo <form *ngIf="session" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()" class="form-widget">
-        <div>
-            <mat-form-field class="flex">
-                <mat-label>Email</mat-label>
-                <input matInput id="email" type="text" [value]="session.user.email" disabled />
-            </mat-form-field>
-        </div>
-        <div>
-
-            <mat-form-field class="flex">
-                <mat-label>Name</mat-label>
-                <input matInput formControlName="username" id="username" type="text" />
-            </mat-form-field>
-        </div>
-        <div>
-
-            <mat-form-field class="flex">
-                <mat-label>Website</mat-label>
-                <input matInput formControlName="website" id="website" type="url" />
-
-            </mat-form-field>
-
-        </div>
-
-        <div>
-            <button mat-raised-button type="submit" class="button primary block" [disabled]="loading">
-                {{ loading ? 'Loading ...' : 'Update' }}
-            </button>
-        </div>
-
-        <div>
-            <button mat-raised-button class="button block" (click)="signOut()">Sign Out</button>
-        </div>
-    </form>
+  Hallo @if (session) {
+  <form [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()" class="form-widget">
+    <div>
+      <mat-form-field class="flex">
+        <mat-label>Email</mat-label>
+        <input matInput id="email" type="text" [value]="session.user.email" disabled />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="flex">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="username" id="username" type="text" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="flex">
+        <mat-label>Website</mat-label>
+        <input matInput formControlName="website" id="website" type="url" />
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button type="submit" class="button primary block" [disabled]="loading">
+        {{ loading ? 'Loading ...' : 'Update' }}
+      </button>
+    </div>
+    <div>
+      <button mat-raised-button class="button block" (click)="signOut()">Sign Out</button>
+    </div>
+  </form>
+}
 </div>

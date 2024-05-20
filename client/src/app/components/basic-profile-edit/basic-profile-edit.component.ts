@@ -6,7 +6,7 @@ import { AdvancedProfileEditComponent } from '../advanced-profile-edit/advanced-
 import { ProfileDetailsComponent } from '../profile-details/profile-details.component';
 import { RenderStepsComponent } from '../render-steps/render-steps.component';
 import { MatSliderModule } from '@angular/material/slider';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -22,20 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-basic-profile-edit',
   standalone: true,
-  imports: [ProfileChartComponent,
-    MatCardModule,
-    RenderStepComponent,
-    ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent,
-    AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, CommonModule, FormsModule,
-    ReactiveFormsModule, MatInputModule,
-    EditableComponent,
-    ViewModeDirective,
-    EditModeDirective,
-    FocusableDirective,
-    MatToolbarModule,
-    MatIconModule,
-
-  ],
+  imports: [ProfileChartComponent, MatCardModule, RenderStepComponent, ProfileDetailsComponent, RenderStepComponent, RenderStepsComponent, AdvancedProfileEditComponent, BasicProfileEditComponent, MatButtonModule, MatSliderModule, FormsModule, ReactiveFormsModule, MatInputModule, EditableComponent, ViewModeDirective, EditModeDirective, FocusableDirective, MatToolbarModule, MatIconModule],
   templateUrl: './basic-profile-edit.component.html',
   styleUrl: './basic-profile-edit.component.css'
 })
